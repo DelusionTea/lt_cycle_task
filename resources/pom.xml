@@ -1,0 +1,153 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.gatling.demo</groupId>
+    <artifactId>gatlingTemplate</artifactId>
+    <version>3.7.5</version>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <url>http://sbtnexus.delta.sbrf.ru:8081/nexus/content/repositories/central</url>
+            <id>nexus-central-plugin-repo</id>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>nexus-central</id>
+            <name>nexus-central</name>
+            <url>http://sbtnexus.delta.sbrf.ru:8081/nexus/content/repositories/central/</url>
+        </repository>
+        <repository>
+            <id>nexus-thirdparty</id>
+            <name>nexus-thirdparty</name>
+            <url>http://sbtnexus.delta.sbrf.ru:8081/nexus/content/repositories/thirdparty/</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <gatling.version>${project.version}</gatling.version>
+        <gatling-maven-plugin.version>4.3.7</gatling-maven-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+        <!-- Kafka plugin version -->
+        <gatling-kafka-plugin.version>3.5</gatling-kafka-plugin.version>
+    </properties>
+
+    <dependencies>
+        <!-- Gatling dependencies -->
+        <dependency>
+            <groupId>io.gatling.highcharts</groupId>
+            <artifactId>gatling-charts-highcharts</artifactId>
+            <version>3.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.gatling</groupId>
+            <artifactId>gatling-jdbc</artifactId>
+            <version>3.9.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.10</version>
+        </dependency>
+
+        <!-- PostgreSQL JDBC Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/resources/lib/postgresql-42.6.0.jar</systemPath>
+        </dependency>
+
+        <!-- Kafka Plugin for Gatling -->
+        <dependency>
+            <groupId>io.github.amerousful</groupId>
+            <artifactId>gatling-kafka</artifactId>
+            <version>3.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/resources/lib/gatling-kafka-3.5.jar</systemPath>
+        </dependency>
+
+        <!-- Akka Dependencies (required for Kafka plugin) -->
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_2.13</artifactId>
+            <version>2.6.21</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/resources/lib/akka-actor_2.13-2.6.21.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-slf4j_2.13</artifactId>
+            <version>2.6.21</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/resources/lib/akka-slf4j_2.13-2.6.21.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_2.13</artifactId>
+            <version>2.6.21</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/resources/lib/akka-stream_2.13-2.6.21.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream-kafka_2.13</artifactId>
+            <version>2.1.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/resources/lib/akka-stream-kafka_2.13-2.1.1.jar</systemPath>
+        </dependency>
+
+        <!-- Kafka Clients -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>3.6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/resources/lib/kafka-clients-3.6.1.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+            <plugin>
+                <groupId>io.gatling</groupId>
+                <artifactId>gatling-maven-plugin</artifactId>
+                <version>4.3.7</version>
+                <configuration>
+                    <runMultipleSimulations>true</runMultipleSimulations>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>15</source>
+                    <target>15</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

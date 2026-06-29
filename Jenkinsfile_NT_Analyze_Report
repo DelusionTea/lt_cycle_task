@@ -1,0 +1,217 @@
+// Джоба анализа и отчётности ночного цикла НТ.
+// Запускается по cron позже старт-джобы. Переподцепляется к завершённому прогону
+// по gatling_status.txt + gatling_report.tar.gz (если тест ещё идёт — no-op).
+//
+// Поток: подхват прогона -> gatling_parser -> (Grafana, опц.) -> Bitbucket history
+//        -> compare_runs -> summary_to_confluence -> mail.
+
+pipeline {
+    agent {
+        node { label 'sberlinux&&Linux_Default' }
+    }
+    triggers {
+        // Запуск после ожидаемой длительности теста (~02:00).
+        cron('H 2 * * *')
+    }
+    environment {
+        REMOTE_STATUSFILE = "/home/pprb_test/gatling_status.txt"
+        REMOTE_TARBALL    = "/home/pprb_test/gatling_report.tar.gz"
+        HISTORY_DIR       = "history_repo"
+    }
+    parameters {
+        string(name: 'APPLICATION', defaultValue: 'efsSberratingWeb', description: 'Имя АС для истории/отчёта.')
+        string(name: 'PROFILE_YAML', defaultValue: 'profiles/profile.yaml', description: 'profile.yaml для проверки попадания/SLA.')
+        string(name: 'ERROR_THRESHOLD', defaultValue: '100', description: 'Порог error% для "перестал отрабатывать".')
+        credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора (SSH).', credentialType: 'Username with password', required: true)
+        string(name: 'BITBUCKET_REPO', defaultValue: '', description: 'URL Bitbucket-репозитория истории прогонов (https).')
+        credentials(name: 'BITBUCKET_CREDS', defaultValue: '', description: 'Креды Bitbucket.', credentialType: 'Username with password', required: true)
+        // Confluence
+        string(name: 'CONF_URL', defaultValue: '', description: 'Базовый URL Confluence.')
+        string(name: 'CONF_SPACE', defaultValue: '', description: 'Space key.')
+        string(name: 'CONF_PAGE_SUMMARY', defaultValue: '', description: 'ID страницы краткого саммари.')
+        credentials(name: 'CONF_CREDS', defaultValue: '', description: 'Креды Confluence.', credentialType: 'Username with password', required: true)
+        // Grafana (системные метрики)
+        booleanParam(name: 'ENABLE_GRAFANA', defaultValue: false, description: 'Рендерить системные метрики из Grafana.')
+        string(name: 'GRAFANA_URL', defaultValue: '', description: 'Базовый URL Grafana (11.6.2). Можно оставить пустым, если задан в GRAFANA_CONFIG.')
+        string(name: 'GRAFANA_CONFIG', defaultValue: 'profiles/grafana.yaml', description: 'YAML с applications/dashboards/grafana для render_export.')
+        string(name: 'GRAFANA_APPLICATION', defaultValue: '', description: 'Ключ АС для render_export (datasources).')
+        credentials(name: 'GRAFANA_TOKEN_CRED', defaultValue: '', description: 'Service account token Grafana (Secret text).', credentialType: 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl', required: false)
+        booleanParam(name: 'RENDER_ONLY_MOST_LOADED_PODS', defaultValue: true, description: 'Только самые нагруженные поды.')
+        // Mail
+        string(name: 'MAIL_TO', defaultValue: '', description: 'Получатели письма (через запятую).')
+    }
+    options {
+        ansiColor('xterm')
+        buildDiscarder(logRotator(numToKeepStr: '30'))
+    }
+    stages {
+        stage('Fetch completed run') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: params.CREDS,
+                            usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
+                        def status = sh(script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'cat ${REMOTE_STATUSFILE} 2>/dev/null || echo RUNNING'", returnStdout: true).trim()
+                        echo "Remote status: ${status}"
+                        if (!(status.contains('SUCCESS') || status.contains('FAILED'))) {
+                            currentBuild.result = 'NOT_BUILT'
+                            error("Прогон ещё не завершён (status=${status}). Выходим без обработки.")
+                        }
+                        // Забираем тарболл и распаковываем
+                        sh "rm -rf run && mkdir -p run"
+                        sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no ${remoteHost}:${REMOTE_TARBALL} run/gatling_report.tar.gz"
+                        sh "tar -xzf run/gatling_report.tar.gz -C run"
+                        // run_id = имя распакованной папки результатов; simulation.log внутри
+                        def runId = sh(script: "ls -1d run/*/ | head -n1 | xargs -n1 basename", returnStdout: true).trim()
+                        env.RUN_ID = runId
+                        env.SIM_LOG = sh(script: "find run -name simulation.log | head -n1", returnStdout: true).trim()
+                        echo "RUN_ID=${env.RUN_ID} SIM_LOG=${env.SIM_LOG}"
+                        if (!env.SIM_LOG?.trim()) {
+                            error("simulation.log не найден в тарболле.")
+                        }
+                    }
+                }
+            }
+        }
+        stage('Checkout scripts') {
+            steps { checkout scm }
+        }
+        stage('Clone history (Bitbucket)') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: params.BITBUCKET_CREDS,
+                            usernameVariable: 'bbUser', passwordVariable: 'bbPass')]) {
+                        sh "rm -rf ${HISTORY_DIR}"
+                        def repo = params.BITBUCKET_REPO.replaceFirst('https://', '')
+                        sh "git clone https://${bbUser}:${bbPass}@${repo} ${HISTORY_DIR}"
+
+                        // Проверка, не обработан ли этот прогон ранее
+                        def lastProcessedFile = "${HISTORY_DIR}/history/${params.APPLICATION}/last_processed.txt"
+                        def lastProcessed = sh(script: "[ -f '${lastProcessedFile}' ] && cat '${lastProcessedFile}' || echo ''", returnStdout: true).trim()
+                        if (lastProcessed == env.RUN_ID) {
+                            currentBuild.result = 'NOT_BUILT'
+                            error("Прогон ${env.RUN_ID} уже обработан. Выходим.")
+                        }
+                        env.PREV_TABLE = "${HISTORY_DIR}/history/${params.APPLICATION}/latest/rps_response_table.csv"
+                    }
+                }
+            }
+        }
+        stage('Parse Gatling') {
+            steps {
+                sh """
+                    rm -rf output && mkdir -p output
+                    python3 ltAuto/gatling_parser.py \
+                        --simulation_log '${env.SIM_LOG}' \
+                        --profile '${params.PROFILE_YAML}' \
+                        --output_dir output \
+                        --script_name '${params.APPLICATION}' || true
+                """
+            }
+        }
+        stage('Grafana system metrics') {
+            when { expression { return params.ENABLE_GRAFANA } }
+            steps {
+                script {
+                    def window = readJSON file: 'output/window.json'
+                    def app = params.GRAFANA_APPLICATION?.trim() ? params.GRAFANA_APPLICATION : params.APPLICATION
+                    def onlyLoaded = params.RENDER_ONLY_MOST_LOADED_PODS ? '1' : '0'
+                    def urlArg = params.GRAFANA_URL?.trim() ? "--grafana_url '${params.GRAFANA_URL}'" : ""
+                    def cfgArg = (params.GRAFANA_CONFIG?.trim() && fileExists(params.GRAFANA_CONFIG)) ? "--config '${params.GRAFANA_CONFIG}'" : ""
+                    withCredentials([string(credentialsId: params.GRAFANA_TOKEN_CRED, variable: 'GRAFANA_TOKEN')]) {
+                        sh """
+                            mkdir -p output/systemMetrics
+                            GRAFANA_TOKEN="\$GRAFANA_TOKEN" \
+                            python3 ltAuto/render_export.py \
+                                ${cfgArg} ${urlArg} \
+                                --application '${app}' \
+                                --from_time '${window.from_ms}' \
+                                --to_time '${window.to_ms}' \
+                                --results_path output/systemMetrics \
+                                --render_only_most_loaded_pods '${onlyLoaded}' || echo 'Grafana render: ошибки рендера (см. лог), продолжаем'
+                        """
+                    }
+                }
+            }
+        }
+        stage('Compare runs') {
+            steps {
+                script {
+                    def prevArg = fileExists(env.PREV_TABLE) ? "--previous '${env.PREV_TABLE}'" : ""
+                    sh """
+                        python3 ltAuto/compare_runs.py \
+                            --current output/rps_response_table.csv \
+                            ${prevArg} \
+                            --error_threshold '${params.ERROR_THRESHOLD}' \
+                            --test_result output/test_result.csv \
+                            --current_run_id '${env.RUN_ID}' \
+                            --output_dir output
+                    """
+                    env.NT_STATUS = sh(script: "python3 -c \"import json;print(json.load(open('output/summary.json'))['status'])\"", returnStdout: true).trim()
+                    env.STOPPED_COUNT = sh(script: "python3 -c \"import json;print(json.load(open('output/summary.json'))['stopped_working_count'])\"", returnStdout: true).trim()
+                }
+            }
+        }
+        stage('Persist history (Bitbucket)') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: params.BITBUCKET_CREDS,
+                            usernameVariable: 'bbUser', passwordVariable: 'bbPass')]) {
+                        def base = "${HISTORY_DIR}/history/${params.APPLICATION}"
+                        sh """
+                            mkdir -p '${base}/${env.RUN_ID}' '${base}/latest'
+                            cp output/rps_response_table.csv output/response_table.csv output/rps_table.csv output/test_result.csv output/summary.json '${base}/${env.RUN_ID}/' 2>/dev/null || true
+                            cp output/rps_response_table.csv output/response_table.csv output/rps_table.csv output/test_result.csv output/summary.json '${base}/latest/' 2>/dev/null || true
+                            echo '${env.RUN_ID}' > '${base}/last_processed.txt'
+                        """
+                        sh """
+                            cd ${HISTORY_DIR}
+                            git add -A
+                            git -c user.email='nt-bot@local' -c user.name='NT Bot' commit -m 'NT run ${params.APPLICATION} ${env.RUN_ID} status=${env.NT_STATUS}' || echo 'nothing to commit'
+                            git push origin HEAD
+                        """
+                    }
+                }
+            }
+        }
+        stage('Confluence summary') {
+            steps {
+                script {
+                    def metricsArg = (params.ENABLE_GRAFANA && fileExists('output/systemMetrics')) ? "--system_metrics_dir output/systemMetrics" : ""
+                    withCredentials([usernamePassword(credentialsId: params.CONF_CREDS,
+                            usernameVariable: 'confUser', passwordVariable: 'confPass')]) {
+                        sh """
+                            python3 ltAuto/summary_to_confluence.py \
+                                --summary output/summary.json \
+                                --delta output/delta_table.csv \
+                                --application '${params.APPLICATION}' \
+                                --build_url '${env.BUILD_URL}' \
+                                --url '${params.CONF_URL}' \
+                                --space '${params.CONF_SPACE}' \
+                                -u '${confUser}' -p '${confPass}' \
+                                -pg '${params.CONF_PAGE_SUMMARY}' \
+                                ${metricsArg}
+                        """
+                    }
+                }
+            }
+        }
+        stage('Notify (mail)') {
+            steps {
+                script {
+                    def subject = "[НТ][${params.APPLICATION}] ${env.NT_STATUS} (отвалилось: ${env.STOPPED_COUNT})"
+                    def confLink = params.CONF_URL ? "${params.CONF_URL}/pages/viewpage.action?pageId=${params.CONF_PAGE_SUMMARY}" : '(не задано)'
+                    def body = """Прогон НТ ${params.APPLICATION} завершён.
+
+Статус: ${env.NT_STATUS}
+Перестали отрабатывать запросов: ${env.STOPPED_COUNT}
+Run ID: ${env.RUN_ID}
+
+Краткое саммари в Confluence: ${confLink}
+Сборка Jenkins: ${env.BUILD_URL}
+"""
+                    mail to: params.MAIL_TO, subject: subject, body: body
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,261 @@
+pipeline {
+    agent {
+        node {
+            label 'sberlinux&&Linux_Default'
+        }
+    }
+    environment {
+        def WorkSpace = pwd()
+    }
+    stages {
+        stage('Initialize'){
+            steps{
+                script{
+                    if (params["my_checkbox"]){
+                        choice = params["my_checkbox"].split(",")
+                    } else {
+                        choice = []
+                    }
+                    echo params["my_checkbox"]
+                }
+            }
+        }
+        stage('Run SshScript') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: params.CREDS,
+                        usernameVariable: 'remoteHost',
+                        passwordVariable: 'remotePassword'
+                    )]) {
+                        def profile_multiplier = params.PROFILE_MULTIPLIER
+                        def test_duration = params.TEST_DURATION
+                        def custom_jmeter_parameters = params.CUSTOM_JMETER_PARAMETERS
+                        def FOLDER_NAME = params.FOLDER_NAME
+                        // Собираем папку из нужных файлов для джобы
+
+                        // Если папки test_files нет, то создаем
+                        if (!fileExists("test_files")){
+                            sh "mkdir test_files"
+                        } else {
+                            echo "Папка test_files уже существует, пропускаем создание новой!"
+                        }
+                        sh "cp SLA/${APPLICATION}.yaml test_files/sla.yaml"
+                        sh "cp PROFILES/${APPLICATION}.yaml test_files/config.yaml"
+                        sh "cp ltAuto/logparser_orig.py ltAuto/render_export.py ltAuto/nongui_start.py test_files/"
+                        sh "cp -r ltAuto/autoreport test_files/"
+
+                        // Создаем директорию на удаленном сервере
+                        sshScript_mkdir = '''
+                            #!/bin/bash
+                            if ! cd jenkins_job; then
+                                mkdir jenkins_job
+                            fi
+                        '''
+                        sshCommand_mkdir = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript_mkdir}'"
+                        sh sshCommand_mkdir
+
+                        // Копируем файлы на удаленный сервер и запускаем скрипт для генерации output_command.yaml
+                        sh """
+                            sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no -r test_files '${APPLICATION}'/* ${remoteHost}:jenkins_job
+                            sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '
+                                export YAML_FILE_NAME=config.yaml
+                                cd jenkins_job/test_files && python3 nongui_start.py -k '${profile_multiplier}' -t '${test_duration}'
+                            '
+                        """
+
+                        // Копируем сгенерированный output_command.yaml обратно на локальный сервер
+                        sh """
+                            sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no ${remoteHost}:jenkins_job/test_files/output_command.yaml test_files/
+                        """
+
+                        // Читаем сгенерированный YAML файл на локальном сервере
+                        def config = readYaml file: 'test_files/output_command.yaml'
+                        def jmeterCommand = config.jmeter_command
+
+
+
+                        sshScript = '''
+                            #!/bin/bash
+                            if ! cd jenkins_job; then
+                                echo "Директория не существует. Выход из скрипта."
+                                exit 1
+                            fi
+
+                            lockfile="../lockfile.txt"
+                            # Проверяем наличие lockfile, если нет - создаем с нулем
+                            if [ ! -f "$lockfile" ]; then
+                                echo 0 > "$lockfile"
+                            fi
+
+                            while true; do
+                                # Читаем значение
+                                value=$(cat "$lockfile")
+                                if [ "$value" -eq 0 ]; then
+                                    # Инкрементируем, если 0, и выходим из цикла
+                                    echo $((value + 1)) > "$lockfile"
+                                    break
+                                else
+                                    # Ждем минуту, если значение не 0
+                                    echo "JMeter is busy. Waiting 60 seconds before re-check"
+                                    sleep 60
+                                fi
+                            done
+
+                            timestamp=$(date +%s)
+
+                            '''+jmeterCommand+''' '''+custom_jmeter_parameters+'''
+                            ../apa/bin/jmeter -g test_files/result_$timestamp.jtl -o report_$timestamp
+
+
+                            if [ -f "$lockfile" ]; then
+                                value=$(cat "$lockfile")
+                                if [ "$value" -gt 0 ]; then
+                                    echo $((value - 1)) > "$lockfile"
+                                fi
+                            fi
+                        '''
+
+                        sshCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+
+                        // Сохраняем время начала теста
+                        env.TEST_START_TIMESTAMP = System.currentTimeMillis() / 1000
+
+                        sh sshCommand
+
+                        // Сохраняем время конца теста
+                        env.TEST_END_TIMESTAMP = System.currentTimeMillis() / 1000
+
+
+                        sshDelete = '''
+                            echo "список на удаление"
+                            ls $HOME/jenkins_job
+                            cd $HOME/jenkins_job || exit
+                            #find . -mindepth 1 -maxdepth 1 -type d ! -name "grafana_results" -exec rm -rf {} +
+                            #rm -f $HOME/jenkins_job/test_files/*
+                            ls $HOME/jenkins_job
+                            '''
+                         sshDEL = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshDelete}'"
+                         sh sshDEL
+                    }
+                }
+            }
+        }
+        stage('Public to Confluence') {
+            steps {
+                script {
+                    withCredentials([
+                    usernamePassword(
+                     credentialsId: params.CREDS,
+                     usernameVariable: 'remoteHost',
+                     passwordVariable: 'remotePassword',
+                     ),
+                    usernamePassword(
+                     credentialsId: params.CONF_CREDS,
+                     usernameVariable: 'confUser',
+                     passwordVariable: 'confPassword',
+                   )])	{
+                        def confPage = params.CONF_PAGE
+                        def pageName = params.PAGE_NAME
+                        def GRAFANA_APPLICATION = params.GRAFANA_APPLICATION
+
+                        def RENDER_ONLY_MOST_LOADED_PODS = '0'
+
+						if ('RENDER_ONLY_MOST_LOADED_PODS' in choice){
+						    RENDER_ONLY_MOST_LOADED_PODS = '1'
+                        }
+
+                        def profile_multiplier = params.PROFILE_MULTIPLIER
+
+						sshScript_mkdir = '''
+							#!/bin/bash
+							if ! cd jenkins_job; then
+								mkdir jenkins_job
+							fi
+
+						'''
+						sshCommand_mkdir = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript_mkdir}'"
+						sh sshCommand_mkdir
+
+
+
+						sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no -r test_files ${remoteHost}:jenkins_job"
+
+						sshScript = '''
+							#!/bin/bash
+							if ! cd jenkins_job; then
+								echo "Директория не существует. Выход из скрипта."
+								exit 1
+							fi
+
+							cd test_files
+                            find . -type f -name "*.jtl" -exec cat {} + >> result.jtl
+
+
+							# mkdir jenkins_job
+							timestamp=$(date +%s)
+							reportFolder=report_$timestamp
+							systemMetricsFolder=systemMetrics_$timestamp
+
+							echo $reportFolder
+							python3 render_export.py --application '''+GRAFANA_APPLICATION+''' --from_time '''+env.TEST_START_TIMESTAMP+''' --to_time '''+env.TEST_END_TIMESTAMP+''' --results_path output/systemMetrics --render_only_most_loaded_pods '''+RENDER_ONLY_MOST_LOADED_PODS+'''
+							python3 logparser_orig.py --result_log=result.jtl --sla=sla.yaml --script_name=smoke.jmx --k '''+profile_multiplier+'''
+
+							# Проверка на успешность бизнес метрик
+							# Открываем CSV файл и читаем первое значение
+                            test_result=$(cat output/test_result.csv | tr -d '[:space:]')
+
+                            # Проверяем значение
+                            if [ "$test_result" -eq 1 ]; then
+                                RESULT="[успех]"'''+pageName+'''
+                            elif [ "$test_result" -eq 0 ]; then
+                                RESULT="[провален]"'''+pageName+'''
+                            else
+                                echo "Unexpected value in CSV: $test_result"
+                                exit 1
+                            fi
+
+							python3 autoreport/autoreport_on_cloned_page.py -u '''+confUser+''' -p '''+confPassword+''' -tt output/rps_table.csv -rt output/response_table.csv -pg '''+confPage+''' -n $RESULT -sm output/systemMetrics -s '''+PARENT_PAGE+'''
+
+						'''
+						sshCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+						sh sshCommand
+                   }
+                }
+            }
+        }
+    }
+    post {
+            aborted {
+                withCredentials([usernamePassword(
+                        credentialsId: params.CREDS,
+                        usernameVariable: 'remoteHost',
+                        passwordVariable: 'remotePassword'
+                )]) {
+                    echo 'Change lockfile to zero'
+
+                    script {
+                        sshScript = '''
+                           #!/bin/bash
+                           lockfile="lockfile.txt"
+                           if [ -f "$lockfile" ]; then
+                               value=$(cat "$lockfile")
+                               if [ "$value" -eq 1 ]; then
+                                   echo 0 > "$lockfile"
+                                   echo "Lockfile reset to 0"
+                               else
+                                   echo "JMeter is Free"
+                               fi
+                           else
+                               echo "$lockfile does not exist"
+                           fi
+                       '''
+
+                        sshCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                        sh sshCommand
+                    }
+                }
+            }
+        }
+
+}

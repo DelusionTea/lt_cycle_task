@@ -1,0 +1,119 @@
+pipeline {
+    agent{
+        node{
+            label'sberlinux&&Linux_Default'
+        }
+    }
+    environment {
+        def WorkSpace = pwd ()
+    }
+    stages {
+        stage('Initialize'){
+            steps{
+                script{
+                    if (params["my_checkbox"]){
+                        choice = params["my_checkbox"].split(",")
+                    } else {
+                        choice = []
+                    }
+                echo params["my_checkbox"]
+                }
+            }
+        }
+        stage('Run SSH Commands') {
+            steps {
+                ansiColor('xterm'){
+                    script {
+                        withCredentials([
+                        usernamePassword(
+                        credentialsId: params.CREDS,
+                        usernameVariable: 'remoteHost',
+                        passwordVariable: 'remotePassword',
+                        ),
+                        usernamePassword(
+                       credentialsId: params.CONF_CREDS,
+                       usernameVariable: 'confUser',
+                       passwordVariable: 'confPassword',
+                       )]) {
+                            def PROFILE_PERC = params.PROFILE_PERC
+                            def BRANCH_NAME = params.BRANCH_NAME
+                            def REPORT_TITLE = params.REPORT_TITLE
+                            def TEMPLATE = params.TEMPLATE
+                            def SYSTEM = params.SYSTEM
+                            def confPage = params.CONF_PAGE
+                            def pageName = params.PAGE_NAME
+                            def JTL_PATH = params.JTL_PATH
+                            def PARENT_PAGE = params.PARENT_PAGE
+                            def APPLICATION = params.APPLICATION
+                            def FROM_TIME = params.FROM_TIME
+                            def TO_TIME = params.TO_TIME
+
+                            def YAML_FILE = params.YAML_FILE
+
+                            def RENDER_ONLY_MOST_LOADED_PODS = '0'
+
+                            if ('RENDER_ONLY_MOST_LOADED_PODS' in choice){
+                                RENDER_ONLY_MOST_LOADED_PODS = '1'
+                            }
+
+                            // Собираем папку из нужных файлов для джобы
+
+                            // Если папки test_files нет, то создаем
+                            if (!fileExists("test_files")){
+                                sh "mkdir test_files"
+                            } else {
+                                echo "Папка test_files уже существует, пропускаем создание новой!"
+                            }
+                            sh "cp ltAuto/logparser_orig.py ltAuto/render_export.py test_files/"
+                            sh "cp -r ltAuto/autoreport test_files/"
+
+
+                            sh 'echo $YAML_FILE | base64 -d > test_files/yaml.yaml'
+                            sh 'cat test_files/yaml.yaml'
+
+
+                            sshScript_mkdir = '''
+                                #!/bin/bash
+                                if ! cd jenkins_job; then
+                                    mkdir jenkins_job
+                                fi
+
+                            '''
+                            sshCommand_mkdir = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript_mkdir}'"
+                            sh sshCommand_mkdir
+
+
+
+                            sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no -r test_files ${remoteHost}:jenkins_job"
+
+                            sshScript = '''
+                                #!/bin/bash
+                                if ! cd jenkins_job; then
+                                    echo "Директория не существует. Выход из скрипта."
+                                    exit 1
+                                fi
+
+
+
+                                # mkdir jenkins_job
+                                timestamp=$(date +"%Y%m%d_%H%M%S")
+                                reportFolder=report_$timestamp
+                                systemMetricsFolder=systemMetrics_$timestamp
+
+                                echo $reportFolder
+                                cp '''+JTL_PATH+''' $HOME/jenkins_job/test_files/result.jtl
+                                python3 test_files/logparser_orig.py --result_log=test_files/result.jtl --sla=test_files/yaml.yaml --script_name=stab.jmx
+                                python3 test_files/render_export.py --application '''+APPLICATION+''' --from_time '''+FROM_TIME+''' --to_time '''+TO_TIME+''' --results_path output/systemMetrics --render_only_most_loaded_pods '''+RENDER_ONLY_MOST_LOADED_PODS+'''
+                                python3 test_files/autoreport/autoreport_on_cloned_page.py -u '''+confUser+''' -p '''+confPassword+''' -tt output/rps_table.csv -rt output/response_table.csv -pg '''+confPage+''' -n '''+pageName+''' -sm output/systemMetrics -s '''+PARENT_PAGE+'''
+
+                            '''
+                            sshCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                            sh sshCommand
+
+                       }
+                    }
+                }
+            }
+        }
+    }
+}

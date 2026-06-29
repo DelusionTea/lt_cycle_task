@@ -1,0 +1,7 @@
+# Локальные тестовые артефакты НТ-пайплайна
+.venv/
+output/
+profile.properties
+run/
+history_repo/
+*.tar.gz

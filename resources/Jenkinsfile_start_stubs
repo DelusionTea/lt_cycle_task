@@ -1,0 +1,214 @@
+pipeline {
+    agent{
+        node{
+            label'sberlinux&&Linux_Default'
+        }
+    }
+
+    stages {
+        stage('Initialize'){
+            steps{
+                echo "STAGE: ${env.STAGE_NAME} execuated"
+                script{
+                    if (params["my_checkbox"]){
+                        choice = params["my_checkbox"].split(",")
+                    } else {
+                        choice = []
+                    }
+                    echo params["my_checkbox"]
+                }
+            }
+        }
+        stage('Start stubs on 16') {
+            when {
+                expression {
+                    '16' in choice || 'all' in choice
+                }
+            }
+            steps {
+                script {
+
+                    // Для проверки в какой тачке мы находимся
+                    sh 'pwd'
+                    //sh "JENKINS_NODE_COOKIE=dontKillMe"
+
+                    sshScript = '''
+                        #!/bin/bash
+                        
+                        # Проверка, занят ли порт 8080
+                        if ! lsof -i:8080 > /dev/null; then
+                            echo "Порт 8080 свободен."
+                            
+                            # Проверка существования скриптов и их запуск
+                            if [ -f "./mockery.sh" ]; then
+                                echo "Запускаем mockery.sh..."
+                                nohup ./mockery.sh > /dev/null 2>&1 &
+                            elif [ -f "./mockery608.sh" ]; then
+                                echo "Запускаем mockery608.sh..."
+                                nohup ./mockery608.sh > /dev/null 2>&1 &
+                            else
+                                echo "Ни один из скриптов mockery.sh или mockery608.sh не найден."
+                            fi
+                        else
+                            echo "Порт 8080 занят."
+                        fi
+                        if [ -f "./mockery608.sh" ]; then
+                            if ! lsof -i:6666 > /dev/null; then
+                                nohup java -Dserver.port=6666 -jar /home/pprb_test/finmonstub/SrpStub/srpstub/SRPStub.jar > /dev/null 2>&1 &
+                            fi
+                        fi
+						'''
+                    withCredentials([usernamePassword(
+                            credentialsId: "pprb_test",
+                            usernameVariable: 'remoteHost',
+                            passwordVariable: 'remotePassword',
+                    )]) {
+                        shCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                        sh shCommand
+                    }
+                }
+            }
+        }
+        stage('Start stubs on 1448') {
+            when {
+                expression {
+                    'riski_mob' in choice || 'all' in choice
+                }
+            }
+            steps {
+                script {
+
+                    sshScript = '''
+                        #!/bin/bash
+                        
+                        # Проверка, занят ли порт 8080
+                        if ! lsof -i:8080 > /dev/null; then
+                            echo "Порт 8080 свободен."
+                            
+                            # Проверка существования скриптов и их запуск
+                            if [ -f "./mockery1448.sh" ]; then
+                                echo "Запускаем mockery1448.sh..."
+                                nohup ./mockery1448.sh > /dev/null 2>&1 &
+                            else
+                                echo "Ни один из скриптов mockery.sh или mockery608.sh не найден."
+                            fi
+                        else
+                            echo "Порт 8080 занят."
+                        fi
+						'''
+                    withCredentials([usernamePassword(
+                            credentialsId: "2e06e1e4-79f6-49cb-bca8-d7a923e5ceb0",
+                            usernameVariable: 'remoteHost',
+                            passwordVariable: 'remotePassword',
+                    )]) {
+                        shCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                        sh shCommand
+                    }
+                }
+            }
+        }
+        stage('Start stubs on 608') {
+            when {
+                expression {
+                    '608' in choice || 'all' in choice
+                }
+            }
+            steps {
+                script {
+
+                    // Для проверки в какой тачке мы находимся
+                    sh 'pwd'
+                    //sh "JENKINS_NODE_COOKIE=dontKillMe"
+
+                    sshScript = '''
+                        #!/bin/bash
+                        
+                        # Проверка, занят ли порт 8080
+                        if ! lsof -i:8080 > /dev/null; then
+                            echo "Порт 8080 свободен."
+                            
+                            # Проверка существования скриптов и их запуск
+                            if [ -f "./mockery.sh" ]; then
+                                echo "Запускаем mockery.sh..."
+                                nohup ./mockery.sh > /dev/null 2>&1 &
+                            elif [ -f "./mockery608.sh" ]; then
+                                echo "Запускаем mockery608.sh..."
+                                nohup ./mockery608.sh > /dev/null 2>&1 &
+                            else
+                                echo "Ни один из скриптов mockery.sh или mockery608.sh не найден."
+                            fi
+                        else
+                            echo "Порт 8080 занят."
+                        fi
+                        if [ -f "./mockery608.sh" ]; then
+                            if ! lsof -i:6666 > /dev/null; then
+                                nohup java -Dserver.port=6666 -jar /home/pprb_test/finmonstub/SrpStub/srpstub/SRPStub.jar > /dev/null 2>&1 &
+                            fi
+                        fi
+						'''
+                    withCredentials([usernamePassword(
+                            credentialsId: "7e1b355c-a5e0-457b-b9c4-c833202c93ea",
+                            usernameVariable: 'remoteHost',
+                            passwordVariable: 'remotePassword',
+                    )]) {
+                        shCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                        sh shCommand
+                    }
+                }
+            }
+        }
+        stage('Start stubs on 80') {
+            when {
+                expression {
+                    'rm_mop' in choice || 'all' in choice
+                }
+            }
+            steps {
+                script {
+
+                    // Для проверки в какой тачке мы находимся
+                    sh 'pwd'
+                    //sh "JENKINS_NODE_COOKIE=dontKillMe"
+
+                    sshScript = '''
+                                #!/bin/bash
+
+                                # Проверка, занят ли порт 8080
+                                if ! lsof -i:8080 > /dev/null; then
+                                    echo "Порт 8080 свободен."
+
+                                    # Проверка существования скриптов и их запуск
+                                    if [ -f "./mockery.sh" ]; then
+                                        echo "Запускаем mockery.sh..."
+                                        nohup ./mockery.sh > /dev/null 2>&1 &
+                                    elif [ -f "./mockery608.sh" ]; then
+                                        echo "Запускаем mockery608.sh..."
+                                        nohup ./mockery608.sh > /dev/null 2>&1 &
+                                    elif [ -f "./mockery80.sh" ]; then
+                                        echo "Запускаем mockery80.sh..."
+                                        nohup ./mockery80.sh > /dev/null 2>&1 &
+                                    else
+                                        echo "Ни один из скриптов mockery.sh или mockery608.sh или mockery80.sh не найден."
+                                    fi
+                                else
+                                    echo "Порт 8080 занят."
+                                fi
+                                if [ -f "./mockery608.sh" ]; then
+                                    if ! lsof -i:6666 > /dev/null; then
+                                        nohup java -Dserver.port=6666 -jar /home/pprb_test/finmonstub/SrpStub/srpstub/SRPStub.jar > /dev/null 2>&1 &
+                                    fi
+                                fi
+        						'''
+                    withCredentials([usernamePassword(
+                            credentialsId: "cdc9275c-8033-4d7d-8f12-4d0a539d2562",
+                            usernameVariable: 'remoteHost',
+                            passwordVariable: 'remotePassword',
+                    )]) {
+                        shCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                        sh shCommand
+                    }
+                }
+            }
+        }
+    }
+}

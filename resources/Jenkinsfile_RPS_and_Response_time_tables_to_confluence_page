@@ -1,0 +1,100 @@
+pipeline {
+    agent{
+        node{
+            label'sberlinux&&Linux_Default'
+        }
+    }
+    environment {
+        def WorkSpace = pwd ()
+    }
+    stages {
+        stage('Run SSH Commands') {
+            steps {
+                script {
+					withCredentials([
+					usernamePassword(
+                    credentialsId: params.CREDS,
+                    usernameVariable: 'remoteHost',
+                    passwordVariable: 'remotePassword',
+                    ),
+                    usernamePassword(
+                   credentialsId: params.CONF_CREDS,
+                   usernameVariable: 'confUser',
+                   passwordVariable: 'confPassword',
+                   )]) {
+						def nameJMX = params.NAME
+						def THREADS = params.THREADS
+						def RAMP_UP = params.RAMP_UP
+						def STEPS = params.STEPS
+						def HOLD = params.HOLD
+						def StRPS = params.START
+						def EndRPS = params.END
+						def RPS = params.RPS
+						def PROFILE_PERC = params.PROFILE_PERC
+						def BRANCH_NAME = params.BRANCH_NAME
+						def REPORT_TITLE = params.REPORT_TITLE
+						def TEMPLATE = params.TEMPLATE
+						def SYSTEM = params.SYSTEM
+						def confPage = params.CONF_PAGE
+						def pageName = params.PAGE_NAME
+						def JTL_PATH = params.JTL_PATH
+						def YAML_PATH = params.YAML_PATH
+
+
+
+
+                        // Собираем папку из нужных файлов для джобы
+
+                        // Если папки test_files нет, то создаем
+                        if (!fileExists("test_files")){
+                            sh "mkdir test_files"
+                        } else {
+                            echo "Папка test_files уже существует, пропускаем создание новой!"
+                        }
+
+                        sh "cp '${JTL_PATH}' test_files/result.jtl"
+                        sh "cp '${YAML_PATH}' test_files/yaml.yaml"
+                        sh "cp ltAuto/logparser_orig.py ltAuto/render_export.py test_files/"
+                        sh "cp -r ltAuto/autoreport test_files/"
+
+
+
+						sshScript_mkdir = '''
+							#!/bin/bash
+							if ! cd jenkins_job; then
+								mkdir jenkins_job
+							fi
+
+						'''
+						sshCommand_mkdir = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript_mkdir}'"
+						sh sshCommand_mkdir
+
+						sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no -r test_files ${remoteHost}:jenkins_job"
+
+						sshScript = '''
+							#!/bin/bash
+							if ! cd jenkins_job; then
+								echo "Директория не существует. Выход из скрипта."
+								exit 1
+							fi
+
+							# mkdir jenkins_job
+							timestamp=$(date +"%Y%m%d_%H%M%S")
+							reportFolder=report_$timestamp
+							systemMetricsFolder=systemMetrics_$timestamp
+
+							echo $reportFolder
+							#python3 test_files/render_export.py --from_time=$test_start_time --to_time=$test_end_time --application "'''+SYSTEM+'''" --root $systemMetricsFolder
+							python3 test_files/logparser_orig.py --result_log=test_files/result.jtl --sla=test_files/yaml.yaml --script_name=stab.jmx
+							python3 test_files/autoreport/autoreport_on_selected_page.py -u '''+confUser+''' -p '''+confPassword+''' -tt output/rps_table.csv -rt output/response_table.csv -pg '''+confPage+''' -n '''+pageName+'''
+
+						'''
+						sshCommand = "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+						sh sshCommand
+
+                    }
+                }
+            }
+        }
+    }
+}

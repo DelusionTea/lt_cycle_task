@@ -1,0 +1,35 @@
+# Конфиг экспорта системных метрик из Grafana (render_export.py).
+# Скопируйте в grafana.yaml и поправьте под свой контур.
+# Приоритет значений: аргумент CLI > переменная окружения > этот YAML > встроенный дефолт.
+
+grafana:
+  url: "http://10.55.2.203:3000"   # переопределяется --grafana_url / env GRAFANA_URL
+  tz: "UTC"                         # таймзона на графиках (--tz)
+  scale: 1                          # масштаб рендера (--scale)
+  width: 2000                       # ширина панели, px
+  height: 300                       # высота панели, px
+  use_proxy: true                   # запросы к datasource через прокси Grafana (надёжно в Grafana 11)
+
+# Наборы дашбордов (uid панелей системных метрик).
+dashboards:
+  default: ["8m6RFbbSk", "2nFTFxbIz"]    # обычные АС (OpenShift)
+  dropapp: ["8m6RFbbSkef", "2nFTFxbIzA"] # АС с префиксом drop* (Drop App)
+
+# Соответствие "ключ АС" -> список имён datasource в Grafana.
+# Ключ передаётся как --application; именно по нему берутся плечи (datasources).
+applications:
+  finmonweb: ["os_28_finmonweb", "os_29_finmonweb"]
+  finmon_mob: ["os_finmonmob 3dm", "os_finmonmob 4ds"]
+  efs-sberrating: ["os_42 EFS_sberrating", "os_43 EFS_sberrating"]
+  pprb-sberraiting: ["os_prometheus_pprb_sberrating_main", "os_prometheus_pprb_sberrating_standin"]
+  idss-ift: ["os_idss-ift"]
+  pprb_test_standin: ["os_pprb_test_standin"]
+  rm_mop: ["os_RMMOP", "os_rmmop_iamproxy"]
+  debug: ["os_cmpl"]
+  dropapp-finmon-mob: ["dropapp-finmon-mob-megacod_az1v01sf", "dropapp-finmon-mob-skolkovo_az10rsto"]
+  dropapp-finmon-web: ["dropapp-finmon-web-megacod_az1v01sf", "dropapp-finmon-web-skolkovo_az10rsto"]
+  dropdropapp-riski: ["dropapp-riski-apj7klkj", "dropapp-riski-apkbsvrs"]
+  dropapp-sberrating-web: ["dropapp-sberrating-web-apj7klkj", "dropapp-sberrating-web-apkbsvrs"]
+  dropapp-digital-api: ["dropapp-digital-api-m", "dropapp-digital-api-s"]
+  compensations: ["os_compensations"]
+  sberOpros: ["os_SberOpros"]

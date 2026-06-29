@@ -1,0 +1,222 @@
+// Старт-джоба ночного цикла НТ (адаптация resources/Jenkinsfile).
+// Отличия от исходной:
+//  - cron-триггер для ночного запуска;
+//  - неинтерактивный режим (без input()) при запуске по таймеру / с заданным packageSimulation;
+//  - параметр TARGET_PERCENT и генерация profile.properties из profile.yaml перед mvn,
+//    который читает Java-класс ProfileConfig (веса randomSwitch + интенсивность injectOpen);
+//  - сохранён механизм wrapper/status/lockfile/tarball.
+//
+// Анализ результата вынесен в отдельную джобу (Jenkinsfile_NT_Analyze_Report),
+// которая переподцепляется к завершённому прогону по gatling_status.txt и gatling_report.tar.gz.
+
+pipeline {
+    agent {
+        node { label 'sberlinux&&Linux_Default' }
+    }
+    triggers {
+        // Ночной запуск (~22:00). H — для разнесения нагрузки на мастере.
+        cron('H 22 * * *')
+    }
+    environment {
+        MAVEN_HOME        = "/home/pprb_test/apache-maven-3.9.6/"
+        REMOTE_RUNLOG     = "/home/pprb_test/gatling_run.log"
+        REMOTE_PIDFILE    = "/home/pprb_test/gatling_maven.pid"
+        REMOTE_WPIDFILE   = "/home/pprb_test/gatling_wrapper.pid"
+        REMOTE_STATUSFILE = "/home/pprb_test/gatling_status.txt"
+        REMOTE_LOCKFILE   = "/home/pprb_test/lockfileGatling.txt"
+        REMOTE_WRAPPER    = "/home/pprb_test/gatling_wrapper.sh"
+        REMOTE_PROFILE    = "/home/pprb_test/gatling_job/gatlingScripts/profile.properties"
+    }
+    parameters {
+        string(name: 'START_TIME', defaultValue: 'now', description: 'now или HH:mm. Тест идёт через nohup.')
+        string(name: 'packageSimulation', defaultValue: 'pprbSberrating.All.OTT_all_debug',
+               description: 'Класс симуляции (обязателен для unattended/cron запуска).')
+        string(name: 'TARGET_PERCENT', defaultValue: '100', description: 'Целевой % от профиля (масштаб интенсивности).')
+        string(name: 'PROFILE_YAML', defaultValue: 'profiles/profile.yaml', description: 'Путь к profile.yaml в репозитории скриптов.')
+        booleanParam(name: 'UNATTENDED', defaultValue: false, description: 'Принудительно неинтерактивный режим (без input()).')
+        credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора', credentialType: 'Username with password', required: true)
+    }
+    options {
+        ansiColor('xterm')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+    stages {
+        stage('Init') {
+            steps {
+                script {
+                    // Запуск по таймеру (cron) => unattended
+                    def timerCause = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
+                    env.IS_UNATTENDED = (params.UNATTENDED || (timerCause != null && !timerCause.isEmpty())) ? 'true' : 'false'
+                    echo "UNATTENDED=${env.IS_UNATTENDED}"
+
+                    if (env.IS_UNATTENDED == 'true' && (params.packageSimulation == null || params.packageSimulation.trim() == '')) {
+                        error "Unattended-запуск требует непустой packageSimulation."
+                    }
+                    env.FINAL_TARGET = params.packageSimulation.trim()
+                }
+            }
+        }
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Generate profile.properties') {
+            steps {
+                script {
+                    // Генерируем профиль из YAML под целевой %
+                    sh """
+                        python3 ltAuto/profile_to_props.py \
+                            --profile '${params.PROFILE_YAML}' \
+                            --target_percent '${params.TARGET_PERCENT}' \
+                            --output profile.properties
+                        cat profile.properties
+                    """
+                }
+            }
+        }
+        stage('Prepare & Sync') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: params.CREDS,
+                            usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
+
+                        // Проверка занятости генератора
+                        def lockCheck = '''#!/bin/bash
+                            [ -f "/home/pprb_test/lockfileGatling.txt" ] && cat /home/pprb_test/lockfileGatling.txt 2>/dev/null || echo 0
+                        '''
+                        def lockValue = sh(script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${lockCheck}'", returnStdout: true).trim()
+
+                        if (lockValue != '0') {
+                            if (env.IS_UNATTENDED == 'true') {
+                                echo "Генератор занят (lock=${lockValue}). Unattended: ждём освобождения."
+                                timeout(time: 12, unit: 'HOURS') {
+                                    waitUntil {
+                                        def lv = sh(script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${lockCheck}'", returnStdout: true).trim()
+                                        if (lv == '0') { return true }
+                                        sleep 60; return false
+                                    }
+                                }
+                            } else {
+                                def choice = input(message: "Генератор занят (lock=${lockValue}).",
+                                        parameters: [choice(name: 'A', choices: ['Подождать', 'Отменить'])])
+                                if (choice == 'Отменить') { error 'Отменено пользователем: генератор занят.' }
+                                timeout(time: 12, unit: 'HOURS') {
+                                    waitUntil {
+                                        def lv = sh(script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${lockCheck}'", returnStdout: true).trim()
+                                        if (lv == '0') { return true }
+                                        sleep 30; return false
+                                    }
+                                }
+                            }
+                        }
+
+                        // Синхронизация скриптов и либ
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'mkdir -p gatling_job/gatlingScripts gatling_job/libs'"
+                        def libsExist = sh(script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '[ -d gatling_job/libs ] && ls -A gatling_job/libs >/dev/null 2>&1 && echo true || echo false'", returnStdout: true).trim()
+                        if (libsExist == 'false') {
+                            sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/libs/ ${remoteHost}:gatling_job/libs/ || true"
+                        }
+                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/gatlingScripts/ ${remoteHost}:gatling_job/gatlingScripts/ || true"
+
+                        // Кладём profile.properties рядом со скриптами
+                        sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no profile.properties ${remoteHost}:${REMOTE_PROFILE}"
+
+                        env.REMOTE_HOST = remoteHost
+                        currentBuild.displayName = "${remoteHost} | ${env.FINAL_TARGET} | ${params.TARGET_PERCENT}%"
+                    }
+                }
+            }
+        }
+        stage('Run test (nohup)') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: params.CREDS,
+                            usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
+
+                        def wrapperContent = """#!/bin/bash
+exec > ${REMOTE_RUNLOG} 2>&1
+echo "--- Wrapper Start: \$(date) ---"
+echo \$\$ > ${REMOTE_WPIDFILE}
+if [ "${params.START_TIME}" != "now" ]; then
+    echo "Waiting for scheduled start at ${params.START_TIME}..."
+    while [ "\$(date +%H:%M)" != "${params.START_TIME}" ]; do sleep 15; done
+fi
+echo "STARTED \$(date) simulation=simulations.${env.FINAL_TARGET}" > ${REMOTE_STATUSFILE}
+echo 1 > ${REMOTE_LOCKFILE}
+cd /home/pprb_test/gatling_job/gatlingScripts || exit 1
+source ~/.bash_profile 2>/dev/null || true
+source ~/.bashrc 2>/dev/null || true
+export MAVEN_OPTS="-Dmaven.settings.file=/home/pprb_test/.m2/settings.xml"
+export LOG_LEVEL=ERROR
+CLASS="${env.FINAL_TARGET}"
+[[ \$CLASS != simulations.* ]] && CLASS="simulations.\$CLASS"
+echo "Launching Maven via nohup for class: \$CLASS (target=${params.TARGET_PERCENT}%)"
+nohup /home/pprb_test/apache-maven-3.9.6/bin/mvn gatling:test -B -q \\
+    -s /home/pprb_test/.m2/settings.xml \\
+    -D"gatling.simulationClass=\$CLASS" \\
+    -DprofileProperties=${REMOTE_PROFILE} \\
+    -Dgatling.resultsFolder=results \\
+    -Dmaven.repo.local=/home/pprb_test/.m2 \\
+    -D"logback.level.root=ERROR" \\
+    -D"jenkins.build.tag=${env.BUILD_TAG}" \\
+    -Dgatling.core.directory.results=/home/pprb_test/gatling_job/gatlingScripts/results \\
+    > /dev/null 2> /home/pprb_test/nohup.out &
+MAVEN_PID=\$!
+echo \$MAVEN_PID > ${REMOTE_PIDFILE}
+echo "Maven PID: \$MAVEN_PID"
+wait \$MAVEN_PID
+MAVEN_EXIT=\$?
+echo 0 > ${REMOTE_LOCKFILE}
+rm -f ${REMOTE_PIDFILE} ${REMOTE_WPIDFILE}
+rm -f /home/pprb_test/gatling_report.tar.gz
+if cd results 2>/dev/null; then
+    LATEST=\$(ls -td -- */ 2>/dev/null | head -n 1)
+    [ -n "\$LATEST" ] && tar -czf /home/pprb_test/gatling_report.tar.gz "\$LATEST"
+fi
+if [ \$MAVEN_EXIT -eq 0 ]; then
+    echo "SUCCESS \$(date)" > ${REMOTE_STATUSFILE}
+else
+    echo "FAILED exit_code=\$MAVEN_EXIT \$(date)" > ${REMOTE_STATUSFILE}
+fi
+"""
+                        writeFile file: 'gatling_wrapper.sh', text: wrapperContent
+                        sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no gatling_wrapper.sh ${remoteHost}:${REMOTE_WRAPPER}"
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'tr -d \"\\r\" < ${REMOTE_WRAPPER} > ${REMOTE_WRAPPER}.tmp && mv ${REMOTE_WRAPPER}.tmp ${REMOTE_WRAPPER} && chmod +x ${REMOTE_WRAPPER}'"
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'nohup ${REMOTE_WRAPPER} > /home/pprb_test/nohup_wrapper.log 2>&1 &'"
+                        echo "Тест запущен в фоне (nohup). Анализ выполнит Jenkinsfile_NT_Analyze_Report."
+                    }
+                }
+            }
+        }
+    }
+    post {
+        aborted {
+            script {
+                if (env.REMOTE_HOST?.trim() && env.FINAL_TARGET?.trim()) {
+                    try {
+                        withCredentials([usernamePassword(credentialsId: params.CREDS,
+                                usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
+                            withEnv(["RH=${remoteHost}", "RP=${remotePassword}", "FT=${env.FINAL_TARGET}",
+                                     "RWPID=${env.REMOTE_WPIDFILE}", "RPID=${env.REMOTE_PIDFILE}", "RLOCK=${env.REMOTE_LOCKFILE}"]) {
+                                sh '''
+                                    sshpass -p "$RP" ssh -o StrictHostKeyChecking=no "$RH" '
+                                        set +e
+                                        killtree() { _p="$1"; [ -z "$_p" ] && return 0; for c in $(pgrep -P "$_p" 2>/dev/null); do killtree "$c"; done; kill -15 "$_p" 2>/dev/null||true; sleep 1; kill -9 "$_p" 2>/dev/null||true; }
+                                        PIDS="$(pgrep -f "gatling.simulationClass=simulations.$FT" 2>/dev/null || pgrep -f "gatling.simulationClass=$FT" 2>/dev/null || true)"
+                                        for p in $PIDS; do killtree "$p"; done
+                                        [ -f "$RWPID" ] && killtree "$(cat "$RWPID" 2>/dev/null)"
+                                        [ -f "$RPID" ]  && killtree "$(cat "$RPID" 2>/dev/null)"
+                                        rm -f "$RPID" "$RWPID"; echo 0 > "$RLOCK"
+                                    '
+                                '''
+                            }
+                        }
+                    } catch (Exception e) {
+                        echo "POST(aborted) cleanup error: ${e.getMessage()}"
+                    }
+                }
+            }
+        }
+    }
+}

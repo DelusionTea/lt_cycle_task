@@ -1,0 +1,54 @@
+# Профиль НТ + SLA (единый источник для инъекции и для проверки попадания).
+#
+# count    - абсолютная цель по числу запросов на 100% профиля (для каждого
+#            измерения/label). Параметр --target_percent масштабирует их: k = %/100.
+#            Проверка попадания: факт_успехов >= 95% от count*k и error% <= 5%.
+# rampup   - сколько секунд отрезать от начала прогона перед расчётом.
+# *pct     - глобальные SLA по времени отклика (мс). Можно переопределить
+#            на конкретное измерение через sla_per_label.
+#
+# Имена измерений (ключи count) должны совпадать с именами запросов в
+# simulation.log (поле name записи REQUEST).
+
+description: "Профиль НТ efsSberratingWeb (пример)"
+target_percent: 100      # дефолт; обычно задаётся параметром джобы TARGET_PERCENT
+rampup: 0
+
+# Глобальные SLA по времени отклика, мс
+95pct: 1000
+50pct: 500
+rps: 50
+error_count: 100
+
+count:
+  "UC06.2_POST_/ufs-sberrating": 250
+  "UC49_POST_/prepayment-check": 120
+  first_login: 5
+  login: 5
+  create: 5
+
+# Необязательные точечные SLA по времени отклика (мс) на измерение
+sla_per_label:
+  "UC06.2_POST_/ufs-sberrating":
+    95pct: 800
+  "UC49_POST_/prepayment-check":
+    95pct: 500
+
+# ---------------------------------------------------------------------------
+# Инъекция (для Gatling). Используется profile_to_props.py для генерации
+# profile.properties, который читает Java-класс ProfileConfig.
+# Ключи сценариев/Choice должны быть Java-property-safe (буквы/цифры/._-).
+# target_percent масштабирует users: users_eff = round(users * target_percent/100).
+# weights в randomSwitch — относительные доли (масштаб не меняет их соотношение).
+# ---------------------------------------------------------------------------
+injection:
+  duration: 3600          # длительность активной фазы, сек (hold)
+  rampup: 60              # сек разгон
+  scenarios:
+    Licenses:
+      users: 50           # целевая интенсивность на 100% профиля
+      weights:
+        UC01: 25
+        UC02: 25
+        UC03: 20
+        UC04: 30
