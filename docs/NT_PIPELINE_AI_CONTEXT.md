@@ -30,8 +30,8 @@
 ## 3. Поток данных (контур)
 
 ```
-TARGET_PERCENT + profiles/profile.yaml
-        │ profile_to_props.py
+TARGET_PERCENT + profiles/profile.yaml (count) + Java Case-классы (request_classes)
+        │ profile_to_props.py: веса = доли count по членам сценария (%)
         ▼
 profile.properties ──scp──► remote: gatling_job/gatlingScripts/profile.properties
         │ (Start job: wrapper + nohup mvn gatling:test -DprofileProperties=...)
@@ -90,29 +90,42 @@ mail (статус + ссылка) ; история коммитится в Bitb
   `--system_metrics_dir` → грузит PNG (`FileData`/`add_attachments`) и встраивает
   макросы `<ac:image><ri:attachment .../></ac:image>` в expand-блок.
   `--dry_run` пишет `output/summary_confluence.xhtml` (для локальной проверки).
+- `case_parser.py` — парсер Java Case-классов Gatling. Регуляркой извлекает пары
+  `{имя_переменной: имя_запроса_в_логе}` из объявлений `VAR = http("name")`
+  (комментарии вырезаются). Используется и генератором весов, и парсером лога.
+  Функции: `parse_case_classes(paths, base_dirs)`, `log_to_var`, `resolve_paths`.
 - `profile_to_props.py` — `profile.yaml` → `profile.properties`.
-  Масштабирует `inject.<scn>.users` на `k=target_percent/100` (min 1, если >0),
-  `weights` переносит как есть. Контракт property (должен совпадать с ProfileConfig):
+  Масштабирует `inject.<scn>.users` на `k=target_percent/100` (min 1, если >0).
+  **Веса считаются автоматически**: для сценария берёт его `request_classes`
+  (→ var↔log), для каждого члена берёт `count[log]` и пишет
+  `weight.<scn>.<var> = count_доля_в_процентах` (сумма ≤ 100, поправка на округление).
+  Fallback: нет `request_classes` → legacy ручные `weights`; класс не найден →
+  WARN + дефолты из кода. Контракт property (совпадает с ProfileConfig):
   `target_percent`, `injection.duration`, `injection.rampup`,
-  `inject.<scn>.users`, `weight.<scn>.<choice>`.
+  `inject.<scn>.users`, `weight.<scn>.<var>` (ключ = имя переменной Case).
 - `render_export.py` — рендер панелей Grafana 11.6.2 в PNG (см. §6).
 
 ### Java (`gatling/src/test/java/`)
 - `config/ProfileConfig.java` — читает `profile.properties` (через
   `-DprofileProperties=...`, иначе cwd, иначе classpath; нет файла → дефолты).
-  Методы: `getWeight(scn,choice,def)` → `weight.scn.choice`;
+  Методы: `getWeight(scn,choice,def)` → **double** `weight.scn.choice` (проценты);
   `getInjectUsers(scn,def)` → `inject.scn.users`; `getDuration/getRampup/
   getTargetPercent`. **Имена property — единственный контракт с profile_to_props.**
 - `scenarios/pprbSberrating/LicensesScenario.java` — **шаблон** рефакторинга:
   хардкод весов `Choice.WithWeight(...)` заменён на `ProfileConfig.getWeight(SCN,
-  "UCxx", default)`, дефолты = прежние значения (поведение без profile.properties
-  не меняется). `SCN="Licenses"` соответствует `injection.scenarios.Licenses`.
+  "<имя_переменной_Case>", default)`. Ключ choice = имя переменной Case-класса
+  (напр. `UC01_POST_Licenses_Summary`) — то же, что связано с лог-именем в Case и
+  что генерит `profile_to_props`. Дефолты = прежние значения (поведение без
+  profile.properties не меняется). `SCN="Licenses"` ↔ `injection.scenarios.Licenses`.
 
 ### Конфиги (`profiles/`)
 - `profile.example.yaml` — профиль НТ + SLA. `count` (абс. цель на 100%),
-  глобальные `95pct/50pct/rps/error_count`, `sla_per_label`, секция `injection`
-  (`duration`, `rampup`, `scenarios.<scn>.users`, `scenarios.<scn>.weights`).
-  Имена ключей `count` обязаны совпадать с `name` записей REQUEST в simulation.log.
+  глобальные `95pct/50pct/rps/error_count`, `sla_per_label`, `request_classes`
+  (список путей к Java Case-классам), секция `injection` (`duration`, `rampup`,
+  `scenarios.<scn>.users`, `scenarios.<scn>.request_classes`). **`weights` в
+  injection больше нет** — считаются из `count`. Ключи `count`/`sla_per_label`
+  можно писать по имени переменной Case (резолвится в `name` из simulation.log)
+  или прямо по лог-имени.
 - `grafana.example.yaml` — конфиг render_export: `grafana{url,tz,scale,width,
   height,use_proxy}`, `dashboards{default,dropapp}`, `applications{ключ→[datasource]}`.
 
@@ -163,21 +176,24 @@ render_export целиком локально не проверить — нуж
 ## 7. Открытые места / что доделать или проверить после отладки
 
 1. **Интеграция инъекции в Simulation-класс.** В сценариях заменены только веса
-   (getWeight). `getInjectUsers/getDuration/getRampup` ещё НЕ подключены в
-   `injectOpen(...)` главного класса симуляции (аналог `resources/OTT_all_debug.java`)
-   — исходник не предоставлен. Нужно: в Simulation заменить хардкод `injectOpen`
-   на значения из `ProfileConfig` (например `constantUsersPerSec` /`during` от
-   `getInjectUsers/getDuration`). 17+ сценариев из OTT_all_debug ещё не отрефакторены
-   по весам — только `LicensesScenario` как шаблон.
+   (getWeight, ключ = имя переменной Case). `getInjectUsers/getDuration/getRampup`
+   ещё НЕ подключены в `injectOpen(...)` главного класса симуляции (аналог
+   `resources/OTT_all_debug.java`) — исходник не предоставлен. Нужно: в Simulation
+   заменить хардкод `injectOpen` на значения из `ProfileConfig`. 17+ сценариев из
+   OTT_all_debug ещё не отрефакторены по весам — только `LicensesScenario` как шаблон.
+   Для каждого сценария в `injection.scenarios.<scn>` нужно указать `request_classes`
+   (Case-класс(ы) его запросов) — из них берутся члены и доли count для весов.
 2. **Раскладка проекта vs wrapper.** Start-джоба синкает `gatling/gatlingScripts/`
    и `gatling/libs/` и запускает `mvn gatling:test` в `gatlingScripts`. Созданные
    Java-файлы лежат в maven-структуре `gatling/src/test/java/...`. Это шаблоны —
    их нужно положить в реальный исходный проект; проверить, что `-DprofileProperties`
    доходит до прогона и `ProfileConfig` грузит файл (в логе строка
    `[ProfileConfig] Loaded profile from ...`).
-3. **Имена в profile.yaml.** Ключи `count` ↔ `name` в simulation.log; ключи
-   `injection.scenarios.<scn>` и `weights.<choice>` ↔ аргументы `getWeight`/
-   `getInjectUsers` в Java (`SCN`, "UCxx"). Рассинхрон → дефолты/пропуски проверок.
+3. **Имена в profile.yaml.** Единый мостик имён — Java Case-класс(ы) в
+   `request_classes`: переменная (choice-ключ getWeight) ↔ `http("...")` (лог-имя).
+   `count`/`sla_per_label` пишутся по переменной (резолвятся в лог-имя) или прямо
+   по лог-имени. Имя сценария `injection.scenarios.<scn>` ↔ `SCN` в Java. Рассинхрон
+   этих связей → дефолтные веса / пропуски проверок попадания.
 4. **Remote-пути и пользователь** (`/home/pprb_test/...`, label агента
    `sberlinux&&Linux_Default`, `apache-maven-3.9.6`) захардкожены под текущий контур.
 5. **Confluence page id / space / URL** и **Bitbucket repo** — задаются параметрами
@@ -192,8 +208,11 @@ render_export целиком локально не проверить — нуж
 - Картинки Grafana пустые/ошибка → `render_export.save_grafana_panel_as_image`
   (слаг, `Content-Type`), либо токен/датасорсы (`get_datasource_map`, прокси).
 - Пустые списки подов → `get_datasource_pods` (прокси vs прямой url, окно времени).
-- Неверные веса/интенсивность → цепочка `profile.yaml` → `profile_to_props.py`
-  (имена property) → `ProfileConfig` (ключи) → сценарий (аргументы getWeight).
+- Неверные веса/интенсивность → цепочка `count` + `request_classes` →
+  `case_parser` (var↔log) → `profile_to_props.py` (доли count, имена property) →
+  `ProfileConfig` (ключи) → сценарий (аргументы getWeight = имена переменных Case).
+  Частые причины: путь к Case-классу не найден (WARN, веса=дефолты); лог-имя из
+  Case отсутствует в `count` (вес 0); ключ choice в getWeight ≠ имя переменной Case.
 - «Всё перестало отрабатывать»/неверная дельта → `compare_runs` (порог, матчинг
   label, наличие предыдущего `rps_response_table.csv` в Bitbucket latest).
 - Confluence без картинок → порядок: вложения грузятся ДО `update_page`; имена

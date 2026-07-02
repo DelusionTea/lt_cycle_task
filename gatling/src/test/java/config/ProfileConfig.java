@@ -21,7 +21,7 @@ import java.util.Properties;
  *   injection.duration=3600
  *   injection.rampup=60
  *   inject.Licenses.users=25
- *   weight.Licenses.UC01=25
+ *   weight.Licenses.UC01_POST_Licenses_Summary=93.75   (проценты, ключ = имя переменной Case)
  */
 public final class ProfileConfig {
 
@@ -87,9 +87,13 @@ public final class ProfileConfig {
         }
     }
 
-    /** Относительный вес Choice в randomSwitch для сценария. */
-    public static int getWeight(String scenario, String choice, int def) {
-        return getInt("weight." + scenario + "." + choice, def);
+    /**
+     * Вес Choice в randomSwitch (процент) для сценария. Значения генерируются
+     * автоматически из долей count (profile_to_props.py), поэтому дробные —
+     * возвращаем double. Ключ choice — имя переменной Case-класса.
+     */
+    public static double getWeight(String scenario, String choice, double def) {
+        return getDouble("weight." + scenario + "." + choice, def);
     }
 
     /** Целевое число одновременных пользователей для сценария (уже масштабировано). */

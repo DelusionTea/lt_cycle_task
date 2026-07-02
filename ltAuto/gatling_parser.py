@@ -22,6 +22,8 @@ import sys
 import pandas as pd
 import yaml
 
+from case_parser import parse_case_classes
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Парсер Gatling simulation.log")
@@ -90,6 +92,34 @@ def load_profile(path):
         return yaml.load(fh, Loader=yaml.FullLoader) or {}
 
 
+def collect_request_classes(cfg):
+    """Собрать все ссылки на Case-классы из профиля (top-level + сценарии инъекции)."""
+    classes = list(cfg.get('request_classes') or [])
+    if cfg.get('request_class'):
+        classes.append(cfg['request_class'])
+    for scn in (cfg.get('injection', {}) or {}).get('scenarios', {}).values() or {}:
+        classes.extend(scn.get('request_classes') or [])
+        if scn.get('request_class'):
+            classes.append(scn['request_class'])
+    # уникальные, порядок не важен
+    return list(dict.fromkeys(classes))
+
+
+def build_var_to_log(cfg, profile_path):
+    """Карта {имя_переменной_Case: имя_запроса_в_логе} по request_classes профиля."""
+    classes = collect_request_classes(cfg)
+    if not classes:
+        return {}
+    profile_dir = os.path.dirname(os.path.abspath(profile_path))
+    base_dirs = ['', os.getcwd(), profile_dir, os.path.dirname(profile_dir)]
+    try:
+        return parse_case_classes(classes, base_dirs=base_dirs)
+    except FileNotFoundError as e:
+        print("\033[93m[gatling_parser] {} — count-ключи по именам переменных "
+              "не будут разрешены\033[0m".format(e))
+        return {}
+
+
 def sla_value(cfg, key, default=None):
     """SLA-перцентиль: сперва глобальный ключ, иначе default."""
     if key in cfg and cfg[key] is not None:
@@ -118,9 +148,20 @@ def main():
 
     rampup = args.rampup if args.rampup is not None else float(cfg.get('rampup', 0))
 
-    # Абсолютные цели на 100% профиля -> масштабируем
-    raw_counts = cfg.get('count', {}) or {}
+    # Абсолютные цели на 100% профиля -> масштабируем.
+    # Ключи count могут быть заданы по имени переменной Case-класса — резолвим их
+    # в имя запроса, которое Gatling пишет в лог (через request_classes профиля).
+    var_to_log = build_var_to_log(cfg, args.profile)
+    raw_counts = {}
+    for key, cnt in (cfg.get('count', {}) or {}).items():
+        label = var_to_log.get(key, key)
+        raw_counts[label] = cnt
     request_counts = {name: cnt * k for name, cnt in raw_counts.items()}
+
+    # sla_per_label тоже может быть задан по имени переменной Case -> резолвим в лог-имя
+    if cfg.get('sla_per_label'):
+        cfg['sla_per_label'] = {var_to_log.get(k, k): v
+                                for k, v in cfg['sla_per_label'].items()}
 
     df, run_info = read_simulation_log(args.simulation_log)
 

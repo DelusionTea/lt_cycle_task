@@ -11,8 +11,13 @@ import static io.gatling.javaapi.core.CoreDsl.*;
 
 /**
  * Шаблон рефакторинга сценария: веса randomSwitch вынесены из хардкода в
- * ProfileConfig (источник — profile.yaml -> profile.properties). Значения по
- * умолчанию сохранены прежними, чтобы поведение без profile.properties не менялось.
+ * ProfileConfig. Веса считаются автоматически из долей count (profile.yaml ->
+ * profile.properties, см. profile_to_props.py) и приходят в процентах (double).
+ *
+ * Ключ choice в getWeight — ИМЯ ПЕРЕМЕННОЙ Case-класса (напр.
+ * "UC01_POST_Licenses_Summary"), т.к. именно оно связано в Case с именем запроса
+ * в логе (http("...")) и используется как ключ веса в profile.properties.
+ * Второй аргумент — дефолт на случай отсутствия profile.properties.
  *
  * Ключ сценария для ProfileConfig — "Licenses" (см. injection.scenarios в profile.yaml).
  */
@@ -60,10 +65,10 @@ public class LicensesScenario {
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
-                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC01", 96), UC01_POST_Licenses_Summary),
-                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC02", 1), UC02_POST_Licenses_List),
-                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC03", 1), UC03_POST_Licenses_Details),
-                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC04", 1), UC04_POST_Licenses_CustomParams)
+                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC01_POST_Licenses_Summary", 96), UC01_POST_Licenses_Summary),
+                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC02_POST_Licenses_List", 1), UC02_POST_Licenses_List),
+                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC03_POST_Licenses_Details", 1), UC03_POST_Licenses_Details),
+                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC04_POST_Licenses_CustomParams", 1), UC04_POST_Licenses_CustomParams)
                     )
             );
 
@@ -76,10 +81,10 @@ public class LicensesScenario {
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
-                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC01", 25), exec(LicensesCase.UC01_POST_Licenses_Summary)),
-                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC02", 25), exec(LicensesCase.UC02_POST_Licenses_List)),
-                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC03", 20), exec(LicensesCase.UC03_POST_Licenses_Details)),
-                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC04", 30), exec(LicensesCase.UC04_POST_Licenses_CustomParams))
+                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC01_POST_Licenses_Summary", 25), exec(LicensesCase.UC01_POST_Licenses_Summary)),
+                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC02_POST_Licenses_List", 25), exec(LicensesCase.UC02_POST_Licenses_List)),
+                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC03_POST_Licenses_Details", 20), exec(LicensesCase.UC03_POST_Licenses_Details)),
+                            new Choice.WithWeight(ProfileConfig.getWeight(SCN, "UC04_POST_Licenses_CustomParams", 30), exec(LicensesCase.UC04_POST_Licenses_CustomParams))
                     )
             );
 

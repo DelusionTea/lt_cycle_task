@@ -7,10 +7,14 @@
 # *pct     - глобальные SLA по времени отклика (мс). Можно переопределить
 #            на конкретное измерение через sla_per_label.
 #
-# Имена измерений (ключи count) должны совпадать с именами запросов в
-# simulation.log (поле name записи REQUEST).
+# ВАЖНО про имена. Gatling пишет в simulation.log имя запроса из http("...").
+# Чтобы не дублировать «сырые» имена вручную, профиль ссылается на Java Case-класс(ы)
+# (request_classes) — там для каждой переменной указано имя запроса в логе.
+# Тогда ключи count / sla_per_label можно писать ПО ИМЕНИ ПЕРЕМЕННОЙ Case
+# (напр. UC01_POST_Licenses_Summary) — инструменты сами резолвят их в лог-имя.
+# Можно и напрямую писать лог-имя (http("...")) — тоже сработает.
 
-description: "Профиль НТ efsSberratingWeb (пример)"
+description: "Профиль НТ Licenses (пример)"
 target_percent: 100      # дефолт; обычно задаётся параметром джобы TARGET_PERCENT
 rampup: 0
 
@@ -20,26 +24,32 @@ rampup: 0
 rps: 50
 error_count: 100
 
-count:
-  "UC06.2_POST_/ufs-sberrating": 250
-  "UC49_POST_/prepayment-check": 120
-  first_login: 5
-  login: 5
-  create: 5
+# Java Case-классы Gatling: имя переменной <-> имя запроса в логе (http("...")).
+# Используются и для анализа (резолв ключей count), и для авторасчёта весов.
+request_classes:
+  - resources/LicensesCase.java
 
-# Необязательные точечные SLA по времени отклика (мс) на измерение
-sla_per_label:
-  "UC06.2_POST_/ufs-sberrating":
-    95pct: 800
-  "UC49_POST_/prepayment-check":
-    95pct: 500
+# Цели на 100% профиля. Ключи — имена переменных Case (см. request_classes).
+count:
+  UC01_POST_Licenses_Summary: 9000
+  UC02_POST_Licenses_List: 200
+  UC03_POST_Licenses_Details: 100
+  UC04_POST_Licenses_CustomParams: 100
+
+# Точечные SLA по времени отклика (мс). Ключ — имя переменной Case или лог-имя.
+sla_per_label: {}
+#   UC01_POST_Licenses_Summary:
+#     95pct: 800
 
 # ---------------------------------------------------------------------------
-# Инъекция (для Gatling). Используется profile_to_props.py для генерации
-# profile.properties, который читает Java-класс ProfileConfig.
-# Ключи сценариев/Choice должны быть Java-property-safe (буквы/цифры/._-).
-# target_percent масштабирует users: users_eff = round(users * target_percent/100).
-# weights в randomSwitch — относительные доли (масштаб не меняет их соотношение).
+# Инъекция (для Gatling). profile_to_props.py генерит profile.properties,
+# который читает Java-класс ProfileConfig.
+#
+# weights БОЛЬШЕ НЕ ЗАДАЮТСЯ вручную: вес каждого запроса в randomSwitch
+# вычисляется автоматически как доля его count среди запросов сценария
+# (список запросов сценария = переменные из его request_classes).
+# Ключ веса в properties — имя переменной Case (choice-ключ в getWeight).
+# target_percent масштабирует только users; соотношение весов не меняется.
 # ---------------------------------------------------------------------------
 injection:
   duration: 3600          # длительность активной фазы, сек (hold)
@@ -47,8 +57,5 @@ injection:
   scenarios:
     Licenses:
       users: 50           # целевая интенсивность на 100% профиля
-      weights:
-        UC01: 25
-        UC02: 25
-        UC03: 20
-        UC04: 30
+      request_classes:    # какие запросы входят в сценарий (для долей весов)
+        - resources/LicensesCase.java
