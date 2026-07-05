@@ -18,6 +18,8 @@ pipeline {
         cron('H 22 * * *')
     }
     environment {
+        // Каталог скриптов Gatling в репозитории (структура: pom.xml, ltAuto/, profiles/, src/).
+        GATLING_DIR       = "gatling/gatlingScripts"
         MAVEN_HOME        = "/home/pprb_test/apache-maven-3.9.6/"
         REMOTE_RUNLOG     = "/home/pprb_test/gatling_run.log"
         REMOTE_PIDFILE    = "/home/pprb_test/gatling_maven.pid"
@@ -32,7 +34,9 @@ pipeline {
         string(name: 'packageSimulation', defaultValue: 'pprbSberrating.All.OTT_all_debug',
                description: 'Класс симуляции (обязателен для unattended/cron запуска).')
         string(name: 'TARGET_PERCENT', defaultValue: '100', description: 'Целевой % от профиля (масштаб интенсивности).')
-        string(name: 'PROFILE_YAML', defaultValue: 'profiles/profile.yaml', description: 'Путь к profile.yaml в репозитории скриптов.')
+        choice(name: 'ACTION', choices: ['ЗАПУСТИТЬ ТЕСТ', 'ТОЛЬКО ОБНОВИТЬ СКРИПТЫ'],
+               description: 'ЗАПУСТИТЬ ТЕСТ — синк + запуск; ТОЛЬКО ОБНОВИТЬ СКРИПТЫ — только rsync без mvn.')
+        string(name: 'PROFILE_YAML', defaultValue: 'profiles/profile.yaml', description: 'Путь к profile.yaml относительно GATLING_DIR (gatling/gatlingScripts).')
         booleanParam(name: 'UNATTENDED', defaultValue: false, description: 'Принудительно неинтерактивный режим (без input()).')
         credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора', credentialType: 'Username with password', required: true)
     }
@@ -62,12 +66,15 @@ pipeline {
             }
         }
         stage('Generate profile.properties') {
+            when { expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' } }
             steps {
                 script {
-                    // Генерируем профиль из YAML под целевой %
+                    // Генерируем профиль из YAML под целевой %.
+                    // Скрипты и профили лежат в ${GATLING_DIR}; веса randomSwitch
+                    // и request_classes (src/test/java/cases/...) резолвятся относительно него.
                     sh """
-                        python3 ltAuto/profile_to_props.py \
-                            --profile '${params.PROFILE_YAML}' \
+                        python3 ${GATLING_DIR}/ltAuto/profile_to_props.py \
+                            --profile '${GATLING_DIR}/${params.PROFILE_YAML}' \
                             --target_percent '${params.TARGET_PERCENT}' \
                             --output profile.properties
                         cat profile.properties
@@ -111,16 +118,24 @@ pipeline {
                             }
                         }
 
-                        // Синхронизация скриптов и либ
+                        // Синхронизация скриптов. Внешние jar (Kafka/Akka/PostgreSQL) в этом
+                        // репозитории лежат внутри gatlingScripts/src/test/resources/lib и едут
+                        // вместе с основным rsync. Отдельный gatling/libs — легаси; синкаем его
+                        // только если он есть в чекауте и на удалёнке пусто.
                         sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'mkdir -p gatling_job/gatlingScripts gatling_job/libs'"
-                        def libsExist = sh(script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '[ -d gatling_job/libs ] && ls -A gatling_job/libs >/dev/null 2>&1 && echo true || echo false'", returnStdout: true).trim()
-                        if (libsExist == 'false') {
-                            sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/libs/ ${remoteHost}:gatling_job/libs/ || true"
+                        def hasLegacyLibs = sh(script: "[ -d '${GATLING_DIR}/../libs' ] && echo true || echo false", returnStdout: true).trim()
+                        if (hasLegacyLibs == 'true') {
+                            def libsExist = sh(script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '[ -d gatling_job/libs ] && ls -A gatling_job/libs >/dev/null 2>&1 && echo true || echo false'", returnStdout: true).trim()
+                            if (libsExist == 'false') {
+                                sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' ${GATLING_DIR}/../libs/ ${remoteHost}:gatling_job/libs/ || true"
+                            }
                         }
-                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/gatlingScripts/ ${remoteHost}:gatling_job/gatlingScripts/ || true"
+                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' ${GATLING_DIR}/ ${remoteHost}:gatling_job/gatlingScripts/ || true"
 
-                        // Кладём profile.properties рядом со скриптами
-                        sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no profile.properties ${remoteHost}:${REMOTE_PROFILE}"
+                        // Кладём profile.properties рядом со скриптами (только при запуске теста)
+                        if (params.ACTION == 'ЗАПУСТИТЬ ТЕСТ') {
+                            sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no profile.properties ${remoteHost}:${REMOTE_PROFILE}"
+                        }
 
                         env.REMOTE_HOST = remoteHost
                         currentBuild.displayName = "${remoteHost} | ${env.FINAL_TARGET} | ${params.TARGET_PERCENT}%"
@@ -129,6 +144,7 @@ pipeline {
             }
         }
         stage('Run test (nohup)') {
+            when { expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' } }
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: params.CREDS,

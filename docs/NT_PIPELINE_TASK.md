@@ -13,36 +13,42 @@
 
 ## Что входит в поставку (уже готово в этом репозитории)
 
-| Файл | Назначение |
+Пути ниже даны для боевой раскладки: ядро — в `gatling/gatlingScripts/`,
+Jenkins-файлы — в `gatlingJenkins/` (в этом scaffold-репозитории они лежат в корне).
+
+| Файл (боевой путь) | Назначение |
 |------|------------|
-| `Jenkinsfile_NT_Start` | Старт-джоба: запускает тест в фоне (nohup) на генераторе |
-| `Jenkinsfile_NT_Analyze_Report` | Анализ-джоба: подхватывает результат, считает, репортит |
-| `ltAuto/gatling_parser.py` | Парсит `simulation.log` → CSV-таблицы + окно прогона |
-| `ltAuto/compare_runs.py` | Сравнение с прошлым прогоном, поиск «отвалившихся» |
-| `ltAuto/summary_to_confluence.py` | Публикация саммари + картинок в Confluence |
-| `ltAuto/profile_to_props.py` | `profile.yaml` → `profile.properties`; авторасчёт весов из count |
-| `ltAuto/case_parser.py` | Разбор Java Case-классов: переменная ↔ имя запроса в логе |
-| `ltAuto/render_export.py` | Рендер панелей Grafana 11.6.2 в PNG |
-| `gatling/src/test/java/config/ProfileConfig.java` | Чтение профиля в Gatling |
-| `gatling/src/test/java/scenarios/.../LicensesScenario.java` | Шаблон сценария с весами из профиля |
-| `profiles/profile.example.yaml` | Пример профиля НТ и SLA |
-| `profiles/grafana.example.yaml` | Пример конфига Grafana |
+| `gatlingJenkins/Jenkinsfile_NT_Start` | Старт-джоба: запускает тест в фоне (nohup) на генераторе |
+| `gatlingJenkins/Jenkinsfile_NT_Analyze_Report` | Анализ-джоба: подхватывает результат, считает, репортит |
+| `gatling/gatlingScripts/ltAuto/gatling_parser.py` | Парсит `simulation.log` → CSV-таблицы + окно прогона |
+| `gatling/gatlingScripts/ltAuto/compare_runs.py` | Сравнение с прошлым прогоном, поиск «отвалившихся» |
+| `gatling/gatlingScripts/ltAuto/summary_to_confluence.py` | Публикация саммари + картинок в Confluence |
+| `gatling/gatlingScripts/ltAuto/profile_to_props.py` | `profile.yaml` → `profile.properties`; авторасчёт весов из count |
+| `gatling/gatlingScripts/ltAuto/case_parser.py` | Разбор Java Case-классов: переменная ↔ имя запроса в логе |
+| `gatling/gatlingScripts/ltAuto/render_export.py` | Рендер панелей Grafana 11.6.2 в PNG |
+| `gatling/gatlingScripts/src/test/java/config/ProfileConfig.java` | Чтение профиля в Gatling |
+| `gatling/gatlingScripts/src/test/java/scenarios/pprbSberrating/LicensesScenario.java` | Шаблон сценария с весами из профиля |
+| `gatling/gatlingScripts/profiles/profile.example.yaml` | Пример профиля НТ и SLA |
+| `gatling/gatlingScripts/profiles/grafana.example.yaml` | Пример конфига Grafana |
 
 ---
 
 ## Часть A. Что куда скопировать
 
 ### A1. Скрипты пайплайна
-1. Папки `ltAuto/` и `profiles/` положи в репозиторий, который Jenkins берёт как
-   scm в обеих джобах (тот же, что чекаутится в `Checkout`/`Checkout scripts`).
-2. Файл `resources/confluence_manger_v2.py` должен быть доступен рядом — скрипт
-   `summary_to_confluence.py` ищет его в `ltAuto/`, в `resources/` и в корне репо.
-   Если у тебя другой путь — положи `confluence_manger_v2.py` в `ltAuto/`.
+1. Папки `ltAuto/` и `profiles/` должны лежать в `gatling/gatlingScripts/`
+   (там же, где `pom.xml` и `src/`) — этот каталог Jenkins чекаутит как scm и джобы
+   обращаются к нему через `env.GATLING_DIR = "gatling/gatlingScripts"`.
+2. Jenkins-файлы (`Jenkinsfile_NT_Start`, `Jenkinsfile_NT_Analyze_Report`) положи в
+   каталог `gatlingJenkins/` рядом с остальными пайплайнами.
+3. `confluence_manger_v2.py` держи **в `ltAuto/`** (в боевом репо он уже там); скрипт
+   `summary_to_confluence.py` ищет его рядом (в `ltAuto/`), затем в `resources/` и корне.
 
 ### A2. Java в проект Gatling
-3. `ProfileConfig.java` скопируй в свой Gatling-проект в пакет `config`
-   (путь `src/test/java/config/ProfileConfig.java`).
-4. `LicensesScenario.java` — это **шаблон**. В своих реальных сценариях замени
+4. `ProfileConfig.java` — в пакет `config`
+   (путь `gatling/gatlingScripts/src/test/java/config/ProfileConfig.java`).
+5. `LicensesScenario.java` (пример из `scenarios/pprbSberrating/`) — это **шаблон**.
+   В своих реальных сценариях замени
    хардкод весов в `randomSwitch` на вызовы `ProfileConfig`. Ключ choice —
    **имя переменной из Case-класса** (то, что стоит слева от `= http("...")`):
 
@@ -65,10 +71,12 @@
 > На время smoke достаточно отрефакторить **один** сценарий (например Licenses).
 
 ### A3. Заполни конфиги (скопируй example → рабочий файл)
-5. `profiles/profile.example.yaml` → `profiles/profile.yaml`. Заполни:
-   - `request_classes:` — список путей к твоим Java Case-классам (где запросы
-     объявлены через `http("...")`, как в `resources/LicensesCase.java`). Это
-     единый источник связи «имя переменной ↔ имя запроса в логе».
+6. `profiles/profile.example.yaml` → `profiles/profile.yaml`. Заполни:
+   - `request_classes:` — пути к твоим Java Case-классам (где запросы объявлены
+     через `http("...")`, как в `cases/pprbSberrating/LicensesCase.java`). Пути
+     относительны `gatlingScripts`, можно указать **каталог** — тогда возьмутся все
+     `.java` внутри (напр. `src/test/java/cases/efsFinmonWeb`), конкретный файл или
+     glob. Это единый источник связи «имя переменной ↔ имя запроса в логе».
    - `count:` — ожидаемое число запросов на 100% профиля. **Ключи можно писать по
      имени переменной Case** (напр. `UC01_POST_Licenses_Summary`) — они сами
      резолвятся в лог-имя; либо прямо по лог-имени из `simulation.log`.
@@ -79,7 +87,7 @@
      вес каждого запроса считается автоматически как доля его `count` среди
      запросов сценария. Имя `<имя>` сценария должно совпасть с `SCN` в коде
      сценария (первый аргумент `getWeight`).
-6. `profiles/grafana.example.yaml` → `profiles/grafana.yaml` (если нужен рендер
+7. `profiles/grafana.example.yaml` → `profiles/grafana.yaml` (если нужен рендер
    Grafana). Заполни `grafana.url`, проверь `dashboards` (uid) и `applications`
    (ключ АС → список datasource в Grafana).
 
@@ -104,8 +112,9 @@
 
 ### B2. Параметры старт-джобы (`Jenkinsfile_NT_Start`)
 - `packageSimulation` — класс симуляции (по умолчанию `pprbSberrating.All.OTT_all_debug`).
+- `ACTION` — `ЗАПУСТИТЬ ТЕСТ` (синк + прогон) или `ТОЛЬКО ОБНОВИТЬ СКРИПТЫ` (только rsync).
 - `TARGET_PERCENT` — для smoke поставь небольшой, например `10`.
-- `PROFILE_YAML` — `profiles/profile.yaml`.
+- `PROFILE_YAML` — `profiles/profile.yaml` (путь относительно `gatling/gatlingScripts`).
 - `START_TIME` — `now`.
 - `UNATTENDED` — для ручного smoke оставь `false` (будет интерактив при занятом генераторе).
 - `CREDS` — выбери креды генератора.
@@ -132,6 +141,10 @@
 Цель — пройти весь путь руками и убедиться, что каждый шаг отрабатывает.
 
 ### Шаг 0. Локальная проверка скриптов (на своей машине)
+> Команды ниже — из каталога `gatling/gatlingScripts` (тогда `ltAuto/`, `profiles/`
+> и `src/test/java/cases/...` из `request_classes` резолвятся). В этом scaffold —
+> из корня, где `simulation.log` лежит в `resources/`.
+
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
 pip install pandas pyyaml requests

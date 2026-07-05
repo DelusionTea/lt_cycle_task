@@ -16,6 +16,7 @@
   - gatling_parser.py — резолв ключей count, записанных по имени переменной.
 """
 
+import glob
 import os
 import re
 
@@ -43,26 +44,37 @@ def parse_case_file(path):
     return mapping
 
 
+def _expand(path):
+    """Развернуть один путь в список .java: файл, каталог (рекурсивно) или glob."""
+    if os.path.isdir(path):
+        return sorted(glob.glob(os.path.join(path, '**', '*.java'), recursive=True))
+    if any(ch in path for ch in '*?['):
+        return sorted(glob.glob(path, recursive=True))
+    return [path] if os.path.isfile(path) else []
+
+
 def resolve_paths(paths, base_dirs=None):
-    """Найти файлы по списку путей, пробуя несколько базовых директорий."""
+    """Найти .java-файлы по списку путей, пробуя несколько базовых директорий.
+
+    Каждый элемент может быть: файлом .java, каталогом (тогда берутся все .java
+    внутри рекурсивно) или glob-шаблоном. Относительные пути ищутся в base_dirs.
+    """
     base_dirs = base_dirs or ['']
     resolved = []
     for p in paths:
-        if os.path.isabs(p) and os.path.isfile(p):
-            resolved.append(p)
-            continue
-        found = None
-        for base in base_dirs:
-            cand = os.path.join(base, p) if base else p
-            if os.path.isfile(cand):
-                found = cand
+        candidates = [p] if os.path.isabs(p) else \
+            [os.path.join(base, p) if base else p for base in base_dirs]
+        found = []
+        for cand in candidates:
+            files = _expand(cand)
+            if files:
+                found = files
                 break
-        if found:
-            resolved.append(found)
-        else:
+        if not found:
             raise FileNotFoundError(
-                "Case-класс не найден: {} (искал в {})".format(p, base_dirs))
-    return resolved
+                "Case-класс/каталог не найден: {} (искал в {})".format(p, base_dirs))
+        resolved.extend(found)
+    return list(dict.fromkeys(resolved))  # уникальные, порядок сохранён
 
 
 def parse_case_classes(paths, base_dirs=None):

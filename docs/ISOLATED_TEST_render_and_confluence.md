@@ -13,8 +13,15 @@ Grafana и публикация саммари в Confluence работают, �
 
 ## 0. Общая подготовка окружения (один раз)
 
+> Пути. В этом scaffold скрипты лежат в корне (`ltAuto/`, `profiles/`, `resources/`) —
+> команды ниже даны для него. В боевом репозитории всё это внутри
+> `gatling/gatlingScripts/` (`ltAuto/`, `profiles/`, `src/`), а `confluence_manger_v2.py`
+> лежит в `ltAuto/`. Там запускайте из каталога `gatling/gatlingScripts` (тогда
+> относительные пути `ltAuto/...`, `profiles/...` совпадут с примерами).
+
 ```bash
-cd /path/to/LT                      # корень репозитория (где папки ltAuto/, profiles/)
+cd /path/to/LT                      # scaffold-корень (папки ltAuto/, profiles/, resources/)
+                                    # в боевом репо: cd .../gatling/gatlingScripts
 python3 -m venv .venv
 . .venv/bin/activate
 pip install requests pyyaml pandas  # requests+pyyaml — для render; pandas — для парсера
@@ -179,8 +186,8 @@ grep -o 'ri:filename="[^"]*"' /tmp/conf_test/summary_confluence.xhtml
 
 ### 2.4. Боевая публикация в Confluence (по желанию, нужен доступ)
 Нужны: URL Confluence, space key, логин/пароль (или токен как пароль), ID тестовой
-страницы. И доступный модуль `confluence_manger_v2.py` (лежит в `resources/`,
-скрипт сам добавляет `resources/` в путь).
+страницы. И доступный модуль `confluence_manger_v2.py` (в боевом репо лежит рядом,
+в `ltAuto/`; в scaffold — в `resources/`; скрипт ищет его в обоих местах).
 
 Создайте **отдельную тестовую страницу** в Confluence и возьмите её `pageId`
 (из URL `.../pages/viewpage.action?pageId=NNN` или из `...>tiny/...`).
@@ -204,7 +211,7 @@ python3 ltAuto/summary_to_confluence.py \
 ### 2.5. Разбор частых проблем
 | Симптом | Причина / что делать |
 |---|---|
-| `Не найден confluence_manger_v2` | нет `resources/confluence_manger_v2.py` рядом; положите его в `ltAuto/` или `resources/`. |
+| `Не найден confluence_manger_v2` | модуль недоступен; положите `confluence_manger_v2.py` в `ltAuto/` (боевой вариант) либо в `resources/`. |
 | `KeyError` при чтении summary/delta | подали не те файлы; сгенерируйте их через §2.1 (форматы должны быть от `compare_runs.py`). |
 | `401/403` при публикации | неверные логин/пароль или нет прав на страницу/space. |
 | Картинки не видны на странице | вложения грузятся ДО обновления контента; проверьте, что `--system_metrics_dir` не пуст и имена файлов совпали с `ri:filename` в XML. |

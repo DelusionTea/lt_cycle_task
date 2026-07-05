@@ -55,9 +55,30 @@ mail (статус + ссылка) ; история коммитится в Bitb
 
 ## 4. Файлы и их роль (что править — здесь)
 
-### Jenkins
+### Раскладка боевого репозитория (важно для путей)
+Всё ядро Gatling лежит в каталоге **`gatling/gatlingScripts/`** (Gatling 3.9.5,
+Java 11, gatling-maven-plugin 4.3.7):
+```
+gatling/gatlingScripts/
+├── pom.xml
+├── ltAuto/            # ВСЕ python-скрипты (включая confluence_manger_v2.py)
+├── profiles/          # profile.yaml, grafana.yaml, *.example.yaml
+└── src/test/
+    ├── java/{cases/<домен>, config, scenarios, simulations, feeders}
+    └── resources/lib/*.jar   # Kafka/Akka/PostgreSQL/gatling-kafka
+```
+Jenkins-файлы — в отдельном каталоге **`gatlingJenkins/`**.
+Джобы используют `env.GATLING_DIR = "gatling/gatlingScripts"` и обращаются к
+скриптам/профилям как `${GATLING_DIR}/ltAuto/...`, `${GATLING_DIR}/profiles/...`.
+Пути `request_classes` в профиле относительны `gatlingScripts` → `src/test/java/cases/...`.
+В примерах локальной проверки (§6) префикс `gatling/gatlingScripts/` опущен, т.к.
+в этом scaffold скрипты лежат в корне; в реальном репозитории добавляйте префикс
+или запускайте из каталога `gatling/gatlingScripts`.
+
+### Jenkins (каталог `gatlingJenkins/`)
 - `Jenkinsfile_NT_Start` — старт-джоба. Cron `H 22 * * *`. Параметры: `START_TIME`,
-  `packageSimulation`, `TARGET_PERCENT`, `PROFILE_YAML`, `UNATTENDED`, `CREDS`.
+  `packageSimulation`, `TARGET_PERCENT`, `ACTION` (`ЗАПУСТИТЬ ТЕСТ` /
+  `ТОЛЬКО ОБНОВИТЬ СКРИПТЫ`), `PROFILE_YAML`, `UNATTENDED`, `CREDS`.
   Ключевое: стадия `Generate profile.properties` (вызов `profile_to_props.py`),
   стадия `Run test (nohup)` генерит `gatling_wrapper.sh` (status/lock/pid/tarball).
   Remote-пути в `environment{}` (см. `REMOTE_*`). `post { aborted }` — аварийная
@@ -68,7 +89,7 @@ mail (статус + ссылка) ; история коммитится в Bitb
   `Parse Gatling`, `Grafana system metrics` (под `when {ENABLE_GRAFANA}`),
   `Compare runs`, `Persist history (Bitbucket)`, `Confluence summary`, `Notify (mail)`.
 
-### Python (`ltAuto/`)
+### Python (`gatling/gatlingScripts/ltAuto/`)
 - `gatling_parser.py` — парс `simulation.log` (TSV: RUN/USER/REQUEST/GROUP).
   Аргументы: `--simulation_log --profile --target_percent --output_dir --rampup
   --script_name --silence`. Выход (контракт downstream):
@@ -86,7 +107,8 @@ mail (статус + ссылка) ; история коммитится в Bitb
 - `summary_to_confluence.py` — строит storage-XML и обновляет страницу.
   Аргументы: `--summary --delta --application --build_url --system_metrics_dir
   --title --url --space -u/-p -pg --dry_run --output_dir`. Импортирует
-  `confluence_manger_v2` (лежит в `resources/`; путь добавляется в sys.path).
+  `confluence_manger_v2` (в боевом репо лежит РЯДОМ, в `ltAuto/`; в scaffold —
+  fallback на `resources/`; путь добавляется в sys.path).
   `--system_metrics_dir` → грузит PNG (`FileData`/`add_attachments`) и встраивает
   макросы `<ac:image><ri:attachment .../></ac:image>` в expand-блок.
   `--dry_run` пишет `output/summary_confluence.xhtml` (для локальной проверки).
@@ -94,6 +116,8 @@ mail (статус + ссылка) ; история коммитится в Bitb
   `{имя_переменной: имя_запроса_в_логе}` из объявлений `VAR = http("name")`
   (комментарии вырезаются). Используется и генератором весов, и парсером лога.
   Функции: `parse_case_classes(paths, base_dirs)`, `log_to_var`, `resolve_paths`.
+  `resolve_paths` принимает **файл `.java`, каталог (все `.java` рекурсивно) или
+  glob** — для домена с ~100 классами достаточно указать каталог `src/test/java/cases/<домен>`.
 - `profile_to_props.py` — `profile.yaml` → `profile.properties`.
   Масштабирует `inject.<scn>.users` на `k=target_percent/100` (min 1, если >0).
   **Веса считаются автоматически**: для сценария берёт его `request_classes`
@@ -105,7 +129,7 @@ mail (статус + ссылка) ; история коммитится в Bitb
   `inject.<scn>.users`, `weight.<scn>.<var>` (ключ = имя переменной Case).
 - `render_export.py` — рендер панелей Grafana 11.6.2 в PNG (см. §6).
 
-### Java (`gatling/src/test/java/`)
+### Java (`gatling/gatlingScripts/src/test/java/`)
 - `config/ProfileConfig.java` — читает `profile.properties` (через
   `-DprofileProperties=...`, иначе cwd, иначе classpath; нет файла → дефолты).
   Методы: `getWeight(scn,choice,def)` → **double** `weight.scn.choice` (проценты);
@@ -118,10 +142,10 @@ mail (статус + ссылка) ; история коммитится в Bitb
   что генерит `profile_to_props`. Дефолты = прежние значения (поведение без
   profile.properties не меняется). `SCN="Licenses"` ↔ `injection.scenarios.Licenses`.
 
-### Конфиги (`profiles/`)
+### Конфиги (`gatling/gatlingScripts/profiles/`)
 - `profile.example.yaml` — профиль НТ + SLA. `count` (абс. цель на 100%),
   глобальные `95pct/50pct/rps/error_count`, `sla_per_label`, `request_classes`
-  (список путей к Java Case-классам), секция `injection` (`duration`, `rampup`,
+  (пути к Java Case-классам/каталогам, относительно `gatlingScripts`), секция `injection` (`duration`, `rampup`,
   `scenarios.<scn>.users`, `scenarios.<scn>.request_classes`). **`weights` в
   injection больше нет** — считаются из `count`. Ключи `count`/`sla_per_label`
   можно писать по имени переменной Case (резолвится в `name` из simulation.log)
@@ -184,8 +208,10 @@ render_export целиком локально не проверить — нуж
    Для каждого сценария в `injection.scenarios.<scn>` нужно указать `request_classes`
    (Case-класс(ы) его запросов) — из них берутся члены и доли count для весов.
 2. **Раскладка проекта vs wrapper.** Start-джоба синкает `gatling/gatlingScripts/`
-   и `gatling/libs/` и запускает `mvn gatling:test` в `gatlingScripts`. Созданные
-   Java-файлы лежат в maven-структуре `gatling/src/test/java/...`. Это шаблоны —
+   (внешние jar лежат внутри — `src/test/resources/lib/*.jar`; отдельный
+   `gatling/libs/` — легаси, синкается только если существует) и запускает
+   `mvn gatling:test` в `gatlingScripts`. Созданные Java-файлы кладутся в maven-структуру
+   `gatling/gatlingScripts/src/test/java/{config,scenarios,...}`. Это шаблоны —
    их нужно положить в реальный исходный проект; проверить, что `-DprofileProperties`
    доходит до прогона и `ProfileConfig` грузит файл (в логе строка
    `[ProfileConfig] Loaded profile from ...`).

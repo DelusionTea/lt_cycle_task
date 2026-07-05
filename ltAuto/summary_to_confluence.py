@@ -188,7 +188,9 @@ def main():
               f"({len(content)} символов, картинок: {len(images)})")
         return
 
-    # Реальная публикация. confluence_manger_v2 лежит в resources/ (и/или рядом).
+    # Реальная публикация. В боевом репозитории confluence_manger_v2.py лежит
+    # РЯДОМ, в этом же каталоге ltAuto/ (here). resources/ и repo_root — запасные
+    # варианты для локального scaffold.
     here = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.dirname(here)
     for cand in (here, os.path.join(repo_root, 'resources'), repo_root):

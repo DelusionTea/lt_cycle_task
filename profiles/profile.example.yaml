@@ -26,8 +26,10 @@ error_count: 100
 
 # Java Case-классы Gatling: имя переменной <-> имя запроса в логе (http("...")).
 # Используются и для анализа (резолв ключей count), и для авторасчёта весов.
+# Пути относительны каталогу gatling/gatlingScripts (где ltAuto/ и profiles/).
+# Можно указать конкретный .java, каталог (все .java внутри) или glob.
 request_classes:
-  - resources/LicensesCase.java
+  - src/test/java/cases/pprbSberrating/LicensesCase.java
 
 # Цели на 100% профиля. Ключи — имена переменных Case (см. request_classes).
 count:
@@ -58,4 +60,4 @@ injection:
     Licenses:
       users: 50           # целевая интенсивность на 100% профиля
       request_classes:    # какие запросы входят в сценарий (для долей весов)
-        - resources/LicensesCase.java
+        - src/test/java/cases/pprbSberrating/LicensesCase.java

@@ -14,13 +14,15 @@ pipeline {
         cron('H 2 * * *')
     }
     environment {
+        // Каталог скриптов Gatling в репозитории (pom.xml, ltAuto/, profiles/, src/).
+        GATLING_DIR       = "gatling/gatlingScripts"
         REMOTE_STATUSFILE = "/home/pprb_test/gatling_status.txt"
         REMOTE_TARBALL    = "/home/pprb_test/gatling_report.tar.gz"
         HISTORY_DIR       = "history_repo"
     }
     parameters {
         string(name: 'APPLICATION', defaultValue: 'efsSberratingWeb', description: 'Имя АС для истории/отчёта.')
-        string(name: 'PROFILE_YAML', defaultValue: 'profiles/profile.yaml', description: 'profile.yaml для проверки попадания/SLA.')
+        string(name: 'PROFILE_YAML', defaultValue: 'profiles/profile.yaml', description: 'profile.yaml для проверки попадания/SLA (относительно GATLING_DIR).')
         string(name: 'ERROR_THRESHOLD', defaultValue: '100', description: 'Порог error% для "перестал отрабатывать".')
         credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора (SSH).', credentialType: 'Username with password', required: true)
         string(name: 'BITBUCKET_REPO', defaultValue: '', description: 'URL Bitbucket-репозитория истории прогонов (https).')
@@ -33,7 +35,7 @@ pipeline {
         // Grafana (системные метрики)
         booleanParam(name: 'ENABLE_GRAFANA', defaultValue: false, description: 'Рендерить системные метрики из Grafana.')
         string(name: 'GRAFANA_URL', defaultValue: '', description: 'Базовый URL Grafana (11.6.2). Можно оставить пустым, если задан в GRAFANA_CONFIG.')
-        string(name: 'GRAFANA_CONFIG', defaultValue: 'profiles/grafana.yaml', description: 'YAML с applications/dashboards/grafana для render_export.')
+        string(name: 'GRAFANA_CONFIG', defaultValue: 'profiles/grafana.yaml', description: 'YAML с applications/dashboards/grafana для render_export (относительно GATLING_DIR).')
         string(name: 'GRAFANA_APPLICATION', defaultValue: '', description: 'Ключ АС для render_export (datasources).')
         credentials(name: 'GRAFANA_TOKEN_CRED', defaultValue: '', description: 'Service account token Grafana (Secret text).', credentialType: 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl', required: false)
         booleanParam(name: 'RENDER_ONLY_MOST_LOADED_PODS', defaultValue: true, description: 'Только самые нагруженные поды.')
@@ -100,9 +102,9 @@ pipeline {
             steps {
                 sh """
                     rm -rf output && mkdir -p output
-                    python3 ltAuto/gatling_parser.py \
+                    python3 ${GATLING_DIR}/ltAuto/gatling_parser.py \
                         --simulation_log '${env.SIM_LOG}' \
-                        --profile '${params.PROFILE_YAML}' \
+                        --profile '${GATLING_DIR}/${params.PROFILE_YAML}' \
                         --output_dir output \
                         --script_name '${params.APPLICATION}' || true
                 """
@@ -116,12 +118,13 @@ pipeline {
                     def app = params.GRAFANA_APPLICATION?.trim() ? params.GRAFANA_APPLICATION : params.APPLICATION
                     def onlyLoaded = params.RENDER_ONLY_MOST_LOADED_PODS ? '1' : '0'
                     def urlArg = params.GRAFANA_URL?.trim() ? "--grafana_url '${params.GRAFANA_URL}'" : ""
-                    def cfgArg = (params.GRAFANA_CONFIG?.trim() && fileExists(params.GRAFANA_CONFIG)) ? "--config '${params.GRAFANA_CONFIG}'" : ""
+                    def grafanaCfgPath = params.GRAFANA_CONFIG?.trim() ? "${GATLING_DIR}/${params.GRAFANA_CONFIG}" : ""
+                    def cfgArg = (grafanaCfgPath && fileExists(grafanaCfgPath)) ? "--config '${grafanaCfgPath}'" : ""
                     withCredentials([string(credentialsId: params.GRAFANA_TOKEN_CRED, variable: 'GRAFANA_TOKEN')]) {
                         sh """
                             mkdir -p output/systemMetrics
                             GRAFANA_TOKEN="\$GRAFANA_TOKEN" \
-                            python3 ltAuto/render_export.py \
+                            python3 ${GATLING_DIR}/ltAuto/render_export.py \
                                 ${cfgArg} ${urlArg} \
                                 --application '${app}' \
                                 --from_time '${window.from_ms}' \
@@ -138,7 +141,7 @@ pipeline {
                 script {
                     def prevArg = fileExists(env.PREV_TABLE) ? "--previous '${env.PREV_TABLE}'" : ""
                     sh """
-                        python3 ltAuto/compare_runs.py \
+                        python3 ${GATLING_DIR}/ltAuto/compare_runs.py \
                             --current output/rps_response_table.csv \
                             ${prevArg} \
                             --error_threshold '${params.ERROR_THRESHOLD}' \
@@ -180,7 +183,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: params.CONF_CREDS,
                             usernameVariable: 'confUser', passwordVariable: 'confPass')]) {
                         sh """
-                            python3 ltAuto/summary_to_confluence.py \
+                            python3 ${GATLING_DIR}/ltAuto/summary_to_confluence.py \
                                 --summary output/summary.json \
                                 --delta output/delta_table.csv \
                                 --application '${params.APPLICATION}' \
