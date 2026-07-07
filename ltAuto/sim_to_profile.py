@@ -23,7 +23,7 @@ RPS и длительность: берутся из CLI (--rps/--duration) ли
         --rps 200 --duration 600 \
         --scenario-name Licenses \
         --request-classes src/test/java/cases/pprbSberrating \
-        --output profiles/profile.generated.yaml
+        --output profiles/pprbSberrating/profile.generated.yaml
 """
 
 import argparse

@@ -36,7 +36,10 @@ pipeline {
         string(name: 'TARGET_PERCENT', defaultValue: '100', description: 'Целевой % от профиля (масштаб интенсивности).')
         choice(name: 'ACTION', choices: ['ЗАПУСТИТЬ ТЕСТ', 'ТОЛЬКО ОБНОВИТЬ СКРИПТЫ'],
                description: 'ЗАПУСТИТЬ ТЕСТ — синк + запуск; ТОЛЬКО ОБНОВИТЬ СКРИПТЫ — только rsync без mvn.')
-        string(name: 'PROFILE_YAML', defaultValue: 'profiles/profile.yaml', description: 'Путь к profile.yaml относительно GATLING_DIR (gatling/gatlingScripts).')
+        string(name: 'APPLICATION', defaultValue: 'efsFinmonWeb',
+               description: 'Имя АС = каталог profiles/<APPLICATION>/ и cases/<APPLICATION>/')
+        string(name: 'PROFILE_YAML', defaultValue: '',
+               description: 'Путь к profile.yaml относительно GATLING_DIR. Пусто → profiles/<APPLICATION>/profile.yaml')
         booleanParam(name: 'UNATTENDED', defaultValue: false, description: 'Принудительно неинтерактивный режим (без input()).')
         credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора', credentialType: 'Username with password', required: true)
     }
@@ -57,6 +60,9 @@ pipeline {
                         error "Unattended-запуск требует непустой packageSimulation."
                     }
                     env.FINAL_TARGET = params.packageSimulation.trim()
+                    env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
+                        params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
+                    echo "PROFILE_YAML=${env.PROFILE_YAML}"
                 }
             }
         }
@@ -74,7 +80,7 @@ pipeline {
                     // и request_classes (src/test/java/cases/...) резолвятся относительно него.
                     sh """
                         python3 ${GATLING_DIR}/ltAuto/profile_to_props.py \
-                            --profile '${GATLING_DIR}/${params.PROFILE_YAML}' \
+                            --profile '${GATLING_DIR}/${env.PROFILE_YAML}' \
                             --target_percent '${params.TARGET_PERCENT}' \
                             --output profile.properties
                         cat profile.properties

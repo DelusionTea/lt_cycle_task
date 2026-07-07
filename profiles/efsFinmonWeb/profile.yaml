@@ -1,0 +1,68 @@
+# Профиль НТ + SLA для АС efsFinmonWeb.
+# Путь: profiles/efsFinmonWeb/profile.yaml (имя каталога = домен Case-классов).
+#
+# count    - абсолютная цель по числу запросов на 100% профиля.
+# Ключи count — имена запросов в simulation.log (REQUEST.name) или имена переменных Case.
+# request_classes — src/test/java/cases/efsFinmonWeb (тот же домен, что имя папки profiles/).
+
+description: "Профиль НТ efsFinmonWeb"
+target_percent: 100
+rampup: 0
+
+95pct: 3000
+50pct: 3500
+rps: 8
+error_count: 50
+
+count:
+  "UC03_GET_/params": 1152
+  "UC05_GET_/download/{fileid}": 144
+  "UC07_POST_/inform-list": 144
+  "UC08_POST_/send-to-bank/{fflId}": 720
+  "UC09_GET_/requests-and-inform": 216
+  "UC10_POST_/mop-1-0": 9144
+  "UC11_POST_/online-control": 144
+  "UC12_GET_/rehabilitation": 1800
+  "UC13_GET_/unread-tabs": 144
+  "UC14_POST_/detail": 1152
+  "UC15_POST_/callback": 144
+  "UC16_PUT_/callback": 144
+  "UC17_DELETE_/callback?taskId={taskIdCB}": 576
+  "UC18_GET_/compliance-helper": 240
+  "UC19_GET_/activation": 216
+  "UC20_GET_/change-tariff": 240
+  "UC21_GET_/user-permissions": 1872
+  "UC22_GET_/print-form": 144
+  "UC23_GET_/rejections": 2448
+  "UC24_GET_/rejection/{operationId}": 1872
+  "UC25_GET_/active-switchers": 648
+  "UC26_GET_/system-parameters": 144
+  "UC27_GET_/organization": 72
+  "UC28_GET_/compliance-profile/mtb": 648
+  "UC29_GET_/dopInfo": 72
+  "UC30_GET_/counterparties": 144
+  "UC31_GET_/compliance-profile/contacts": 144
+  "UC32_GET_/compliance-profile": 720
+  "UC33_GET_/detail": 504
+  "UC34_DELETE_/alert": 300
+  "UC35_POST_/organization": 216
+  "UC36_POST_/mtb": 216
+  "UC37_POST_/dopInfo": 144
+  "UC38_POST_/counterparties": 144
+  "UC39_POST_/contacts": 144
+  "UC40_GET_/mop2/{fflId}": 576
+  "UC41_GET_/onboarding/{fflId}": 144
+
+sla_per_label: {}
+
+request_classes:
+  - src/test/java/cases/efsFinmonWeb
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    efsFinmonWeb:
+      users: 10
+      request_classes:
+        - src/test/java/cases/efsFinmonWeb

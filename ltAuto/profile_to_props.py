@@ -27,6 +27,7 @@ import os
 import yaml
 
 from case_parser import parse_case_classes, log_to_var
+from profile_paths import build_profile_base_dirs
 
 
 def parse_args():
@@ -142,9 +143,7 @@ def main():
     if target_percent is None:
         target_percent = float(cfg.get('target_percent', 100))
 
-    # Пути к Case-классам ищем относительно cwd и папки профиля
-    profile_dir = os.path.dirname(os.path.abspath(args.profile))
-    base_dirs = ['', os.getcwd(), profile_dir, os.path.dirname(profile_dir)]
+    base_dirs = build_profile_base_dirs(args.profile)
 
     props = build_properties(cfg, target_percent, base_dirs)
     with open(args.output, 'w', encoding='utf-8') as fh:

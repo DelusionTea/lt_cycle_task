@@ -1,0 +1,32 @@
+# Шаблон профиля НТ для АС pprbSberrating.
+# Скопируйте в profiles/pprbSberrating/profile.yaml и заполните под свой контур.
+# Имя каталога profiles/pprbSberrating = src/test/java/cases/pprbSberrating/
+
+description: "Профиль НТ Licenses (пример, pprbSberrating)"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 50
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/pprbSberrating/LicensesCase.java
+
+count:
+  UC01_POST_Licenses_Summary: 9000
+  UC02_POST_Licenses_List: 200
+  UC03_POST_Licenses_Details: 100
+  UC04_POST_Licenses_CustomParams: 100
+
+sla_per_label: {}
+
+injection:
+  duration: 3600
+  rampup: 60
+  scenarios:
+    Licenses:
+      users: 50
+      request_classes:
+        - src/test/java/cases/pprbSberrating/LicensesCase.java

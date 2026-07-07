@@ -23,6 +23,7 @@ import pandas as pd
 import yaml
 
 from case_parser import parse_case_classes
+from profile_paths import build_profile_base_dirs
 
 
 def parse_args():
@@ -110,10 +111,8 @@ def build_var_to_log(cfg, profile_path):
     classes = collect_request_classes(cfg)
     if not classes:
         return {}
-    profile_dir = os.path.dirname(os.path.abspath(profile_path))
-    base_dirs = ['', os.getcwd(), profile_dir, os.path.dirname(profile_dir)]
     try:
-        return parse_case_classes(classes, base_dirs=base_dirs)
+        return parse_case_classes(classes, base_dirs=build_profile_base_dirs(profile_path))
     except FileNotFoundError as e:
         print("\033[93m[gatling_parser] {} — count-ключи по именам переменных "
               "не будут разрешены\033[0m".format(e))

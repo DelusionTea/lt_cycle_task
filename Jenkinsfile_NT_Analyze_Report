@@ -21,8 +21,10 @@ pipeline {
         HISTORY_DIR       = "history_repo"
     }
     parameters {
-        string(name: 'APPLICATION', defaultValue: 'efsSberratingWeb', description: 'Имя АС для истории/отчёта.')
-        string(name: 'PROFILE_YAML', defaultValue: 'profiles/profile.yaml', description: 'profile.yaml для проверки попадания/SLA (относительно GATLING_DIR).')
+        string(name: 'APPLICATION', defaultValue: 'efsFinmonWeb',
+               description: 'Имя АС = каталог profiles/<APPLICATION>/, cases/<APPLICATION>/, история Bitbucket.')
+        string(name: 'PROFILE_YAML', defaultValue: '',
+               description: 'profile.yaml для SLA. Пусто → profiles/<APPLICATION>/profile.yaml')
         string(name: 'ERROR_THRESHOLD', defaultValue: '100', description: 'Порог error% для "перестал отрабатывать".')
         credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора (SSH).', credentialType: 'Username with password', required: true)
         string(name: 'BITBUCKET_REPO', defaultValue: '', description: 'URL Bitbucket-репозитория истории прогонов (https).')
@@ -75,7 +77,14 @@ pipeline {
             }
         }
         stage('Checkout scripts') {
-            steps { checkout scm }
+            steps {
+                script {
+                    env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
+                        params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
+                    echo "PROFILE_YAML=${env.PROFILE_YAML}"
+                }
+                checkout scm
+            }
         }
         stage('Clone history (Bitbucket)') {
             steps {
@@ -104,7 +113,7 @@ pipeline {
                     rm -rf output && mkdir -p output
                     python3 ${GATLING_DIR}/ltAuto/gatling_parser.py \
                         --simulation_log '${env.SIM_LOG}' \
-                        --profile '${GATLING_DIR}/${params.PROFILE_YAML}' \
+                        --profile '${GATLING_DIR}/${env.PROFILE_YAML}' \
                         --output_dir output \
                         --script_name '${params.APPLICATION}' || true
                 """
