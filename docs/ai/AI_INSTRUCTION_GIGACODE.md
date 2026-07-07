@@ -30,7 +30,7 @@ scenarios целиком без явного разрешения.
 |-----------|------|------------|
 | Скрипт codemod весов | `ltAuto/weights_codemod.py` | Хардкод весов → `ProfileConfig.getWeight` |
 | Скрипт codemod inject | `ltAuto/inject_codemod.py` | `atOnceUsers(N)` → `ProfileConfig.getInjectUsers` |
-| Скрипт профиля из RPS | `ltAuto/sim_to_profile.py` | Веса + RPS(throttle) → `profile.yaml` (count/injection) |
+| Скрипт профиля из RPS | `ltAuto/sim_to_profile.py` | Веса + RPS(throttle) → `profile.yaml` (count req/h, injection) |
 | Генератор properties | `ltAuto/profile_to_props.py` | `profile.yaml` → `profile.properties` (веса из count) |
 | Gate (PASS/FAIL) | `ltAuto/verify_profile.py` | Единая проверка после каждой итерации |
 | Метаданные сценария | `ltAuto/dump_scenario_meta.py` | SCN, веса, injectOpen-блоки → JSON |

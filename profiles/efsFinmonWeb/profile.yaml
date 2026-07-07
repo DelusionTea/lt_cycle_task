@@ -1,7 +1,8 @@
 # Профиль НТ + SLA для АС efsFinmonWeb.
 # Путь: profiles/efsFinmonWeb/profile.yaml (имя каталога = домен Case-классов).
 #
-# count    - абсолютная цель по числу запросов на 100% профиля.
+# count    - запросов в час на 100% профиля (из весов randomSwitch + RPS throttle).
+# Формула: count_i = round(RPS_total * weight_i / Σweight * 3600).
 # Ключи count — имена запросов в simulation.log (REQUEST.name) или имена переменных Case.
 # request_classes — src/test/java/cases/efsFinmonWeb (тот же домен, что имя папки profiles/).
 

@@ -1,228 +1,354 @@
 # Задача: внедрить и проверить пайплайн ночного НТ
 
-## Цель
-Развернуть непрерывный цикл нагрузочного тестирования: ночной запуск Gatling →
-автоматический анализ → краткое саммари в Confluence + письмо → сравнение с прошлым
-прогоном (дельта, «отвалившиеся» запросы) → история в Bitbucket. Плюс рендер
-системных метрик из Grafana 11.6.2.
+**Для кого:** инженер, который разворачивает автоматизацию впервые.  
+**Цель:** за минимальное время пройти smoke (одна АС + одна симуляция), затем включить ночной цикл.
 
-Эту задачу нужно сначала **проверить на одном сервисе и одной симуляции** (smoke),
-убедиться, что всё работает, и только потом включать по расписанию.
+> Техкарта для ИИ: `docs/NT_PIPELINE_AI_CONTEXT.md`  
+> Скиллы GigaCode: `gigacode/skills/` (см. `gigacode/README.md`)  
+> Инструкция агенту: `docs/ai/AI_INSTRUCTION_GIGACODE.md`
 
 ---
 
-## Что входит в поставку (уже готово в этом репозитории)
+## Быстрый маршрут (5 шагов)
 
-Пути ниже даны для боевой раскладки: ядро — в `gatling/gatlingScripts/`,
-Jenkins-файлы — в `gatlingJenkins/` (в этом scaffold-репозитории они лежат в корне).
+| # | Вы | Агент (GigaCode) | Gate |
+|---|-----|------------------|------|
+| 1 | Скопировать файлы по карте ниже (§1) | — | дерево каталогов на месте |
+| 2 | `@onboard-new-as-domain` + APPLICATION | один SCN → codemod весов | `verify_profile.py` PASS |
+| 3 | Заполнить `profiles/<АС>/profile.yaml` | `@align-count-from-simulation-log` или `@build-profile-from-simulation` | verify PASS |
+| 4 | Локально: parser + compare + confluence dry-run | `@parse-gatling-run` | CSV + xhtml |
+| 5 | Jenkins Start → Analyze (smoke) | `@jenkins-nt-smoke` | Confluence + mail |
 
-| Файл (боевой путь) | Назначение |
-|------|------------|
-| `gatlingJenkins/Jenkinsfile_NT_Start` | Старт-джоба: запускает тест в фоне (nohup) на генераторе |
-| `gatlingJenkins/Jenkinsfile_NT_Analyze_Report` | Анализ-джоба: подхватывает результат, считает, репортит |
-| `gatling/gatlingScripts/ltAuto/gatling_parser.py` | Парсит `simulation.log` → CSV-таблицы + окно прогона |
-| `gatling/gatlingScripts/ltAuto/compare_runs.py` | Сравнение с прошлым прогоном, поиск «отвалившихся» |
-| `gatling/gatlingScripts/ltAuto/summary_to_confluence.py` | Публикация саммари + картинок в Confluence |
-| `gatling/gatlingScripts/ltAuto/profile_to_props.py` | `profile.yaml` → `profile.properties`; авторасчёт весов из count |
-| `gatling/gatlingScripts/ltAuto/case_parser.py` | Разбор Java Case-классов: переменная ↔ имя запроса в логе |
-| `gatling/gatlingScripts/ltAuto/render_export.py` | Рендер панелей Grafana 11.6.2 в PNG |
-| `gatling/gatlingScripts/src/test/java/config/ProfileConfig.java` | Чтение профиля в Gatling |
-| `gatling/gatlingScripts/src/test/java/scenarios/pprbSberrating/LicensesScenario.java` | Шаблон сценария с весами из профиля |
-| `gatling/gatlingScripts/profiles/profile.example.yaml` | Пример профиля НТ и SLA |
-| `gatling/gatlingScripts/profiles/grafana.example.yaml` | Пример конфига Grafana |
+**Не ждите**, пока все 17+ сценариев будут на ProfileConfig — для smoke достаточно **одного SCN** (например Licenses) и рабочего `profile.yaml`.
 
 ---
 
-## Часть A. Что куда скопировать
+## 1. Куда что положить
 
-### A1. Скрипты пайплайна
-1. Папки `ltAuto/` и `profiles/` должны лежать в `gatling/gatlingScripts/`
-   (там же, где `pom.xml` и `src/`) — этот каталог Jenkins чекаутит как scm и джобы
-   обращаются к нему через `env.GATLING_DIR = "gatling/gatlingScripts"`.
-2. Jenkins-файлы (`Jenkinsfile_NT_Start`, `Jenkinsfile_NT_Analyze_Report`) положи в
-   каталог `gatlingJenkins/` рядом с остальными пайплайнами.
-3. `confluence_manger_v2.py` держи **в `ltAuto/`** (в боевом репо он уже там); скрипт
-   `summary_to_confluence.py` ищет его рядом (в `ltAuto/`), затем в `resources/` и корне.
+### 1.1 Два репозитория / зоны
 
-### A2. Java в проект Gatling
-4. `ProfileConfig.java` — в пакет `config`
-   (путь `gatling/gatlingScripts/src/test/java/config/ProfileConfig.java`).
-5. `LicensesScenario.java` (пример из `scenarios/pprbSberrating/`) — это **шаблон**.
-   В своих реальных сценариях замени
-   хардкод весов в `randomSwitch` на вызовы `ProfileConfig`. Ключ choice —
-   **имя переменной из Case-класса** (то, что стоит слева от `= http("...")`):
+| Зона | Что | Пример пути |
+|------|-----|-------------|
+| **Ядро Gatling** | pom.xml, Java, ltAuto, profiles | `gatling/gatlingScripts/` |
+| **Jenkins** | NT Start / Analyze | `gatlingJenkins/` (в scaffold — корень `Jenkinsfile_NT_*`) |
+| **Скиллы агента** | GigaCode (не копировать на генератор) | `gigacode/skills/<имя>/SKILL.md` |
+| **Checkstyle** | стиль Java (корень LT-репо) | `checkstyle/gatling-checkstyle.xml` |
 
-   Было:
-   ```java
-   new Choice.WithWeight(25, exec(LicensesCase.UC01_POST_Licenses_Summary))
-   ```
-   Стало:
-   ```java
-   new Choice.WithWeight(
-       ProfileConfig.getWeight("Licenses", "UC01_POST_Licenses_Summary", 25),
-       exec(LicensesCase.UC01_POST_Licenses_Summary))
-   ```
-   где `"Licenses"` — имя сценария (совпадает с ключом в `profile.yaml`),
-   `"UC01_POST_Licenses_Summary"` — имя переменной Case (choice-ключ),
-   `25` — дефолт на случай отсутствия profile.properties.
+Jenkins всегда: `env.GATLING_DIR = "gatling/gatlingScripts"`.
 
-> Веса задавать вручную НЕ нужно — они считаются автоматически из долей `count`
-> (см. A3). Здесь ты только «прокидываешь» вес из профиля в сценарий.
-> На время smoke достаточно отрефакторить **один** сценарий (например Licenses).
+### 1.2 Дерево `gatling/gatlingScripts/` (боевое)
 
-### A3. Заполни конфиги (скопируй example → рабочий файл)
-6. `profiles/profile.example.yaml` → `profiles/profile.yaml`. Заполни:
-   - `request_classes:` — пути к твоим Java Case-классам (где запросы объявлены
-     через `http("...")`, как в `cases/pprbSberrating/LicensesCase.java`). Пути
-     относительны `gatlingScripts`, можно указать **каталог** — тогда возьмутся все
-     `.java` внутри (напр. `src/test/java/cases/efsFinmonWeb`), конкретный файл или
-     glob. Это единый источник связи «имя переменной ↔ имя запроса в логе».
-   - `count:` — ожидаемое число запросов на 100% профиля. **Ключи можно писать по
-     имени переменной Case** (напр. `UC01_POST_Licenses_Summary`) — они сами
-     резолвятся в лог-имя; либо прямо по лог-имени из `simulation.log`.
-   - SLA: `95pct`, `50pct`, `rps`, `error_count` (+ при желании `sla_per_label`,
-     ключи так же — по переменной или лог-имени).
-   - `injection.scenarios.<имя>` — `users` (интенсивность на 100%) и
-     `request_classes` (какие запросы входят в сценарий). **`weights` НЕ задаём** —
-     вес каждого запроса считается автоматически как доля его `count` среди
-     запросов сценария. Имя `<имя>` сценария должно совпасть с `SCN` в коде
-     сценария (первый аргумент `getWeight`).
-7. `profiles/grafana.example.yaml` → `profiles/grafana.yaml` (если нужен рендер
-   Grafana). Заполни `grafana.url`, проверь `dashboards` (uid) и `applications`
-   (ключ АС → список datasource в Grafana).
+```text
+gatling/gatlingScripts/
+├── pom.xml
+├── checkstyle/                    ← или ссылка на ../../checkstyle из корня LT
+├── ltAuto/                        ← все Python-скрипты (§1.3)
+├── profiles/
+│   ├── README.md
+│   ├── grafana.yaml               ← из grafana.example.yaml
+│   ├── grafana.example.yaml
+│   └── <APPLICATION>/             ← имя АС = cases/<APPLICATION>/
+│       └── profile.yaml           ← НЕ profiles/profile.yaml в корне!
+├── src/test/java/
+│   ├── config/ProfileConfig.java
+│   ├── cases/<APPLICATION>/       ← *Case.java
+│   ├── scenarios/<пакет>/         ← *Scenario.java
+│   ├── simulations/...          ← *Simulation.java
+│   └── feeders/<APPLICATION>/
+└── src/test/resources/
+    ├── JSONs/<APPLICATION>/...
+    └── feeders/<APPLICATION>/...
+```
 
-> Как считаются веса: `weight[запрос] = count[запрос] / Σcount(запросов сценария) × 100%`.
-> Пример: count 9000/200/100/100 → веса ≈ 95.74 / 2.13 / 1.06 / 1.06 (сумма 100).
+**Правило:** `APPLICATION` = имя каталога в `cases/` и `profiles/` (напр. `efsFinmonWeb`, `pprbSberrating`).
 
-> `profile.properties` создаётся автоматически и в гит не коммитится. Рабочие
-> `profile.yaml` и `grafana.yaml` — коммить (джобы читают их из репозитория).
+### 1.3 Python `ltAuto/` — что скопировать
 
----
+| Скрипт | Назначение | Когда нужен |
+|--------|------------|-------------|
+| `profile_to_props.py` | yaml → properties, **веса из count** | Jenkins Start, всегда |
+| `case_parser.py` | var ↔ log | зависимость |
+| `profile_paths.py` | пути profiles/\<АС\>/ | зависимость |
+| `gatling_parser.py` | simulation.log → CSV | Analyze |
+| `compare_runs.py` | дельта прогонов | Analyze |
+| `summary_to_confluence.py` | Confluence | Analyze |
+| `confluence_manger_v2.py` | REST Confluence | рядом в ltAuto/ |
+| `render_export.py` | Grafana → PNG | Analyze (опц.) |
+| `verify_profile.py` | **gate PASS/FAIL** | после каждой правки |
+| `weights_codemod.py` | WithWeight → ProfileConfig | рефакторинг |
+| `inject_codemod.py` | injectOpen → ProfileConfig | позже smoke |
+| `sim_to_profile.py` | RPS + веса → yaml (count в req/h) | сборка профиля |
+| `log_labels_to_profile.py` | log → ключи count | заполнение yaml |
+| `dump_scenario_meta.py` | метаданные перед правкой | extract |
 
-## Часть B. Что настроить в Jenkins
+### 1.4 Java — минимум для smoke
 
-Создай две Pipeline-джобы из `Jenkinsfile_NT_Start` и `Jenkinsfile_NT_Analyze_Report`.
+| Файл | Куда |
+|------|------|
+| `ProfileConfig.java` | `src/test/java/config/` |
+| Шаблон сценария | `src/test/java/scenarios/.../LicensesScenario.java` (из репо) |
+| Остальные Case/Scenario/Simulation | уже в вашем Gatling-проекте |
 
-### B1. Credentials (создать заранее в Jenkins)
-- `CREDS` — доступ к генератору (Username/Password) — для обеих джоб.
-- `BITBUCKET_CREDS` — доступ к репозиторию истории (Username/Password).
-- `CONF_CREDS` — учётка Confluence (Username/Password).
-- `GRAFANA_TOKEN_CRED` — Service account token Grafana (тип **Secret text**) — только
-  если включаешь рендер метрик.
+### 1.5 Jenkins
 
-### B2. Параметры старт-джобы (`Jenkinsfile_NT_Start`)
-- `packageSimulation` — класс симуляции (по умолчанию `pprbSberrating.All.OTT_all_debug`).
-- `ACTION` — `ЗАПУСТИТЬ ТЕСТ` (синк + прогон) или `ТОЛЬКО ОБНОВИТЬ СКРИПТЫ` (только rsync).
-- `TARGET_PERCENT` — для smoke поставь небольшой, например `10`.
-- `PROFILE_YAML` — `profiles/profile.yaml` (путь относительно `gatling/gatlingScripts`).
-- `START_TIME` — `now`.
-- `UNATTENDED` — для ручного smoke оставь `false` (будет интерактив при занятом генераторе).
-- `CREDS` — выбери креды генератора.
-- При необходимости поправь remote-пути в блоке `environment{}` и label агента
-  `sberlinux&&Linux_Default`, версию maven `apache-maven-3.9.6` под свой контур.
+| Файл | Куда |
+|------|------|
+| `Jenkinsfile_NT_Start` | `gatlingJenkins/` |
+| `Jenkinsfile_NT_Analyze_Report` | `gatlingJenkins/` |
 
-### B3. Параметры анализ-джобы (`Jenkinsfile_NT_Analyze_Report`)
-- `APPLICATION` — имя АС для истории/отчёта (например `efsSberratingWeb`).
-- `PROFILE_YAML` — `profiles/profile.yaml`.
-- `ERROR_THRESHOLD` — порог error% для «перестал отрабатывать» (по умолч. `100`).
-- `CREDS`, `BITBUCKET_REPO`, `BITBUCKET_CREDS`.
-- `CONF_URL`, `CONF_SPACE`, `CONF_PAGE_SUMMARY`, `CONF_CREDS`.
-- Grafana (опционально): `ENABLE_GRAFANA=true`, `GRAFANA_URL` (или оставь пустым,
-  если задан в `grafana.yaml`), `GRAFANA_CONFIG=profiles/grafana.yaml`,
-  `GRAFANA_APPLICATION` (ключ АС из `grafana.yaml`), `GRAFANA_TOKEN_CRED`.
-- `MAIL_TO` — получатели письма.
+### 1.6 Scaffold vs production
 
-> На время smoke отключи cron-триггеры (запускай руками), чтобы не ловить ночной запуск.
+| | **Scaffold (этот репо LT)** | **Production** |
+|---|------------------------------|------------------|
+| Запуск Python | корень LT или `resources/` | `cd gatling/gatlingScripts` |
+| profile | `profiles/efsFinmonWeb/profile.yaml` | `profiles/<APPLICATION>/profile.yaml` |
+| simulation.log | `resources/simulation.log` | из tarball прогона |
+| pom + checkstyle | `resources/pom.xml` | `gatling/gatlingScripts/pom.xml` |
 
 ---
 
-## Часть C. Smoke-проверка (один сервис, одна симуляция)
+## 2. Что попросить у агента (GigaCode)
 
-Цель — пройти весь путь руками и убедиться, что каждый шаг отрабатывает.
+Скиллы лежат в **`gigacode/skills/`**. Вызов: `@имя-скилла` или `skill: имя-скилла`.
 
-### Шаг 0. Локальная проверка скриптов (на своей машине)
-> Команды ниже — из каталога `gatling/gatlingScripts` (тогда `ltAuto/`, `profiles/`
-> и `src/test/java/cases/...` из `request_classes` резолвятся). В этом scaffold —
-> из корня, где `simulation.log` лежит в `resources/`.
+### 2.1 Стартовый промпт (любая задача)
+
+```text
+Прочитай docs/ai/AI_INSTRUCTION_GIGACODE.md и @task-router-gigacode.
+Режим: @one-file-at-a-time + @session-handoff-template.
+APPLICATION: efsFinmonWeb
+Задача: <одна фраза из маршрутизатора>.
+Сделай ТОЛЬКО первую итерацию. Gate обязателен. Стоп до «далее».
+```
+
+### 2.2 Типовые задачи → скилл
+
+| Задача человеку | Скилл | Gate |
+|-----------------|-------|------|
+| Подключить новую АС | `@onboard-new-as-domain` | verify PASS |
+| Вынести веса одного сценария | `@gatling-weights-to-profileconfig` | `verify_profile.py --scenario ... --compile` |
+| Собрать profile из RPS | `@build-profile-from-simulation` | verify + round-trip |
+| Заполнить count по логу | `@align-count-from-simulation-log` | verify `--profile` |
+| injectOpen (позже) | `@injectopen-from-profile` | `inject_codemod.py --limit 1` + compile |
+| Ревью PR коллеги | `@gatling-reviewer` | `review_gates.py --strict` |
+| Проверить Jenkins | `@jenkins-nt-smoke` | чек-лист параметров |
+| После прогона локально | `@parse-gatling-run` | CSV + summary.json |
+| Confluence dry-run | `@confluence-summary-publish` | xhtml не пуст |
+| Grafana PNG | `@grafana-render-for-run` | PNG > 0 |
+
+### 2.3 Пример: первый SCN за одну сессию
+
+```text
+@onboard-new-as-domain
+APPLICATION: pprbSberrating
+Первый сценарий: src/test/java/scenarios/pprbSberrating/LicensesScenario.java
+1) dump_scenario_meta.py --dry-run
+2) weights_codemod.py на этот файл
+3) verify_profile.py --scenario ... --compile
+Только LicensesScenario. Жду «далее».
+```
+
+### 2.4 Чего **не** просить агента
+
+- «Отрефакторь все scenarios сразу» — только `@one-file-at-a-time`.
+- «Посчитай веса/count вручную» — только скрипты.
+- «Готово» без вывода `RESULT: PASS` или `mvn test-compile`.
+
+---
+
+## 3. Конфиги (profile + Grafana)
+
+### 3.1 profile.yaml
+
+Путь: **`profiles/<APPLICATION>/profile.yaml`**.
+
+Jenkins: `APPLICATION=efsFinmonWeb`, `PROFILE_YAML` **пусто** → auto `profiles/efsFinmonWeb/profile.yaml`.
+
+```yaml
+description: "Профиль НТ efsFinmonWeb"
+target_percent: 100
+request_classes:
+  - src/test/java/cases/efsFinmonWeb
+
+count:                    # ключи = имя переменной Case (или log-имя)
+  UC10_POST_Mop_1_0: 9144   # запросов/час на 100% профиля
+
+95pct: 3000
+50pct: 3500
+rps: 8
+error_count: 50
+
+injection:
+  duration: 3600
+  rampup: 60
+  scenarios:
+    Licenses:             # = SCN в Java и getWeight(..., "UC..", ...)
+      users: 5
+      request_classes:
+        - src/test/java/cases/pprbSberrating
+```
+
+- **`count` — запросов в час на 100% профиля** (`target_percent` масштабирует интенсивность при прогоне, не меняет соотношение весов). Значения считают из **весов randomSwitch + RPS throttle**:
+  `count_i = round(RPS_total × weight_i / Σweight × 3600)` — см. `sim_to_profile.py`.
+- **`weights` в yaml не задаём** — считает `profile_to_props.py` из **долей** `count` (абсолютные единицы не важны, важны пропорции).
+- `injection.duration` — длительность hold из throttle (сек), **не** множитель для `count`.
+- `profile.properties` **не коммитить** — генерируется на Start-джобе.
+
+### 3.2 Grafana
+
+`profiles/grafana.example.yaml` → `profiles/grafana.yaml` (url, dashboards uid, applications).
+
+### 3.3 Контракт имён (критично)
+
+| Уровень | Пример |
+|---------|--------|
+| Case variable | `UC01_POST_Licenses_Summary` |
+| getWeight choice | то же имя |
+| simulation.log | `UC01_POST_/licenses/summary` |
+| injection.scenarios | `Licenses` (= SCN) |
+
+Скилл: `@gatling-profile-conventions`.
+
+---
+
+## 4. Jenkins (кратко)
+
+### 4.1 Credentials
+
+`CREDS`, `BITBUCKET_CREDS`, `CONF_CREDS`, `GRAFANA_TOKEN_CRED` (если Grafana).
+
+### 4.2 Start (`Jenkinsfile_NT_Start`)
+
+| Параметр | Smoke |
+|----------|-------|
+| `APPLICATION` | `efsFinmonWeb` |
+| `PROFILE_YAML` | пусто |
+| `TARGET_PERCENT` | `10` |
+| `packageSimulation` | ваш debug-класс |
+| `ACTION` | `ЗАПУСТИТЬ ТЕСТ` |
+| cron | **отключить** на время smoke |
+
+В логе: `PROFILE_YAML=profiles/<APPLICATION>/profile.yaml`, `profile.properties`, «Тест запущен в фоне».
+
+### 4.3 Analyze (`Jenkinsfile_NT_Analyze_Report`)
+
+| Параметр | Значение |
+|----------|----------|
+| `APPLICATION` | тот же, что Start |
+| `PROFILE_YAML` | пусто или явный путь |
+| `ENABLE_GRAFANA` | false на первом smoke |
+| `MAIL_TO`, Confluence | заполнить |
+
+Скилл: `@jenkins-nt-smoke`.
+
+---
+
+## 5. Smoke-проверка (чек-лист)
+
+### Шаг 0 — локально (15 мин)
 
 ```bash
+cd gatling/gatlingScripts   # или корень LT для scaffold
 python3 -m venv .venv && . .venv/bin/activate
 pip install pandas pyyaml requests
-python3 ltAuto/gatling_parser.py --simulation_log resources/simulation.log \
-    --profile profiles/profile.yaml --output_dir output --script_name smoke
-python3 ltAuto/compare_runs.py --current output/rps_response_table.csv \
-    --error_threshold 100 --test_result output/test_result.csv \
-    --current_run_id r1 --output_dir output
-python3 ltAuto/summary_to_confluence.py --summary output/summary.json \
-    --delta output/delta_table.csv --application smoke --dry_run
+
+# Gate профиля
+python3 ltAuto/verify_profile.py \
+  --profile profiles/efsFinmonWeb/profile.yaml \
+  --application efsFinmonWeb
+
+# Парс (scaffold: resources/simulation.log)
+python3 ltAuto/gatling_parser.py \
+  --simulation_log resources/simulation.log \
+  --profile profiles/efsFinmonWeb/profile.yaml \
+  --output_dir output --script_name smoke
+
+python3 ltAuto/compare_runs.py \
+  --current output/rps_response_table.csv \
+  --output_dir output --current_run_id r1
+
+python3 ltAuto/summary_to_confluence.py \
+  --summary output/summary.json --delta output/delta_table.csv \
+  --application smoke --dry_run
 ```
-Ожидаемо: появились `output/*.csv`, `output/window.json`, `output/summary.json`,
-`output/summary_confluence.xhtml`. Открой xhtml — должна быть таблица и статус.
 
-### Шаг 1. Старт-джоба
-1. Запусти `Jenkinsfile_NT_Start` с `TARGET_PERCENT=10`, `START_TIME=now`.
-2. В логе должно быть: `cat profile.properties` с твоими весами; строка
-   «Тест запущен в фоне (nohup)».
-3. На генераторе проверь, что появились `gatling_status.txt` (`STARTED ...`),
-   `lockfileGatling.txt=1`, процесс mvn идёт.
+Ожидаемо: `output/*.csv`, `window.json`, `summary.json`, `summary_confluence.xhtml`.
 
-### Шаг 2. Дождись завершения теста
-Когда тест закончится, на генераторе:
-- `gatling_status.txt` = `SUCCESS ...` (или `FAILED ...`),
-- появился `gatling_report.tar.gz`, `lockfileGatling.txt=0`.
+Опционально:
+```bash
+mvn -q -DskipTests test-compile
+mvn -q checkstyle:check          # стиль; failOnViolation=false пока legacy
+```
 
-### Шаг 3. Анализ-джоба
-1. Запусти `Jenkinsfile_NT_Analyze_Report` (с теми же кредами/АС).
-2. Проверь по стадиям:
-   - `Fetch completed run` — status распознан, tarball скачан, найден `simulation.log`.
-   - `Parse Gatling` — создались CSV и `window.json`.
-   - `Grafana system metrics` (если включал) — в логе «Рендер завершён: успешно N…»,
-     в `output/systemMetrics/**` лежат PNG.
-   - `Compare runs` — первый прогон без предыдущего отработал (дельта = baseline).
-   - `Persist history` — коммит в Bitbucket прошёл (в репо появилась папка прогона
-     и `latest/`, обновился `last_processed.txt`).
-   - `Confluence summary` — страница обновилась.
-   - `Notify (mail)` — письмо ушло на `MAIL_TO`.
+### Шаг 1 — Start-джоба
 
-### Шаг 4. Проверка отчётности
-- Открой страницу Confluence: статус прогона, метаданные, блок «Дельта по
-  измерениям», (если включал Grafana) блок «Системные метрики».
-- Проверь письмо: тема `[НТ][<АС>] <статус> (отвалилось: N)` и ссылка на Confluence.
+Проверить на генераторе: `gatling_status.txt`, lockfile, процесс mvn.
 
-### Шаг 5. Проверка сравнения (дельта между прогонами)
-1. Прогони Старт + Анализ **второй раз**.
-2. На второй итерации `Compare runs` должен показать ненулевую дельту, а в саммари —
-   корректные «новые/исчезнувшие/отвалившиеся» запросы (если такие появятся).
-3. Чтобы проверить детект «перестал отрабатывать», можно временно понизить
-   `ERROR_THRESHOLD` или сэмулировать ошибки на сервисе.
+### Шаг 2 — дождаться SUCCESS/FAILED + tarball
+
+### Шаг 3 — Analyze-джоба
+
+Стадии: Fetch → Parse → Compare → History → Confluence → Mail.
+
+### Шаг 4 — второй прогон
+
+Проверить дельту в `compare_runs` и Confluence.
 
 ---
 
-## Часть D. Критерии приёмки (Definition of Done)
-- [ ] Старт-джоба запускает тест в фоне, не держит агент.
-- [ ] Анализ-джоба сама подхватывает завершённый прогон и не падает, если тест ещё идёт.
-- [ ] Веса/интенсивность берутся из `profile.yaml` (в логе `[ProfileConfig] Loaded ...`).
-- [ ] CSV и `summary.json` формируются, история коммитится в Bitbucket.
-- [ ] Саммари публикуется в Confluence; письмо приходит со статусом и ссылкой.
-- [ ] (Если включён Grafana) PNG системных метрик рендерятся и прикладываются к странице.
-- [ ] Повторный прогон показывает корректную дельту и пометку «отвалившихся» запросов.
+## 6. Поэтапная автоматизация (не всё сразу)
+
+Путь автоматизации **может быть непройден** — это нормально для первого smoke.
+
+| Этап | Содержание | Скилл / скрипт | Обязательно для smoke |
+|------|------------|----------------|------------------------|
+| **0** | Файлы на месте, parser работает | §1, §5 шаг 0 | да |
+| **1** | Один SCN: веса → ProfileConfig | weights_codemod + verify | да |
+| **2** | profile.yaml для APPLICATION | onboard / align-count | да |
+| **3** | Jenkins Start + Analyze | jenkins-nt-smoke | да |
+| **4** | injectOpen из профиля | inject_codemod | нет |
+| **5** | Все SCN домена | one-file-at-a-time × N | нет |
+| **6** | Grafana PNG | render_export | нет |
+| **7** | checkstyle failOnViolation=true | checkstyle/README | нет |
 
 ---
 
-## Если что-то не работает — куда смотреть
-- **Картинки Grafana пустые/ошибка** → проверь `GRAFANA_TOKEN` (Service account,
-  роль ≥ Viewer), `grafana.url`, что в `grafana.yaml` правильные `dashboards`/
-  `applications`. При проблемах с datasource попробуй `--use_proxy 0`.
-- **Веса не применились** → сверь: (1) путь в `request_classes` существует (иначе в
-  логе `profile_to_props` будет WARN и веса = дефолты из кода); (2) имя сценария
-  `injection.scenarios.<имя>` == первый аргумент `getWeight`; (3) имя переменной
-  Case == второй аргумент `getWeight`; (4) лог-имя из Case есть в `count` (иначе
-  вес 0). В логе Gatling ищи `[ProfileConfig] Loaded profile from ...`.
-- **Анализ-джоба «NOT_BUILT»** → тест ещё не завершён (status не SUCCESS/FAILED),
-  либо прогон уже обработан (`last_processed.txt`).
-- **Нет дельты** → в Bitbucket нет `history/<АС>/latest/rps_response_table.csv`
-  (это первый прогон) — норм; на втором прогоне появится.
-- **Confluence без картинок** → проверь, что `ENABLE_GRAFANA=true` и каталог
-  `output/systemMetrics` не пуст; имена вложений совпадают с макросами.
+## 7. Definition of Done
 
-Подробная техкарта по внутренностям — в `docs/NT_PIPELINE_AI_CONTEXT.md`.
+- [ ] `profiles/<APPLICATION>/profile.yaml` в git, verify PASS.
+- [ ] Хотя бы один Scenario с `ProfileConfig.getWeight` (или smoke на дефолтах + yaml готов).
+- [ ] Start запускает nohup, в логе `[ProfileConfig] Loaded ...`.
+- [ ] Analyze: CSV, summary.json, Confluence (dry-run локально OK).
+- [ ] История в Bitbucket, второй прогон — дельта.
+- [ ] (Опц.) Grafana PNG на странице.
+
+---
+
+## 8. Troubleshooting
+
+| Симптом | Куда смотреть |
+|---------|----------------|
+| Веса = дефолты из кода | `request_classes`, SCN, ключи count; лог `profile_to_props` |
+| verify FAIL | `python3 ltAuto/verify_profile.py ...` — текст FAIL |
+| PROFILE_YAML не тот | `APPLICATION` + пустой PROFILE_YAML |
+| Analyze NOT_BUILT | тест ещё идёт или run уже обработан |
+| Grafana пусто | token, grafana.yaml, window.json |
+| Агент «сделал всё» | нет PASS в выводе — `@session-handoff-template` |
+
+Подробности: `docs/NT_PIPELINE_AI_CONTEXT.md`.
+
+---
+
+## 9. Карта документов
+
+| Документ | Зачем |
+|----------|-------|
+| `docs/NT_PIPELINE_TASK.md` | **этот файл** — что куда, smoke, промпты |
+| `docs/NT_PIPELINE_AI_CONTEXT.md` | контракты CSV, Jenkins, для глубокой отладки |
+| `docs/ai/AI_INSTRUCTION_GIGACODE.md` | старт для GigaCode |
+| `gigacode/README.md` | список скиллов |
+| `profiles/README.md` | layout profiles/\<АС\>/ |
+| `checkstyle/README.md` | Java-стиль |
+| `resources/readme.txt` | обзор всего PPRB Compl |
+
+*Обновлено: 2026-07-07*

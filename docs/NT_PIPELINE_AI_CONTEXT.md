@@ -143,7 +143,8 @@ Jenkins-файлы — в отдельном каталоге **`gatlingJenkins/
   profile.properties не меняется). `SCN="Licenses"` ↔ `injection.scenarios.Licenses`.
 
 ### Конфиги (`gatling/gatlingScripts/profiles/`)
-- `profile.example.yaml` — профиль НТ + SLA. `count` (абс. цель на 100%),
+- `profile.example.yaml` — профиль НТ + SLA. `count` (**запросов/час на 100%**,
+  из весов + RPS throttle; см. `sim_to_profile.py`),
   глобальные `95pct/50pct/rps/error_count`, `sla_per_label`, `request_classes`
   (пути к Java Case-классам/каталогам, относительно `gatlingScripts`), секция `injection` (`duration`, `rampup`,
   `scenarios.<scn>.users`, `scenarios.<scn>.request_classes`). **`weights` в

@@ -35,6 +35,13 @@ request_classes:
 
 Можно указать каталог, один `.java` или glob — см. `case_parser.py`.
 
+## Семантика `count`
+
+- **`count` — запросов в час на 100% профиля** (не «за окно holdFor»).
+- Расчёт из кода: `count_i = round(RPS_total × weight_i / Σweight × 3600)` — `sim_to_profile.py`.
+- **Веса** в properties считаются только из **долей** count; абсолютные единицы не важны.
+- `injection.duration` — длительность hold из throttle (сек), отдельно от count.
+
 ## Команды
 
 ```bash

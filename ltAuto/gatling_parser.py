@@ -147,7 +147,7 @@ def main():
 
     rampup = args.rampup if args.rampup is not None else float(cfg.get('rampup', 0))
 
-    # Абсолютные цели на 100% профиля -> масштабируем.
+    # count в yaml — запросов/час на 100% профиля; масштабируем на target_percent (k).
     # Ключи count могут быть заданы по имени переменной Case-класса — резолвим их
     # в имя запроса, которое Gatling пишет в лог (через request_classes профиля).
     var_to_log = build_var_to_log(cfg, args.profile)
@@ -155,7 +155,7 @@ def main():
     for key, cnt in (cfg.get('count', {}) or {}).items():
         label = var_to_log.get(key, key)
         raw_counts[label] = cnt
-    request_counts = {name: cnt * k for name, cnt in raw_counts.items()}
+    request_counts_hourly = {name: cnt * k for name, cnt in raw_counts.items()}
 
     # sla_per_label тоже может быть задан по имени переменной Case -> резолвим в лог-имя
     if cfg.get('sla_per_label'):
@@ -229,15 +229,17 @@ def main():
 
     # --- Таблица попадания в профиль (rps_table) ---
     new_test_time_in_minutes = new_test_time / 60.0 or 1.0
+    window_scale = new_test_time / 3600.0
     profile_table = "Measurement,Profile RPM,Result RPM,Profile %,Error %\n"
     for label in labels_list:
         s = int(success_by_label.get(label, 0))
         e = int(errors_by_label.get(label, 0))
         tot = s + e
-        target = request_counts.get(label, 0)
-        profile_rpm = (target / new_test_time_in_minutes) if target else 0.0
+        target_hourly = request_counts_hourly.get(label, 0)
+        target_window = target_hourly * window_scale
+        profile_rpm = (target_hourly / 60.0) if target_hourly else 0.0
         result_rpm = s / new_test_time_in_minutes
-        hit = (s / target * 100) if target else 0.0
+        hit = (s / target_window * 100) if target_window else 0.0
         err_perc = (e / tot * 100) if tot else 0.0
         profile_table += '{},{},{},{},{}\n'.format(
             label, format(profile_rpm, ".2f"), format(result_rpm, ".2f"),
@@ -248,7 +250,7 @@ def main():
     # Измерения из профиля, которых вообще не было в логе -> провал
     for label in missing_labels:
         profile_table += '{},{},{},{},{}\n'.format(
-            label, format(request_counts.get(label, 0) / new_test_time_in_minutes, ".2f"),
+            label, format(request_counts_hourly.get(label, 0) / 60.0, ".2f"),
             "0.00", "0.00%", "0.00%")
         test_result = False
 
@@ -275,7 +277,7 @@ def main():
     g50 = sla_value(cfg, '50pct', 500)
     pass_emoji, fail_emoji = ':green_circle:', ':face_with_symbols_over_mouth:'
     checks = ':performing_arts: {}\n{}\n'.format(cfg.get('description', ''), args.script_name)
-    target_total = sum(request_counts.values())
+    target_total = sum(v * window_scale for v in request_counts_hourly.values())
     checks += '\n{} request count: {} (target: {})'.format(
         pass_emoji if df_success >= target_total else fail_emoji,
         df_success, int(target_total))

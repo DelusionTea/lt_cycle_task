@@ -1,4 +1,5 @@
 # Шаблон профиля НТ для АС pprbSberrating.
+# count — запросов/час на 100% профиля (sim_to_profile.py: веса + RPS throttle).
 # Скопируйте в profiles/pprbSberrating/profile.yaml и заполните под свой контур.
 # Имя каталога profiles/pprbSberrating = src/test/java/cases/pprbSberrating/
 

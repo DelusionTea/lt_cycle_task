@@ -41,7 +41,9 @@ description: >-
 ## Формулы (для проверки себя)
 
 - Вес: `weight_i = count_i / Σcount(запросов сценария) × 100%` (сумма ≈ 100).
-- Обратно (из RPS): `count_i = round(RPS_total × weight_i / Σweight × duration_сек)`.
+- **`count` в yaml — запросов/час на 100% профиля**, не «за окно holdFor».
+- Из весов + RPS throttle: `count_i = round(RPS_total × weight_i / Σweight × 3600)`.
+- Проверка: `Σcount_i / 3600 ≈ RPS_total` (с учётом округления).
 
 ## Частые ошибки (не допускай)
 

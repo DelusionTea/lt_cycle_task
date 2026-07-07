@@ -6,7 +6,7 @@ randomSwitch и суммарного RPS (из throttle) считаются coun
 Формула:
     сумма_весов   = Σ w_i
     RPS_i         = RPS_total * w_i / сумма_весов
-    count_i       = round(RPS_i * duration_сек)
+    count_i       = round(RPS_i * 3600)   # запросов/час на 100% профиля
 
 Веса читаются из сценария в двух формах (хардкод и уже вынесенные в профиль):
     new Choice.WithWeight(25, exec(LicensesCase.UC01_POST_Licenses_Summary))
@@ -89,12 +89,12 @@ def build_yaml(weights, rps, duration, scn, request_classes, rampup):
         for rc in request_classes:
             lines.append("  - {}".format(rc))
         lines.append("")
-    lines.append("# count_i = round(RPS_total * w_i / Σw * duration)")
+    lines.append("# count_i = round(RPS_total * w_i / Σw * 3600) — запросов/час на 100% профиля")
     lines.append("count:")
     for var, w in weights.items():
         rps_i = rps * w / total_w
-        count_i = round(rps_i * duration)
-        lines.append("  {}: {}    # вес {} -> {:.2f} rps".format(var, count_i, w, rps_i))
+        count_i = round(rps_i * 3600)
+        lines.append("  {}: {}    # вес {} -> {:.2f} rps -> {} req/h".format(var, count_i, w, rps_i, count_i))
     lines.append("")
     lines.append("sla_per_label: {}")
     lines.append("")
