@@ -69,7 +69,8 @@ python3 gigacode/skills/gatling-reviewer/scripts/review_gates.py \
 
 | Gate | Что проверяет |
 |------|----------------|
-| `mvn test-compile` | Java компилируется (**линтер сборки**) |
+| `mvn test-compile` | Java компилируется |
+| `mvn checkstyle:check` | стиль/отступы/имена (warning, см. checkstyle/README.md) |
 | `verify_profile.py` | числовые `WithWeight`, SCN, profile.yaml, round-trip |
 | Security grep | секреты в Cases/Scenarios; feeders без `DEBUG ONLY` |
 | Cases | `extends Methods`, `http()` → `.check(status())` |
@@ -79,7 +80,30 @@ python3 gigacode/skills/gatling-reviewer/scripts/review_gates.py \
 Флаг `--quick` — только compile + verify (быстрый прогон).  
 Флаг `--skip-compile` — если нет Maven локально (тогда WARN, не для merge).
 
-### 1.2 Дополнительные gates по типу изменений
+### 1.2 Checkstyle (стиль, отступы, именование)
+
+Проверяет **оформление** по эталонам `LicensesCase` / `LicensesScenario` — **не** правила ProfileConfig (пока автоматизация не завершена).
+
+```bash
+cd gatling/gatlingScripts   # или resources/ в scaffold
+
+mvn -q checkstyle:check
+# отчёт: target/checkstyle-result.xml
+```
+
+Конфиг: `checkstyle/gatling-checkstyle.xml` (корень репо).  
+Сейчас `checkstyle.failOnViolation=false` — предупреждения не ломают сборку; смотреть вывод в PR.
+
+| Checkstyle | Примеры |
+|------------|---------|
+| 4 пробела, без табов | `.post(...)` с отступом как в LicensesCase |
+| `// комментарий` | пробел после `//` |
+| `JSONS_PATH`, `SCN` | UPPER_SNAKE |
+| `UC01_POST_Licenses_Summary` | поля UC |
+| `scn_ott_debug` | lower_snake для scenario |
+| import order | cases → feeders → io.gatling → static |
+
+### 1.3 Дополнительные gates по типу изменений
 
 **Изменён Scenario с весами** (должен быть ProfileConfig):
 ```bash

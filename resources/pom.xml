@@ -35,6 +35,11 @@
         <gatling-maven-plugin.version>4.3.7</gatling-maven-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+        <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
+        <checkstyle.version>10.12.7</checkstyle.version>
+        <!-- false — пока автоматизация профиля и legacy не вычищены; см. checkstyle/README.md -->
+        <checkstyle.failOnViolation>false</checkstyle.failOnViolation>
+        <checkstyle.config.dir>${project.basedir}/../checkstyle</checkstyle.config.dir>
         <!-- Kafka plugin version -->
         <gatling-kafka-plugin.version>3.5</gatling-kafka-plugin.version>
     </properties>
@@ -147,6 +152,39 @@
                     <source>15</source>
                     <target>15</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configLocation>${checkstyle.config.dir}/gatling-checkstyle.xml</configLocation>
+                    <suppressionsLocation>${checkstyle.config.dir}/suppressions.xml</suppressionsLocation>
+                    <propertyExpansion>config_loc=${checkstyle.config.dir}</propertyExpansion>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <includeResources>false</includeResources>
+                    <includeTestResources>false</includeTestResources>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>${checkstyle.failOnViolation}</failsOnError>
+                    <failOnViolation>${checkstyle.failOnViolation}</failOnViolation>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>gatling-checkstyle</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<!--
+  Исключения для постепенного внедрения и legacy-кода.
+  Удаляйте suppress по мере приведения файлов к стандарту.
+-->
+<suppressions>
+    <!-- Gatling: import static CoreDsl.* / HttpDsl.* — норма -->
+    <suppress checks="AvoidStarImport" files=".*"/>
+
+    <!-- Simulation: OTT_all_debug — legacy пробел перед { (Simulation{) -->
+    <suppress checks="WhitespaceAround" files=".*Simulation.*\.java" lines="8"/>
+
+    <!-- resources/ — эталоны и черновики, не production tree -->
+    <suppress checks=".*" files="[\\/]resources[\\/].*\.java"/>
+
+    <!-- Поле Debug с заглавной — legacy в LicensesScenario -->
+    <suppress checks="StaticVariableName" files="LicensesScenario\.java" lines="91"/>
+
+    <!-- Старый resources/LicensesScenario: длинные строки и склеенный .feed -->
+    <suppress checks="LineLength" files="LicensesScenario\.java"/>
+    <suppress checks="EmptyLineSeparator" files="LicensesScenario\.java"/>
+
+    <!-- Indentation на глубоких Gatling-цепочках — не блокируем merge -->
+    <suppress checks="Indentation" files=".*Scenario\.java"/>
+    <suppress checks="Indentation" files=".*Simulation.*\.java"/>
+    <suppress checks="Indentation" files=".*Case\.java"/>
+</suppressions>
