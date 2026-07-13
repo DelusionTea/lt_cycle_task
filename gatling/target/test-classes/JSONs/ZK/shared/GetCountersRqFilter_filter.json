@@ -1,0 +1,22 @@
+{
+  "message": {
+    "employeeNumbers": [
+      "sample"
+    ],
+    "tasks": [
+      {
+        "types": [
+          "sample_types"
+        ]
+      }
+    ]
+  },
+  "filter": {
+    "statusCode": [
+      "sample"
+    ],
+    "typeCode": [
+      "sample"
+    ]
+  }
+}

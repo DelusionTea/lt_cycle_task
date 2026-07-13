@@ -1,0 +1,33 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / RehabilitationBufferRequests"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 1
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/RehabilitationBufferRequestsCase.java
+
+count:
+  UC01_GET_v2_rehabilitation_buffer_requests: 0
+  UC02_POST_v2_rehabilitation_buffer_requests: 0
+  UC03_PATCH_v2_rehabilitation_buffer_requests_batch_identical: 0
+  UC04_POST_v2_rehabilitation_buffer_requests_process_rehabilitation_request_By_id: 0
+  UC05_DELETE_v2_rehabilitation_buffer_requests_By_id: 0
+  UC06_GET_v2_rehabilitation_buffer_requests_By_id: 0
+  UC07_PATCH_v2_rehabilitation_buffer_requests_By_id: 0
+  UC08_PUT_v2_rehabilitation_buffer_requests_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    RehabilitationBufferRequests:
+      users: 1
+      request_classes:
+        - src/test/java/cases/ZK/RehabilitationBufferRequestsCase.java

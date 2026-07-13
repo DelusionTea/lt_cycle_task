@@ -1,0 +1,71 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / Sbbol"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 76
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/SbbolCase.java
+
+count:
+  UC01_GET_v1_sbbol_compliance_requests_callback_cancel: 0
+  UC02_POST_v1_sbbol_compliance_requests_callback_save: 0
+  UC03_POST_v1_sbbol_compliance_requests_callback_update: 0
+  UC04_GET_v1_sbbol_compliance_requests_mop_one: 0
+  UC05_GET_v1_sbbol_compliance_requests_rehabilitation: 0
+  UC06_GET_v1_sbbol_compliance_requests_start_rehabilitation_By_requestId: 72
+  UC07_GET_v1_sbbol_free_format_letters_detail: 840
+  UC08_POST_v2_sbbol_compliance_requests_attachments: 10336
+  UC09_POST_v2_sbbol_compliance_requests_attachments_batch: 0
+  UC10_POST_v2_sbbol_compliance_requests_attachments_with_transfer: 0
+  UC11_DELETE_v2_sbbol_compliance_requests_attachments_By_id: 0
+  UC12_POST_v2_sbbol_compliance_requests_callback_detail: 0
+  UC13_POST_v2_sbbol_compliance_requests_callback_info: 8454
+  UC14_GET_v2_sbbol_compliance_requests_compliance_profile: 13184
+  UC15_DELETE_v2_sbbol_compliance_requests_compliance_profile_alert: 0
+  UC16_GET_v2_sbbol_compliance_requests_compliance_profile_contacts: 0
+  UC17_POST_v2_sbbol_compliance_requests_compliance_profile_contacts: 0
+  UC18_GET_v2_sbbol_compliance_requests_compliance_profile_counterparties: 513
+  UC19_POST_v2_sbbol_compliance_requests_compliance_profile_counterparties: 263
+  UC20_GET_v2_sbbol_compliance_requests_compliance_profile_detail: 0
+  UC21_GET_v2_sbbol_compliance_requests_compliance_profile_dopInfo: 0
+  UC22_POST_v2_sbbol_compliance_requests_compliance_profile_dopInfo: 0
+  UC23_GET_v2_sbbol_compliance_requests_compliance_profile_mtb: 0
+  UC24_POST_v2_sbbol_compliance_requests_compliance_profile_mtb: 0
+  UC25_GET_v2_sbbol_compliance_requests_compliance_profile_organization: 0
+  UC26_POST_v2_sbbol_compliance_requests_compliance_profile_organization: 0
+  UC27_GET_v2_sbbol_compliance_requests_organization_by_ucp_id_By_ucpId: 0
+  UC28_GET_v2_sbbol_compliance_requests_proactive: 0
+  UC29_GET_v2_sbbol_compliance_requests_proactive_by_ucp: 12427
+  UC30_GET_v2_sbbol_compliance_requests_proactive_mop2: 992
+  UC31_GET_v2_sbbol_compliance_requests_proactive_onboarding: 0
+  UC32_GET_v2_sbbol_compliance_requests_request_online_control: 60
+  UC33_POST_v2_sbbol_compliance_requests_send_to_bank_By_requestId: 0
+  UC34_GET_v2_sbbol_compliance_requests_unread_posts_counter: 179170
+  UC35_GET_v2_sbbol_free_format_letters_detail_By_freeFormatLetterId: 0
+  UC36_GET_v2_sbbol_free_format_letters_list: 0
+  UC37_POST_v2_sbbol_free_format_letters_send_to_bank_By_freeFormatLetterId: 0
+  UC38_POST_v3_sbbol_compliance_requests_callback_detail: 0
+  UC39_POST_v3_sbbol_compliance_requests_detail: 0
+  UC40_GET_v3_sbbol_compliance_requests_fin_operation_list: 13709
+  UC41_GET_v3_sbbol_compliance_requests_fin_operation_operation_by_case: 0
+  UC42_GET_v3_sbbol_compliance_requests_fin_operation_operation_by_id: 2182
+  UC43_GET_v3_sbbol_compliance_requests_fin_operation_operations_by_request: 0
+  UC44_POST_v4_sbbol_compliance_requests_detail: 0
+  UC45_GET_v5_sbbol_compliance_requests_request_list: 15325
+  UC46_GET_v7_sbbol_compliance_requests_request_list: 15325
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    Sbbol:
+      users: 4548
+      request_classes:
+        - src/test/java/cases/ZK/SbbolCase.java

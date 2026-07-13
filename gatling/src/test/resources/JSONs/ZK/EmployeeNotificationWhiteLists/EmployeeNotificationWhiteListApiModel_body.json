@@ -1,0 +1,4 @@
+{
+  "employeeNumber": "#{employeeNotificationWhiteListsEmployeeNumber}",
+  "subject": "Тема уведомления"
+}

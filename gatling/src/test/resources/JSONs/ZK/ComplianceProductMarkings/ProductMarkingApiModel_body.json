@@ -1,0 +1,5 @@
+{
+  "complianceRequestId": "#{complianceProductMarkingsComplianceRequestId}",
+  "crmRowId": "#{complianceProductMarkingsCrmRowId}",
+  "type": "RCO"
+}

@@ -1,0 +1,9 @@
+{
+  "rehabilitationBufferRequestId": "#{rehabilitationBufferChecklistsRehabilitationBufferRequestId}",
+  "docType": "TYPE",
+  "subType": "SUB_TYPE",
+  "documentName": "NAME",
+  "counterpartyName": "NAME",
+  "ckId": "#{rehabilitationBufferChecklistsCkId}",
+  "counterpartyInn": 432554233211
+}

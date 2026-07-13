@@ -1,0 +1,14 @@
+{
+  "source": "source",
+  "format": "PDF",
+  "templateCode": "DOC_NOT_RECEIVED",
+  "mask": true,
+  "documentStatuses": [
+    "Not Granted"
+  ],
+  "ucpId": 1823337101782618605,
+  "requestId": "cdddfd1d-6299-474e-a2a1-0dcc9ede3dae",
+  "rehabilitationBufferRequestId": "d182bfca-3ddc-4227-a4f3-86b4e2e32188",
+  "operationId": "50bdcd4b-293f-4b45-97e0-3983aa4aa795",
+  "freeFormatLetterId": "59ed5df9-753a-43b8-bb8c-7d088b1522a3"
+}

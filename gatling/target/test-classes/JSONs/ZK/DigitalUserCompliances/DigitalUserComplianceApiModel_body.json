@@ -1,0 +1,9 @@
+{
+  "ucpId": "#{digitalUserCompliancesUcpId}",
+  "complianceOrganizationId": "#{digitalUserCompliancesComplianceOrganizationId}",
+  "activeFlag": true,
+  "digitalOfficeId": "#{digitalUserCompliancesDigitalOfficeId}",
+  "source": "SBBOL",
+  "lastUpdateDate": "Sun Oct 01 03:00:00 MSK 2023",
+  "permissionFlag": true
+}

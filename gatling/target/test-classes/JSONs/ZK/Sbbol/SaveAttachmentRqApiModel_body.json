@@ -1,0 +1,11 @@
+{
+  "freeFormatLetterId": "#{sbbolFreeFormatLetterId}",
+  "requestId": "#{sbbolRequestId}",
+  "name": "test.txt",
+  "size": 1048576,
+  "cephId": "#{sbbolCephId}",
+  "ecmId": "#{sbbolEcmId}",
+  "cephBucket": "testBucket",
+  "channel": "WEB",
+  "ecmFolderId": "#{sbbolEcmFolderId}"
+}

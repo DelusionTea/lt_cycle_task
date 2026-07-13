@@ -1,0 +1,9 @@
+{
+  "activeFlag": true,
+  "digitalUserComplianceId": "#{digitalUserComplianceContactsDigitalUserComplianceId}",
+  "contactType": "notificationEmail",
+  "contact": 79163333333,
+  "confirmed": true,
+  "confirmedDatetime": "2023-10-01T12:00Z",
+  "comment": "Комментарий"
+}

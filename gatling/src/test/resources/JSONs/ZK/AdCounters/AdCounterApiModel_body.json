@@ -1,0 +1,4 @@
+{
+  "employeeNumber": "#{adCountersEmployeeNumber}",
+  "distributionCounter": 100
+}

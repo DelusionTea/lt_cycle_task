@@ -1,0 +1,6 @@
+{
+  "lockKey": "#{intLocksLockKey}",
+  "region": "#{intLocksRegion}",
+  "clientId": "#{intLocksClientId}",
+  "createdDate": "#{intLocksCreatedDate}"
+}

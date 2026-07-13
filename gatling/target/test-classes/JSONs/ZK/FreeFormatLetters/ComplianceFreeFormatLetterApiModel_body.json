@@ -1,0 +1,14 @@
+{
+  "ucpId": "#{freeFormatLettersUcpId}",
+  "letterNumber": 75616231,
+  "letterSubject": "Тема ПСФ",
+  "letterBody": "Тело ПСФ",
+  "employeeNumber": "#{freeFormatLettersEmployeeNumber}",
+  "folderEcmId": "#{freeFormatLettersFolderEcmId}",
+  "comment": "Комментарий",
+  "sbbolChannelViewed": "WEB",
+  "sbbolDateViewed": "2023-10-01T12:00Z",
+  "sbbolStatusLetter": "Viewed",
+  "provideDocuments": true,
+  "complianceOrganizationId": "#{freeFormatLettersComplianceOrganizationId}"
+}

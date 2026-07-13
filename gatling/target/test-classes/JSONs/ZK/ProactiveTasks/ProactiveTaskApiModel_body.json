@@ -1,0 +1,13 @@
+{
+  "proactiveOnboardingId": "#{proactiveTasksProactiveOnboardingId}",
+  "ucpId": "#{proactiveTasksUcpId}",
+  "complianceOrganizationId": "#{proactiveTasksComplianceOrganizationId}",
+  "orderBy": 1,
+  "type": "SMS",
+  "employeeNumber": "#{proactiveTasksEmployeeNumber}",
+  "status": "NEW",
+  "statusDate": "2025-03-26T14:13:03.077Z",
+  "dueDate": "2025-03-26T14:13:03.077Z",
+  "result": "результат",
+  "comment": "call"
+}

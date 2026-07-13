@@ -1,0 +1,32 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / IntLocks"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 3
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/IntLocksCase.java
+
+count:
+  UC01_DELETE_v2_int_locks: 0
+  UC02_PATCH_v2_int_locks: 0
+  UC03_POST_v2_int_locks: 2331
+  UC04_PUT_v2_int_locks: 7417
+  UC05_DELETE_v2_int_locks_all: 0
+  UC06_GET_v2_int_locks_count: 0
+  UC07_DELETE_v2_int_locks_expired: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    IntLocks:
+      users: 162
+      request_classes:
+        - src/test/java/cases/ZK/IntLocksCase.java

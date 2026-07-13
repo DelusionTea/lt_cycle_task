@@ -1,0 +1,15 @@
+{
+  "employeeNumber": "#{complianceEmployeesEmployeeNumber}",
+  "status": "NEW",
+  "lastName": "Фамилия",
+  "firstName": "Имя",
+  "middleName": "Отчество",
+  "fullName": "Фамилия Имя Отчество",
+  "emailAlpha": "alpha@email.com",
+  "emailSigma": "sigma@email.com",
+  "officePhone": 994558448377,
+  "avayaPhone": 994558448377,
+  "avayaCode": "code1337",
+  "individualRequestId": "#{complianceEmployeesIndividualRequestId}",
+  "employeeEndDate": "Thu Jan 01 03:00:00 MSK 2026"
+}

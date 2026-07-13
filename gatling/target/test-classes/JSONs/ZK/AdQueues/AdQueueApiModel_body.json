@@ -1,0 +1,5 @@
+{
+  "employeeNumber": "#{adQueuesEmployeeNumber}",
+  "distributionMark": "Признак",
+  "markValue": "Значение"
+}

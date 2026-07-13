@@ -1,0 +1,92 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / Admin"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 7
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/AdminCase.java
+
+count:
+  UC01_GET_v2_admin_attribute_display_configs: 0
+  UC02_POST_v2_admin_attribute_display_configs: 0
+  UC03_PATCH_v2_admin_attribute_display_configs_batch_identical: 0
+  UC04_DELETE_v2_admin_attribute_display_configs_By_id: 0
+  UC05_GET_v2_admin_attribute_display_configs_By_id: 0
+  UC06_PATCH_v2_admin_attribute_display_configs_By_id: 0
+  UC07_PUT_v2_admin_attribute_display_configs_By_id: 0
+  UC08_GET_v2_admin_compliance_case_decisions: 4082
+  UC09_POST_v2_admin_compliance_case_decisions: 0
+  UC10_PATCH_v2_admin_compliance_case_decisions_batch_identical: 0
+  UC11_DELETE_v2_admin_compliance_case_decisions_By_id: 0
+  UC12_GET_v2_admin_compliance_case_decisions_By_id: 0
+  UC13_PATCH_v2_admin_compliance_case_decisions_By_id: 0
+  UC14_PUT_v2_admin_compliance_case_decisions_By_id: 0
+  UC15_GET_v2_admin_compliance_checklists: 0
+  UC16_POST_v2_admin_compliance_checklists: 0
+  UC17_PATCH_v2_admin_compliance_checklists_batch_identical: 0
+  UC18_DELETE_v2_admin_compliance_checklists_By_id: 0
+  UC19_GET_v2_admin_compliance_checklists_By_id: 0
+  UC20_PATCH_v2_admin_compliance_checklists_By_id: 383
+  UC21_PUT_v2_admin_compliance_checklists_By_id: 0
+  UC22_GET_v2_admin_compliance_communications: 2569
+  UC23_POST_v2_admin_compliance_communications: 751
+  UC24_PATCH_v2_admin_compliance_communications_batch_identical: 1189
+  UC25_DELETE_v2_admin_compliance_communications_By_id: 0
+  UC26_GET_v2_admin_compliance_communications_By_id: 0
+  UC27_PATCH_v2_admin_compliance_communications_By_id: 0
+  UC28_PUT_v2_admin_compliance_communications_By_id: 0
+  UC29_GET_v2_admin_compliance_tasks: 6152
+  UC30_POST_v2_admin_compliance_tasks: 0
+  UC31_PATCH_v2_admin_compliance_tasks_batch_identical: 0
+  UC32_DELETE_v2_admin_compliance_tasks_By_id: 0
+  UC33_GET_v2_admin_compliance_tasks_By_id: 1664
+  UC34_PATCH_v2_admin_compliance_tasks_By_id: 0
+  UC35_PUT_v2_admin_compliance_tasks_By_id: 0
+  UC36_GET_v2_admin_fin_operations_settings: 0
+  UC37_POST_v2_admin_fin_operations_settings: 0
+  UC38_PATCH_v2_admin_fin_operations_settings_batch_identical: 0
+  UC39_DELETE_v2_admin_fin_operations_settings_By_id: 0
+  UC40_GET_v2_admin_fin_operations_settings_By_id: 0
+  UC41_PATCH_v2_admin_fin_operations_settings_By_id: 0
+  UC42_PUT_v2_admin_fin_operations_settings_By_id: 0
+  UC43_GET_v2_admin_organizations: 4433
+  UC44_POST_v2_admin_organizations: 2400
+  UC45_PATCH_v2_admin_organizations_batch_identical: 960
+  UC46_GET_v2_admin_organizations_check_actual_id: 0
+  UC47_POST_v2_admin_organizations_check_actual_id_or_create: 0
+  UC48_DELETE_v2_admin_organizations_By_id: 0
+  UC49_GET_v2_admin_organizations_By_id: 0
+  UC50_PATCH_v2_admin_organizations_By_id: 0
+  UC51_PUT_v2_admin_organizations_By_id: 0
+  UC52_GET_v3_admin_compliance_requests: 0
+  UC53_POST_v3_admin_compliance_requests: 0
+  UC54_PATCH_v3_admin_compliance_requests_batch_identical: 0
+  UC55_GET_v3_admin_compliance_requests_by_ucp_id_for_mmb: 0
+  UC56_DELETE_v3_admin_compliance_requests_By_id: 0
+  UC57_GET_v3_admin_compliance_requests_By_id: 0
+  UC58_PATCH_v3_admin_compliance_requests_By_id: 0
+  UC59_PUT_v3_admin_compliance_requests_By_id: 0
+  UC60_GET_v3_admin_fin_operations: 0
+  UC61_POST_v3_admin_fin_operations: 0
+  UC62_PATCH_v3_admin_fin_operations_batch_identical: 0
+  UC63_GET_v3_admin_fin_operations_by_ucp_id_for_mmb: 0
+  UC64_DELETE_v3_admin_fin_operations_By_id: 0
+  UC65_GET_v3_admin_fin_operations_By_id: 0
+  UC66_PATCH_v3_admin_fin_operations_By_id: 0
+  UC67_PUT_v3_admin_fin_operations_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    Admin:
+      users: 410
+      request_classes:
+        - src/test/java/cases/ZK/AdminCase.java

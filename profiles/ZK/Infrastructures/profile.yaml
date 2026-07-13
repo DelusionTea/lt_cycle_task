@@ -1,0 +1,36 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / Infrastructures"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 1
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/InfrastructuresCase.java
+
+count:
+  UC01_GET_v2_infrastructures: 29
+  UC02_POST_v2_infrastructures: 4
+  UC03_DELETE_v2_infrastructures_batch: 0
+  UC04_PATCH_v2_infrastructures_batch: 0
+  UC05_POST_v2_infrastructures_batch: 4
+  UC06_PUT_v2_infrastructures_batch: 0
+  UC07_PATCH_v2_infrastructures_batch_identical: 0
+  UC08_DELETE_v2_infrastructures_By_id: 0
+  UC09_GET_v2_infrastructures_By_id: 0
+  UC10_PATCH_v2_infrastructures_By_id: 0
+  UC11_PUT_v2_infrastructures_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    Infrastructures:
+      users: 1
+      request_classes:
+        - src/test/java/cases/ZK/InfrastructuresCase.java

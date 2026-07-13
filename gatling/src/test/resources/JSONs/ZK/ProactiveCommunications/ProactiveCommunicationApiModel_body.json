@@ -1,0 +1,19 @@
+{
+  "proactiveOnboardingId": "#{proactiveCommunicationsProactiveOnboardingId}",
+  "ucpId": "#{proactiveCommunicationsUcpId}",
+  "complianceOrganizationId": "#{proactiveCommunicationsComplianceOrganizationId}",
+  "type": "SMS",
+  "templateId": "#{proactiveCommunicationsTemplateId}",
+  "employeeNumber": "#{proactiveCommunicationsEmployeeNumber}",
+  "status": "NEW",
+  "statusDate": "2025-03-26T14:13:03.077Z",
+  "sendDate": "2025-03-26T14:13:03.077Z",
+  "messageText": "создание сообщения проактивной коммуникации",
+  "errorText": "ошибка отправки сообщения",
+  "comment": "call",
+  "contactDigitalId": "#{proactiveCommunicationsContactDigitalId}",
+  "contactDigitalUserId": "#{proactiveCommunicationsContactDigitalUserId}",
+  "result": "результат",
+  "contactName": "ФИО",
+  "contactPhone": 79999999999
+}

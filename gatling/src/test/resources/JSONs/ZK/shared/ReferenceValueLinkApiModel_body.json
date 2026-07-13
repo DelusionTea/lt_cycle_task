@@ -1,0 +1,7 @@
+{
+  "parentCode": "PARENT_CODE",
+  "parentRefCode": "PARENT_REF_CODE",
+  "childCode": "CHILD_CODE",
+  "childRefCode": "CHILD_REF_CODE",
+  "childValue": "CHILD_VALUE"
+}

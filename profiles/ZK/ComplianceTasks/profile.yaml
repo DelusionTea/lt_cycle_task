@@ -1,0 +1,29 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / ComplianceTasks"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 1
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/ComplianceTasksCase.java
+
+count:
+  UC01_GET_v2_compliance_tasks_counters: 1945
+  UC02_POST_v2_compliance_tasks_documents_checks: 0
+  UC03_PUT_v2_compliance_tasks_By_id_close_call: 0
+  UC04_PUT_v2_compliance_tasks_By_id_close_documents_check: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    ComplianceTasks:
+      users: 32
+      request_classes:
+        - src/test/java/cases/ZK/ComplianceTasksCase.java

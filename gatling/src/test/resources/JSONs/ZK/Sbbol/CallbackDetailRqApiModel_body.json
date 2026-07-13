@@ -1,0 +1,6 @@
+{
+  "pprbId": "#{sbbolPprbId}",
+  "digitalOrgId": "#{sbbolDigitalOrgId}",
+  "ucpId": "#{sbbolUcpId}",
+  "channel": "WEB"
+}

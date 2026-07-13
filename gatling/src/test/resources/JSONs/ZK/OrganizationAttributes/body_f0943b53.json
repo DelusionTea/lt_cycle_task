@@ -1,0 +1,8 @@
+[
+  {
+    "organizationId": "#{organizationAttributesOrganizationId}",
+    "type": "type",
+    "taxSystem": "type",
+    "otherBanksName": "type"
+  }
+]

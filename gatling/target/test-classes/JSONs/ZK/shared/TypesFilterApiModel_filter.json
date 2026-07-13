@@ -1,0 +1,10 @@
+{
+  "type": [
+    "COMPLIANCE_REQUEST",
+    "COMPLIANCE_FREE_FORMAT_LETTER"
+  ],
+  "typeComplianceHistory": [
+    "MOP 1.0"
+  ],
+  "provideDocuments": true
+}

@@ -1,0 +1,36 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / OrganizationAttributes"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 1
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/OrganizationAttributesCase.java
+
+count:
+  UC01_GET_v1_organization_attributes: 928
+  UC02_POST_v1_organization_attributes: 0
+  UC03_DELETE_v1_organization_attributes_batch: 0
+  UC04_PATCH_v1_organization_attributes_batch: 0
+  UC05_POST_v1_organization_attributes_batch: 228
+  UC06_PUT_v1_organization_attributes_batch: 0
+  UC07_PATCH_v1_organization_attributes_batch_identical: 0
+  UC08_DELETE_v1_organization_attributes_By_id: 0
+  UC09_GET_v1_organization_attributes_By_id: 0
+  UC10_PATCH_v1_organization_attributes_By_id: 0
+  UC11_PUT_v1_organization_attributes_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    OrganizationAttributes:
+      users: 19
+      request_classes:
+        - src/test/java/cases/ZK/OrganizationAttributesCase.java

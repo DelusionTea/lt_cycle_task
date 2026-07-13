@@ -1,0 +1,32 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / PilotLog"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 1
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/PilotLogCase.java
+
+count:
+  UC01_GET_v2_pilot_log: 0
+  UC02_POST_v2_pilot_log: 480
+  UC03_PATCH_v2_pilot_log_batch_identical: 0
+  UC04_DELETE_v2_pilot_log_By_id: 0
+  UC05_GET_v2_pilot_log_By_id: 0
+  UC06_PATCH_v2_pilot_log_By_id: 0
+  UC07_PUT_v2_pilot_log_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    PilotLog:
+      users: 8
+      request_classes:
+        - src/test/java/cases/ZK/PilotLogCase.java

@@ -1,0 +1,12 @@
+{
+  "ucpId": "#{complianceRecommendationsUcpId}",
+  "crmRowId": "#{complianceRecommendationsCrmRowId}",
+  "triggerCode": "Код триггера",
+  "triggerName": "Наименование триггера",
+  "recommendation": "Рекомендация",
+  "sendToSbbolFlag": true,
+  "offeredToClientFlag": true,
+  "complianceCaseId": "#{complianceRecommendationsComplianceCaseId}",
+  "complianceRequestId": "#{complianceRecommendationsComplianceRequestId}",
+  "complianceOrganizationId": "#{complianceRecommendationsComplianceOrganizationId}"
+}

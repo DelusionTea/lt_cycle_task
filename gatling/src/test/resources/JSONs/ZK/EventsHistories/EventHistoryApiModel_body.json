@@ -1,0 +1,13 @@
+{
+  "ucpId": "#{eventsHistoriesUcpId}",
+  "complianceRequestId": "#{eventsHistoriesComplianceRequestId}",
+  "complianceCaseId": "#{eventsHistoriesComplianceCaseId}",
+  "complianceFinOperationId": "#{eventsHistoriesComplianceFinOperationId}",
+  "fflId": "#{eventsHistoriesFflId}",
+  "individualRequestId": "#{eventsHistoriesIndividualRequestId}",
+  "complianceOrganizationId": "#{eventsHistoriesComplianceOrganizationId}",
+  "communicationCount": 5,
+  "errorText": "Текст ошибки",
+  "type": "DECISION",
+  "status": "SUCCESS"
+}

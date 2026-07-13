@@ -1,0 +1,32 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / OrganizationBusinessScheme"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 3
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/OrganizationBusinessSchemeCase.java
+
+count:
+  UC01_GET_v2_organization_business_scheme: 8931
+  UC02_POST_v2_organization_business_scheme: 0
+  UC03_PATCH_v2_organization_business_scheme_batch_identical: 0
+  UC04_DELETE_v2_organization_business_scheme_By_id: 0
+  UC05_GET_v2_organization_business_scheme_By_id: 0
+  UC06_PATCH_v2_organization_business_scheme_By_id: 1965
+  UC07_PUT_v2_organization_business_scheme_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    OrganizationBusinessScheme:
+      users: 182
+      request_classes:
+        - src/test/java/cases/ZK/OrganizationBusinessSchemeCase.java

@@ -1,0 +1,6 @@
+{
+  "ucpId": "#{complianceCasesUcpId}",
+  "cmplCaseId": "#{complianceCasesCmplCaseId}",
+  "comment": "Комментарий",
+  "complianceOrganizationId": "#{complianceCasesComplianceOrganizationId}"
+}

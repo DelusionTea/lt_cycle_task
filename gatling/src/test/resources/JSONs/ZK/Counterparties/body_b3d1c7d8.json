@@ -1,0 +1,13 @@
+[
+  {
+    "organizationId": "#{counterpartiesOrganizationId}",
+    "name": "name",
+    "inn": "#{counterpartiesInn}",
+    "kpp": "kpp",
+    "ucpId": "#{counterpartiesUcpId}",
+    "paymentTerms": "paymentTerms",
+    "contractFlag": true,
+    "comment": "comment",
+    "legalForm": "legalForm"
+  }
+]

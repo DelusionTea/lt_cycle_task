@@ -1,0 +1,9 @@
+{
+  "comment": {
+    "createdBy": "sample_createdBy",
+    "type": "sample_type"
+  },
+  "updateEntity": {
+    "listOfId": "#{complianceChecklistsListOfId}"
+  }
+}

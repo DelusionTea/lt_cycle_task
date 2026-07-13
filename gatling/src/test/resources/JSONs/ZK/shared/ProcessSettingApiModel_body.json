@@ -1,0 +1,10 @@
+{
+  "processName": "processName",
+  "activeFlag": true,
+  "description": "Description",
+  "startDate": "2023-10-01T12:01Z",
+  "endDate": "2023-10-01T12:02Z",
+  "cron": "Cron",
+  "actualStatus": "ERROR",
+  "additionalProperties": "AdditionalProperties"
+}

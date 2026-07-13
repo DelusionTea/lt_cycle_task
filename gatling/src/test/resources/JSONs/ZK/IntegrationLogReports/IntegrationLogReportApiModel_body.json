@@ -1,0 +1,7 @@
+{
+  "messageId": "#{integrationLogReportsMessageId}",
+  "messageName": "ComplianceCaseDecision",
+  "body": "CaseDecisionEvent[eventId=41cedb34224a4e688d64792ff232666b, eventType=ComplianceCaseDecision, ucpId=1389983886669160611, cmplCaseId=aft487380, complianceRequestId=d7523b1f-53b4-4bc4-9c50-888809a83dee, fccmRequestId=4977725068238874, event=Cancel, eventDate=2023-05-15, comment=Тестирование СББОЛ, whitewashTriggers=[Trigger[code=triggerCode1, comment=triggerComment1], Trigger[code=triggerCode2, comment=triggerComment2]]]",
+  "status": "Received",
+  "errorText": "Ошибка обработки события '41cedb34224a4e688d64792ff232666b' (eventId: 'ComplianceCaseDecision'): Запись сущности ComplianceRequest для ID кейса ЦК '15052023100800' не найдена "
+}

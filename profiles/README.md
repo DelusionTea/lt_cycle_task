@@ -8,6 +8,10 @@ profiles/
 │   └── profile.yaml              # профиль АС efsFinmonWeb
 ├── pprbSberrating/
 │   └── profile.example.yaml      # шаблон для pprbSberrating
+├── ZK/
+│   ├── README.md                 # один profile.yaml на контроллер
+│   ├── AdClientMarkings/profile.yaml
+│   └── …/profile.yaml            # 83 контроллера swagger
 └── <имя_АС>/                     # имя = каталог в src/test/java/cases/<имя_АС>/
     └── profile.yaml
 ```

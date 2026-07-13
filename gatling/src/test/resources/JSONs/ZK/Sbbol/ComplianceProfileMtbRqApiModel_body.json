@@ -1,0 +1,5 @@
+{
+  "ucpId": "#{sbbolUcpId}",
+  "transportNotExistComment": "Транспортные средства не используются в деятельности",
+  "premisesNotExistComment": "Деятельность ведется удаленно"
+}

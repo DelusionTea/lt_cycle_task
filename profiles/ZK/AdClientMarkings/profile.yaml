@@ -1,0 +1,36 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / AdClientMarkings"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 1
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/AdClientMarkingsCase.java
+
+count:
+  UC01_GET_v1_ad_client_markings: 0
+  UC02_POST_v1_ad_client_markings: 0
+  UC03_PATCH_v1_ad_client_markings_batch_identical: 0
+  UC04_DELETE_v1_ad_client_markings_By_id: 0
+  UC05_GET_v1_ad_client_markings_By_id: 0
+  UC06_PATCH_v1_ad_client_markings_By_id: 0
+  UC07_PUT_v1_ad_client_markings_By_id: 0
+  UC08_DELETE_v2_ad_client_markings_batch: 0
+  UC09_PATCH_v2_ad_client_markings_batch: 0
+  UC10_POST_v2_ad_client_markings_batch: 0
+  UC11_PUT_v2_ad_client_markings_batch: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    AdClientMarkings:
+      users: 1
+      request_classes:
+        - src/test/java/cases/ZK/AdClientMarkingsCase.java

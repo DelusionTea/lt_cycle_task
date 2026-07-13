@@ -1,0 +1,7 @@
+[
+  {
+    "complianceOrganizationId": "#{adClientMarkingsComplianceOrganizationId}",
+    "distributionMark": "Признак",
+    "markValue": "Значение"
+  }
+]

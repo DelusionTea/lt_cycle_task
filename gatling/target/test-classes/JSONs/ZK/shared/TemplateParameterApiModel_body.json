@@ -1,0 +1,8 @@
+{
+  "code": "PLANNED_COMPLETION",
+  "name": "Срок предоставления документов",
+  "description": "Запрос SELECT...",
+  "parameterType": "SIMPLE_TABLE",
+  "valueType": "TEXT",
+  "value": "SP_DOC_CONDITION"
+}

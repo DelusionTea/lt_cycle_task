@@ -1,0 +1,29 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / PrintForms"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 1
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/PrintFormsCase.java
+
+count:
+  UC01_GET_v3_print_forms: 198
+  UC02_GET_v3_print_forms_download: 0
+  UC03_POST_v3_print_forms_download_explanatory_note: 0
+  UC04_POST_v3_print_forms_explanatory_note: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    PrintForms:
+      users: 3
+      request_classes:
+        - src/test/java/cases/ZK/PrintFormsCase.java

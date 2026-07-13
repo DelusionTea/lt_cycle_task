@@ -1,0 +1,7 @@
+{
+  "name": "name",
+  "type": "type",
+  "size": 2,
+  "fileEcmId": "#{reportsFileEcmId}",
+  "protectedFlag": false
+}

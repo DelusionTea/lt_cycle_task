@@ -1,0 +1,15 @@
+{
+  "ucpId": "#{adminUcpId}",
+  "name": "Тестовая организация",
+  "segment": "Сегмент",
+  "inn": "#{adminInn}",
+  "kpp": "КПП",
+  "keyClientFlag": true,
+  "serviceMode": "Модель обслуживания",
+  "status": "NEW",
+  "industry": "Отрасль",
+  "okvedCode": "Код ОКВЭД",
+  "okvedCodeName": "Наименование кода ОКВЭД",
+  "terBank": "Территориальный банк Организации",
+  "priority": "Приоритет клиента"
+}

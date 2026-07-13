@@ -1,0 +1,7 @@
+{
+  "type": "DEFAULT",
+  "groupConditionId": "#{eventsNoticeConditionsGroupConditionId}",
+  "executionPosition": 1,
+  "dictionaryName": "DECISIONS_COMPLIANCE",
+  "dictionaryCode": "Online control"
+}

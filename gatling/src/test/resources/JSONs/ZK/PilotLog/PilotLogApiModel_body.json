@@ -1,0 +1,10 @@
+{
+  "processSettingId": "#{pilotLogProcessSettingId}",
+  "processName": "PROCESS_NAME",
+  "category": "CATEGORY",
+  "log": "LOG",
+  "status": "ERROR",
+  "additionalProperties": "PROPERTIES",
+  "initiator": "Manual",
+  "initiatorHost": "localhost"
+}

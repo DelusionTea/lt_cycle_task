@@ -1,0 +1,11 @@
+{
+  "requestId": "#{sbbolRequestId}",
+  "taskId": "#{sbbolTaskId}",
+  "ucpId": "#{sbbolUcpId}",
+  "employeeNumber": "#{sbbolEmployeeNumber}",
+  "callbackContact": "Иванов Иван Иванович",
+  "callbackPhone": "+7 (954) 333-45-67",
+  "callbackDate": "2025-12-19",
+  "selectedCallbackInterval": "09:00—12:00",
+  "selectedTimeZone": "Москва (UTC+3)"
+}

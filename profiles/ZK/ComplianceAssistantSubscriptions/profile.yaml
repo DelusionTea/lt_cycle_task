@@ -1,0 +1,32 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / ComplianceAssistantSubscriptions"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 2
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/ComplianceAssistantSubscriptionsCase.java
+
+count:
+  UC01_GET_v1_compliance_assistant_subscriptions: 5691
+  UC02_POST_v1_compliance_assistant_subscriptions: 0
+  UC03_PATCH_v1_compliance_assistant_subscriptions_batch_identical: 0
+  UC04_DELETE_v1_compliance_assistant_subscriptions_By_id: 0
+  UC05_GET_v1_compliance_assistant_subscriptions_By_id: 0
+  UC06_PATCH_v1_compliance_assistant_subscriptions_By_id: 0
+  UC07_PUT_v1_compliance_assistant_subscriptions_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    ComplianceAssistantSubscriptions:
+      users: 95
+      request_classes:
+        - src/test/java/cases/ZK/ComplianceAssistantSubscriptionsCase.java

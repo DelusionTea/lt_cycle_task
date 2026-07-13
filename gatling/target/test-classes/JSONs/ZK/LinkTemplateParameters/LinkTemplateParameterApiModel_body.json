@@ -1,0 +1,8 @@
+{
+  "templateId": "#{linkTemplateParametersTemplateId}",
+  "templateParameterId": "#{linkTemplateParametersTemplateParameterId}",
+  "templateName": "Наименование шаблона",
+  "templateDisplayName": "Отображаемое наименование шаблона",
+  "parameterCode": "PLANNED_COMPLETION",
+  "parameterValue": "SP_DOC_CONDITION"
+}

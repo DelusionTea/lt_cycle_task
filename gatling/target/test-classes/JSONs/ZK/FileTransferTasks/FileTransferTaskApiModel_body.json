@@ -1,0 +1,6 @@
+{
+  "complianceRequestId": "#{fileTransferTasksComplianceRequestId}",
+  "status": "NEW",
+  "attemptsCount": 1,
+  "lastTransferError": "Произошла ошибка"
+}

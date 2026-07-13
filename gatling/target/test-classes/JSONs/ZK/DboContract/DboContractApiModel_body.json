@@ -1,0 +1,13 @@
+{
+  "ucpId": "#{dboContractUcpId}",
+  "complianceOrganizationId": "#{dboContractComplianceOrganizationId}",
+  "digitalOfficeId": "#{dboContractDigitalOfficeId}",
+  "dboContractId": "#{dboContractId}",
+  "createDate": "2023-10-01T12:00Z",
+  "status": "active",
+  "statusDescription": "Описание причины",
+  "suspendedInitiator": "Инициатор",
+  "suspendedDateStart": "2023-10-01T12:00Z",
+  "suspendedDateEnd": "2023-10-01T12:00Z",
+  "annulledDate": "2023-10-01T12:00Z"
+}

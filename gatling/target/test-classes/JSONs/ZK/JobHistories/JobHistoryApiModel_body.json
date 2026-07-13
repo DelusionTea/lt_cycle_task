@@ -1,0 +1,10 @@
+{
+  "name": "DeleteJobHistoryJob",
+  "startDate": "2023-10-01T12:00Z",
+  "endDate": "2023-10-01T12:01Z",
+  "status": "SUCCESS",
+  "totalProcessed": 1,
+  "comment": "Работа автопроцедуры завершена успешно",
+  "totalError": 0,
+  "executionId": "#{jobHistoriesExecutionId}"
+}

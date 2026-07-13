@@ -1,0 +1,33 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / FreeFormatLetters"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 22
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/FreeFormatLettersCase.java
+
+count:
+  UC01_GET_v2_free_format_letters: 68724
+  UC02_POST_v2_free_format_letters: 4200
+  UC03_GET_v2_free_format_letters_all: 5082
+  UC04_PATCH_v2_free_format_letters_batch_identical: 0
+  UC05_DELETE_v2_free_format_letters_By_id: 0
+  UC06_GET_v2_free_format_letters_By_id: 0
+  UC07_PATCH_v2_free_format_letters_By_id: 0
+  UC08_PUT_v2_free_format_letters_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    FreeFormatLetters:
+      users: 1300
+      request_classes:
+        - src/test/java/cases/ZK/FreeFormatLettersCase.java

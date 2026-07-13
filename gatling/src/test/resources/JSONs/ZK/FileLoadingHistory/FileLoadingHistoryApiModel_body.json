@@ -1,0 +1,17 @@
+{
+  "complianceRequestId": "#{fileLoadingHistoryComplianceRequestId}",
+  "fflId": "#{fileLoadingHistoryFflId}",
+  "cephId": "#{fileLoadingHistoryCephId}",
+  "ecmId": "#{fileLoadingHistoryEcmId}",
+  "channel": "WEB",
+  "fileStatus": "UPLOADED",
+  "name": "Договор_№123.pdf",
+  "size": 1048576,
+  "cephBucket": "cmpl-from-dkb-upload",
+  "rqUidEcm": "7d670932314741a3b7ed22c013891f48",
+  "counterRetryTransferToEcm": 2,
+  "ecmErrorCode": "ECM:TIMEOUT",
+  "sentToBank": true,
+  "targetFolderTransferAttempts": 1,
+  "ecmFolderId": "#{fileLoadingHistoryEcmFolderId}"
+}

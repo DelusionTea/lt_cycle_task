@@ -1,0 +1,6 @@
+{
+  "name": "name",
+  "ecmId": "#{organizationBusinessSchemeAttachmentsEcmId}",
+  "fileStatus": "fileStatus",
+  "section": "section"
+}

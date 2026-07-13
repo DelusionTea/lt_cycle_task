@@ -1,0 +1,6 @@
+{
+  "proactiveOnboardingId": "#{proactiveAttributesProactiveOnboardingId}",
+  "systemName": "Риск блокировки",
+  "value": "value",
+  "color": "Зеленый"
+}

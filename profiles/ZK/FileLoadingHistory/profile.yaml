@@ -1,0 +1,32 @@
+# Профиль ZK из docs/profile.html (tpm -> count = round(tpm*60))
+description: "Профиль НТ ZK / FileLoadingHistory"
+target_percent: 100
+rampup: 0
+
+95pct: 1000
+50pct: 500
+rps: 1
+error_count: 100
+
+request_classes:
+  - src/test/java/cases/ZK/FileLoadingHistoryCase.java
+
+count:
+  UC01_GET_v4_file_loading_history: 0
+  UC02_POST_v4_file_loading_history: 0
+  UC03_PATCH_v4_file_loading_history_batch_identical: 0
+  UC04_DELETE_v4_file_loading_history_By_id: 0
+  UC05_GET_v4_file_loading_history_By_id: 451
+  UC06_PATCH_v4_file_loading_history_By_id: 0
+  UC07_PUT_v4_file_loading_history_By_id: 0
+
+sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    FileLoadingHistory:
+      users: 8
+      request_classes:
+        - src/test/java/cases/ZK/FileLoadingHistoryCase.java

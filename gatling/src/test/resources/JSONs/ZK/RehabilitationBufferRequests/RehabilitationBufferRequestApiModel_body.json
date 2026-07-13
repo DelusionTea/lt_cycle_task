@@ -1,0 +1,11 @@
+{
+  "fccmRequestId": "#{rehabilitationBufferRequestsFccmRequestId}",
+  "ucpId": "#{rehabilitationBufferRequestsUcpId}",
+  "mopComment": "Комментарий",
+  "textRequest": "Комментарий",
+  "sbbolStatusRequest": "ACTIVE",
+  "complianceFinOperationId": "#{rehabilitationBufferRequestsComplianceFinOperationId}",
+  "organizationId": "#{rehabilitationBufferRequestsOrganizationId}",
+  "complianceCaseId": "#{rehabilitationBufferRequestsComplianceCaseId}",
+  "complianceRequestId": "#{rehabilitationBufferRequestsComplianceRequestId}"
+}

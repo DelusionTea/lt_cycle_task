@@ -1,0 +1,6 @@
+{
+  "freeFormatLetterId": "#{ecmFreeFormatLetterId}",
+  "requestId": "#{ecmRequestId}",
+  "fccmRequestId": "#{ecmFccmRequestId}",
+  "ucpId": "#{ecmUcpId}"
+}
