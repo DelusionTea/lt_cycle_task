@@ -1,9 +1,9 @@
 {
-  "rehabilitationBufferRequestId": "#{rehabilitationBufferChecklistsRehabilitationBufferRequestId}",
+  "rehabilitationBufferRequestId": "#{rehabilitation_buffer_request_id}",
   "docType": "TYPE",
   "subType": "SUB_TYPE",
   "documentName": "NAME",
   "counterpartyName": "NAME",
-  "ckId": "#{rehabilitationBufferChecklistsCkId}",
+  "ckId": "#{ck_id}",
   "counterpartyInn": 432554233211
 }

@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.constructor;
+import static feeders.ZK.ZKFeeder.constructor;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class PrintFormsScenario {
@@ -30,6 +32,8 @@ public class PrintFormsScenario {
 
     public static ScenarioBuilder scn = scenario("PrintForms")
             .feed(defaultFeeder)
+            .feed(constructor)
+            .feed(constructor)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -42,6 +46,8 @@ public class PrintFormsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug PrintForms")
             .feed(defaultFeeder)
+            .feed(constructor)
+            .feed(constructor)
             .feed(rqUidsFeeder)
             .exec(PrintFormsCase.UC01_GET_v3_print_forms)
             .exec(PrintFormsCase.UC02_GET_v3_print_forms_download)

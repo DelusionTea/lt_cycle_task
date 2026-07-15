@@ -41,21 +41,21 @@ public class RehabilitationBufferChecklistsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_rehabilitation_buffer_checklists_By_id =
             http("UC04_DELETE_/api/v2/rehabilitation-buffer-checklists/{id}")
-                    .delete("/api/v2/rehabilitation-buffer-checklists/#{rehabilitationBufferChecklistsId}")
+                    .delete("/api/v2/rehabilitation-buffer-checklists/#{checklist_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_rehabilitation_buffer_checklists_By_id =
             http("UC05_GET_/api/v2/rehabilitation-buffer-checklists/{id}")
-                    .get("/api/v2/rehabilitation-buffer-checklists/#{rehabilitationBufferChecklistsId}")
+                    .get("/api/v2/rehabilitation-buffer-checklists/#{checklist_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_rehabilitation_buffer_checklists_By_id =
             http("UC06_PATCH_/api/v2/rehabilitation-buffer-checklists/{id}")
-                    .patch("/api/v2/rehabilitation-buffer-checklists/#{rehabilitationBufferChecklistsId}")
+                    .patch("/api/v2/rehabilitation-buffer-checklists/#{checklist_id}")
                     .body(ElFileBody(JSONS_PATH + "RehabilitationBufferChecklists/RehabilitationBufferChecklistApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class RehabilitationBufferChecklistsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_rehabilitation_buffer_checklists_By_id =
             http("UC07_PUT_/api/v2/rehabilitation-buffer-checklists/{id}")
-                    .put("/api/v2/rehabilitation-buffer-checklists/#{rehabilitationBufferChecklistsId}")
+                    .put("/api/v2/rehabilitation-buffer-checklists/#{checklist_id}")
                     .body(ElFileBody(JSONS_PATH + "RehabilitationBufferChecklists/RehabilitationBufferChecklistApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

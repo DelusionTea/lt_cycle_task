@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.blackLists;
+import static feeders.ZK.ZKFeeder.blackLists;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class BlackListsScenario {
@@ -42,6 +44,8 @@ public class BlackListsScenario {
 
     public static ScenarioBuilder scn = scenario("BlackLists")
             .feed(defaultFeeder)
+            .feed(blackLists)
+            .feed(blackLists)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class BlackListsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug BlackLists")
             .feed(defaultFeeder)
+            .feed(blackLists)
+            .feed(blackLists)
             .feed(rqUidsFeeder)
             .exec(BlackListsCase.UC01_GET_v2_black_lists)
             .exec(BlackListsCase.UC02_POST_v2_black_lists)

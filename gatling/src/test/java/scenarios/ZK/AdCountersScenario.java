@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.adCounters;
+import static feeders.ZK.ZKFeeder.adCounters;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class AdCountersScenario {
@@ -42,6 +44,8 @@ public class AdCountersScenario {
 
     public static ScenarioBuilder scn = scenario("AdCounters")
             .feed(defaultFeeder)
+            .feed(adCounters)
+            .feed(adCounters)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class AdCountersScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug AdCounters")
             .feed(defaultFeeder)
+            .feed(adCounters)
+            .feed(adCounters)
             .feed(rqUidsFeeder)
             .exec(AdCountersCase.UC01_GET_v1_ad_counters)
             .exec(AdCountersCase.UC02_POST_v1_ad_counters)

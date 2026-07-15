@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.constructor;
+import static feeders.ZK.ZKFeeder.constructor;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ConstructorScenario {
@@ -42,6 +44,8 @@ public class ConstructorScenario {
 
     public static ScenarioBuilder scn = scenario("Constructor")
             .feed(defaultFeeder)
+            .feed(constructor)
+            .feed(constructor)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ConstructorScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug Constructor")
             .feed(defaultFeeder)
+            .feed(constructor)
+            .feed(constructor)
             .feed(rqUidsFeeder)
             .exec(ConstructorCase.UC01_GET_v1_constructor)
             .exec(ConstructorCase.UC02_POST_v1_constructor)

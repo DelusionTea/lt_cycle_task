@@ -1,5 +1,5 @@
 {
-  "complianceRequestId": "#{complianceRequestMarkingsComplianceRequestId}",
+  "complianceRequestId": "#{compliance_request_id}",
   "markingKey": "COMPLIANCE_CASE_MARKING_TYPE",
   "value": "NoRequest"
 }

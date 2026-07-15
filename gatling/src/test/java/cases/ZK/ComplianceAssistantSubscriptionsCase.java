@@ -39,21 +39,21 @@ public class ComplianceAssistantSubscriptionsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v1_compliance_assistant_subscriptions_By_id =
             http("UC04_DELETE_/api/v1/compliance-assistant-subscriptions/{id}")
-                    .delete("/api/v1/compliance-assistant-subscriptions/#{complianceAssistantSubscriptionsId}")
+                    .delete("/api/v1/compliance-assistant-subscriptions/#{subscription_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v1_compliance_assistant_subscriptions_By_id =
             http("UC05_GET_/api/v1/compliance-assistant-subscriptions/{id}")
-                    .get("/api/v1/compliance-assistant-subscriptions/#{complianceAssistantSubscriptionsId}")
+                    .get("/api/v1/compliance-assistant-subscriptions/#{subscription_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v1_compliance_assistant_subscriptions_By_id =
             http("UC06_PATCH_/api/v1/compliance-assistant-subscriptions/{id}")
-                    .patch("/api/v1/compliance-assistant-subscriptions/#{complianceAssistantSubscriptionsId}")
+                    .patch("/api/v1/compliance-assistant-subscriptions/#{subscription_id}")
                     .body(ElFileBody(JSONS_PATH + "ComplianceAssistantSubscriptions/ComplianceAssistantSubscriptionApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -61,7 +61,7 @@ public class ComplianceAssistantSubscriptionsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v1_compliance_assistant_subscriptions_By_id =
             http("UC07_PUT_/api/v1/compliance-assistant-subscriptions/{id}")
-                    .put("/api/v1/compliance-assistant-subscriptions/#{complianceAssistantSubscriptionsId}")
+                    .put("/api/v1/compliance-assistant-subscriptions/#{subscription_id}")
                     .body(ElFileBody(JSONS_PATH + "ComplianceAssistantSubscriptions/ComplianceAssistantSubscriptionApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

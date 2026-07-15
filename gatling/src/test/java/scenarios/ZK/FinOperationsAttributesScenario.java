@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.finOperationsAttributes;
+import static feeders.ZK.ZKFeeder.finOperationsAttributes;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class FinOperationsAttributesScenario {
@@ -42,6 +44,8 @@ public class FinOperationsAttributesScenario {
 
     public static ScenarioBuilder scn = scenario("FinOperationsAttributes")
             .feed(defaultFeeder)
+            .feed(finOperationsAttributes)
+            .feed(finOperationsAttributes)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class FinOperationsAttributesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug FinOperationsAttributes")
             .feed(defaultFeeder)
+            .feed(finOperationsAttributes)
+            .feed(finOperationsAttributes)
             .feed(rqUidsFeeder)
             .exec(FinOperationsAttributesCase.UC01_GET_v2_fin_operations_attributes)
             .exec(FinOperationsAttributesCase.UC02_POST_v2_fin_operations_attributes)

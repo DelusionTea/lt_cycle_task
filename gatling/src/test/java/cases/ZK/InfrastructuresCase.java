@@ -31,7 +31,7 @@ public class InfrastructuresCase extends Methods {
     public static HttpRequestActionBuilder UC03_DELETE_v2_infrastructures_batch =
             http("UC03_DELETE_/api/v2/infrastructures/batch")
                     .delete("/api/v2/infrastructures/batch")
-                    .queryParam("ids", "#{infrastructuresIds}")
+                    .queryParam("ids", "#{infrastructure_ids}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -70,21 +70,21 @@ public class InfrastructuresCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC08_DELETE_v2_infrastructures_By_id =
             http("UC08_DELETE_/api/v2/infrastructures/{id}")
-                    .delete("/api/v2/infrastructures/#{infrastructuresId}")
+                    .delete("/api/v2/infrastructures/#{infrastructure_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC09_GET_v2_infrastructures_By_id =
             http("UC09_GET_/api/v2/infrastructures/{id}")
-                    .get("/api/v2/infrastructures/#{infrastructuresId}")
+                    .get("/api/v2/infrastructures/#{infrastructure_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC10_PATCH_v2_infrastructures_By_id =
             http("UC10_PATCH_/api/v2/infrastructures/{id}")
-                    .patch("/api/v2/infrastructures/#{infrastructuresId}")
+                    .patch("/api/v2/infrastructures/#{infrastructure_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/InfrastructureApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -92,7 +92,7 @@ public class InfrastructuresCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC11_PUT_v2_infrastructures_By_id =
             http("UC11_PUT_/api/v2/infrastructures/{id}")
-                    .put("/api/v2/infrastructures/#{infrastructuresId}")
+                    .put("/api/v2/infrastructures/#{infrastructure_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/InfrastructureApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

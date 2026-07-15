@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.complianceRequests;
+import static feeders.ZK.ZKFeeder.complianceRequests;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class SbbolScenario {
@@ -198,6 +200,8 @@ public class SbbolScenario {
 
     public static ScenarioBuilder scn = scenario("Sbbol")
             .feed(defaultFeeder)
+            .feed(complianceRequests)
+            .feed(complianceRequests)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -252,6 +256,8 @@ public class SbbolScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug Sbbol")
             .feed(defaultFeeder)
+            .feed(complianceRequests)
+            .feed(complianceRequests)
             .feed(rqUidsFeeder)
             .exec(SbbolCase.UC01_GET_v1_sbbol_compliance_requests_callback_cancel)
             .exec(SbbolCase.UC02_POST_v1_sbbol_compliance_requests_callback_save)

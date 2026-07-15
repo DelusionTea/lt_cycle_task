@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.adClientMarkings;
+import static feeders.ZK.ZKFeeder.adClientMarkings;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class AdClientMarkingsScenario {
@@ -58,6 +60,8 @@ public class AdClientMarkingsScenario {
 
     public static ScenarioBuilder scn = scenario("AdClientMarkings")
             .feed(defaultFeeder)
+            .feed(adClientMarkings)
+            .feed(adClientMarkings)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -77,6 +81,8 @@ public class AdClientMarkingsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug AdClientMarkings")
             .feed(defaultFeeder)
+            .feed(adClientMarkings)
+            .feed(adClientMarkings)
             .feed(rqUidsFeeder)
             .exec(AdClientMarkingsCase.UC01_GET_v1_ad_client_markings)
             .exec(AdClientMarkingsCase.UC02_POST_v1_ad_client_markings)

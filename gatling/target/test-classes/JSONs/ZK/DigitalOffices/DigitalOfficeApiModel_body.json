@@ -1,8 +1,8 @@
 {
-  "ucpId": "#{digitalOfficesUcpId}",
-  "complianceOrganizationId": "#{digitalOfficesComplianceOrganizationId}",
+  "ucpId": "#{ucp_id}",
+  "complianceOrganizationId": "#{organization_id}",
   "activeFlag": true,
-  "digitalId": "#{digitalOfficesDigitalId}",
+  "digitalId": "#{digital_id}",
   "lastUpdateDate": "Sun Oct 01 03:00:00 MSK 2023",
   "status": "active",
   "createDate": "2023-10-01T12:00Z"

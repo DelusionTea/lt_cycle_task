@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.dboContract;
+import static feeders.ZK.ZKFeeder.dboContract;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class DboContractScenario {
@@ -42,6 +44,8 @@ public class DboContractScenario {
 
     public static ScenarioBuilder scn = scenario("DboContract")
             .feed(defaultFeeder)
+            .feed(dboContract)
+            .feed(dboContract)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class DboContractScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug DboContract")
             .feed(defaultFeeder)
+            .feed(dboContract)
+            .feed(dboContract)
             .feed(rqUidsFeeder)
             .exec(DboContractCase.UC01_GET_v2_dbo_contract)
             .exec(DboContractCase.UC02_POST_v2_dbo_contract)

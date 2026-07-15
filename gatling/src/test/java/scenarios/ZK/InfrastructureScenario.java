@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.complianceRequests;
+import static feeders.ZK.ZKFeeder.complianceRequests;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class InfrastructureScenario {
@@ -34,6 +36,8 @@ public class InfrastructureScenario {
 
     public static ScenarioBuilder scn = scenario("Infrastructure")
             .feed(defaultFeeder)
+            .feed(complianceRequests)
+            .feed(complianceRequests)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -47,6 +51,8 @@ public class InfrastructureScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug Infrastructure")
             .feed(defaultFeeder)
+            .feed(complianceRequests)
+            .feed(complianceRequests)
             .feed(rqUidsFeeder)
             .exec(InfrastructureCase.UC01_GET_v1_infrastructure_entities)
             .exec(InfrastructureCase.UC02_GET_v1_infrastructure_entities_By_entityName_filters)

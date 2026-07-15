@@ -40,21 +40,21 @@ public class IndividualRequestHistoryCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_individual_request_history_By_id =
             http("UC04_DELETE_/api/v2/individual-request-history/{id}")
-                    .delete("/api/v2/individual-request-history/#{individualRequestHistoryId}")
+                    .delete("/api/v2/individual-request-history/#{history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_individual_request_history_By_id =
             http("UC05_GET_/api/v2/individual-request-history/{id}")
-                    .get("/api/v2/individual-request-history/#{individualRequestHistoryId}")
+                    .get("/api/v2/individual-request-history/#{history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_individual_request_history_By_id =
             http("UC06_PATCH_/api/v2/individual-request-history/{id}")
-                    .patch("/api/v2/individual-request-history/#{individualRequestHistoryId}")
+                    .patch("/api/v2/individual-request-history/#{history_id}")
                     .body(ElFileBody(JSONS_PATH + "IndividualRequestHistory/IndividualRequestHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class IndividualRequestHistoryCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_individual_request_history_By_id =
             http("UC07_PUT_/api/v2/individual-request-history/{id}")
-                    .put("/api/v2/individual-request-history/#{individualRequestHistoryId}")
+                    .put("/api/v2/individual-request-history/#{history_id}")
                     .body(ElFileBody(JSONS_PATH + "IndividualRequestHistory/IndividualRequestHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

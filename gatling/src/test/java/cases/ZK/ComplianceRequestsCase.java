@@ -30,7 +30,7 @@ public class ComplianceRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC03_PUT_v3_compliance_requests_By_id_assign =
             http("UC03_PUT_/api/v3/compliance-requests/{id}/assign")
-                    .put("/api/v3/compliance-requests/#{complianceRequestsId}/assign")
+                    .put("/api/v3/compliance-requests/#{compliance_request_id}/assign")
                     .body(ElFileBody(JSONS_PATH + "ComplianceRequests/ComplianceRequestAssign_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -38,7 +38,7 @@ public class ComplianceRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_PUT_v3_compliance_requests_By_id_close =
             http("UC04_PUT_/api/v3/compliance-requests/{id}/close")
-                    .put("/api/v3/compliance-requests/#{complianceRequestsId}/close")
+                    .put("/api/v3/compliance-requests/#{compliance_request_id}/close")
                     .body(ElFileBody(JSONS_PATH + "shared/ComplianceRequestClose_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -46,14 +46,14 @@ public class ComplianceRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v3_compliance_requests_By_id_detail =
             http("UC05_GET_/api/v3/compliance-requests/{id}/detail")
-                    .get("/api/v3/compliance-requests/#{complianceRequestsId}/detail")
+                    .get("/api/v3/compliance-requests/#{compliance_request_id}/detail")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PUT_v3_compliance_requests_By_id_from_to_bordo =
             http("UC06_PUT_/api/v3/compliance-requests/{id}/from-to-bordo")
-                    .put("/api/v3/compliance-requests/#{complianceRequestsId}/from-to-bordo")
+                    .put("/api/v3/compliance-requests/#{compliance_request_id}/from-to-bordo")
                     .body(ElFileBody(JSONS_PATH + "shared/ComplianceRequestFromToBordo_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -61,7 +61,7 @@ public class ComplianceRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_GET_v3_compliance_requests_By_id_preview =
             http("UC07_GET_/api/v3/compliance-requests/{id}/preview")
-                    .get("/api/v3/compliance-requests/#{complianceRequestsId}/preview")
+                    .get("/api/v3/compliance-requests/#{compliance_request_id}/preview")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 }

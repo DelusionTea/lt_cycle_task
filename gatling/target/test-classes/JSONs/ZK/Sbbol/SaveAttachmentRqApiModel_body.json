@@ -1,11 +1,11 @@
 {
-  "freeFormatLetterId": "#{sbbolFreeFormatLetterId}",
-  "requestId": "#{sbbolRequestId}",
+  "freeFormatLetterId": "#{free_format_letter_id}",
+  "requestId": "#{compliance_request_id}",
   "name": "test.txt",
   "size": 1048576,
-  "cephId": "#{sbbolCephId}",
-  "ecmId": "#{sbbolEcmId}",
+  "cephId": "#{ceph_id}",
+  "ecmId": "#{ecm_id}",
   "cephBucket": "testBucket",
   "channel": "WEB",
-  "ecmFolderId": "#{sbbolEcmFolderId}"
+  "ecmFolderId": "#{ecm_folder_id}"
 }

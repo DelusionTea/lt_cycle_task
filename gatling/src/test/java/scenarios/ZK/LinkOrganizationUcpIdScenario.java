@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.linkOrganizationUcpId;
+import static feeders.ZK.ZKFeeder.linkOrganizationUcpId;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class LinkOrganizationUcpIdScenario {
@@ -42,6 +44,8 @@ public class LinkOrganizationUcpIdScenario {
 
     public static ScenarioBuilder scn = scenario("LinkOrganizationUcpId")
             .feed(defaultFeeder)
+            .feed(linkOrganizationUcpId)
+            .feed(linkOrganizationUcpId)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class LinkOrganizationUcpIdScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug LinkOrganizationUcpId")
             .feed(defaultFeeder)
+            .feed(linkOrganizationUcpId)
+            .feed(linkOrganizationUcpId)
             .feed(rqUidsFeeder)
             .exec(LinkOrganizationUcpIdCase.UC01_GET_v2_link_organization_ucp_id)
             .exec(LinkOrganizationUcpIdCase.UC02_POST_v2_link_organization_ucp_id)

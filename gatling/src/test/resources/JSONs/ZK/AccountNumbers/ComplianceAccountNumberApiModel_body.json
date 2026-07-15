@@ -1,6 +1,6 @@
 {
-  "ucpId": "#{accountNumbersUcpId}",
+  "ucpId": "#{ucp_id}",
   "accountNumber": 45235232423,
-  "complianceRequestId": "#{accountNumbersComplianceRequestId}",
-  "complianceOrganizationId": "#{accountNumbersComplianceOrganizationId}"
+  "complianceRequestId": "#{compliance_request_id}",
+  "complianceOrganizationId": "#{organization_id}"
 }

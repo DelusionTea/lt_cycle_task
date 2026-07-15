@@ -41,21 +41,21 @@ public class FinOperationsAttributesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_fin_operations_attributes_By_id =
             http("UC04_DELETE_/api/v2/fin-operations-attributes/{id}")
-                    .delete("/api/v2/fin-operations-attributes/#{finOperationsAttributesId}")
+                    .delete("/api/v2/fin-operations-attributes/#{attr_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_fin_operations_attributes_By_id =
             http("UC05_GET_/api/v2/fin-operations-attributes/{id}")
-                    .get("/api/v2/fin-operations-attributes/#{finOperationsAttributesId}")
+                    .get("/api/v2/fin-operations-attributes/#{attr_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_fin_operations_attributes_By_id =
             http("UC06_PATCH_/api/v2/fin-operations-attributes/{id}")
-                    .patch("/api/v2/fin-operations-attributes/#{finOperationsAttributesId}")
+                    .patch("/api/v2/fin-operations-attributes/#{attr_id}")
                     .body(ElFileBody(JSONS_PATH + "FinOperationsAttributes/ComplianceFinOperationAttributeApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class FinOperationsAttributesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_fin_operations_attributes_By_id =
             http("UC07_PUT_/api/v2/fin-operations-attributes/{id}")
-                    .put("/api/v2/fin-operations-attributes/#{finOperationsAttributesId}")
+                    .put("/api/v2/fin-operations-attributes/#{attr_id}")
                     .body(ElFileBody(JSONS_PATH + "FinOperationsAttributes/ComplianceFinOperationAttributeApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

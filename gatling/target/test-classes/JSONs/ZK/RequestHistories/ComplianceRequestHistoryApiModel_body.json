@@ -1,11 +1,11 @@
 {
-  "crmParRowId": "#{requestHistoriesCrmParRowId}",
-  "crmRowId": "#{requestHistoriesCrmRowId}",
-  "complianceOrganizationId": "#{requestHistoriesComplianceOrganizationId}",
-  "complianceCaseId": "#{requestHistoriesComplianceCaseId}",
-  "fccmRequestId": "#{requestHistoriesFccmRequestId}",
-  "ucpId": "#{requestHistoriesUcpId}",
-  "employeeNumber": "#{requestHistoriesEmployeeNumber}",
+  "crmParRowId": "#{crm_par_row_id}",
+  "crmRowId": "#{crm_row_id}",
+  "complianceOrganizationId": "#{organization_id}",
+  "complianceCaseId": "#{compliance_case_id}",
+  "fccmRequestId": "#{fccm_request_id}",
+  "ucpId": "#{ucp_id}",
+  "employeeNumber": "#{employee_number}",
   "strategy": "Реабилитация",
   "createDate": "2024-10-01T12:00Z",
   "closeDate": "2024-10-01T12:00Z",
@@ -33,5 +33,5 @@
   "sbbolLastReceivedVersion": 1,
   "sbbolSyncStatus": "New",
   "sbbolSyncStatusDesc": "Комментарий",
-  "complianceRequestId": "#{requestHistoriesComplianceRequestId}"
+  "complianceRequestId": "#{compliance_request_id}"
 }

@@ -41,21 +41,21 @@ public class EventsHistoriesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_events_histories_By_id =
             http("UC04_DELETE_/api/v2/events-histories/{id}")
-                    .delete("/api/v2/events-histories/#{eventsHistoriesId}")
+                    .delete("/api/v2/events-histories/#{history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_events_histories_By_id =
             http("UC05_GET_/api/v2/events-histories/{id}")
-                    .get("/api/v2/events-histories/#{eventsHistoriesId}")
+                    .get("/api/v2/events-histories/#{history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_events_histories_By_id =
             http("UC06_PATCH_/api/v2/events-histories/{id}")
-                    .patch("/api/v2/events-histories/#{eventsHistoriesId}")
+                    .patch("/api/v2/events-histories/#{history_id}")
                     .body(ElFileBody(JSONS_PATH + "EventsHistories/EventHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class EventsHistoriesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_events_histories_By_id =
             http("UC07_PUT_/api/v2/events-histories/{id}")
-                    .put("/api/v2/events-histories/#{eventsHistoriesId}")
+                    .put("/api/v2/events-histories/#{history_id}")
                     .body(ElFileBody(JSONS_PATH + "EventsHistories/EventHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

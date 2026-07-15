@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.processSettings;
+import static feeders.ZK.ZKFeeder.processSettings;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ProcessSettingsScenario {
@@ -42,6 +44,8 @@ public class ProcessSettingsScenario {
 
     public static ScenarioBuilder scn = scenario("ProcessSettings")
             .feed(defaultFeeder)
+            .feed(processSettings)
+            .feed(processSettings)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ProcessSettingsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ProcessSettings")
             .feed(defaultFeeder)
+            .feed(processSettings)
+            .feed(processSettings)
             .feed(rqUidsFeeder)
             .exec(ProcessSettingsCase.UC01_GET_v2_process_settings)
             .exec(ProcessSettingsCase.UC02_POST_v2_process_settings)

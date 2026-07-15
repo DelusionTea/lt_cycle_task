@@ -31,7 +31,7 @@ public class ComplianceTasksCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC03_PUT_v2_compliance_tasks_By_id_close_call =
             http("UC03_PUT_/api/v2/compliance-tasks/{id}/close-call")
-                    .put("/api/v2/compliance-tasks/#{complianceTasksId}/close-call")
+                    .put("/api/v2/compliance-tasks/#{taskid}/close-call")
                     .body(ElFileBody(JSONS_PATH + "shared/CloseTaskApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -39,7 +39,7 @@ public class ComplianceTasksCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_PUT_v2_compliance_tasks_By_id_close_documents_check =
             http("UC04_PUT_/api/v2/compliance-tasks/{id}/close-documents-check")
-                    .put("/api/v2/compliance-tasks/#{complianceTasksId}/close-documents-check")
+                    .put("/api/v2/compliance-tasks/#{taskid}/close-documents-check")
                     .body(ElFileBody(JSONS_PATH + "shared/CloseTaskApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

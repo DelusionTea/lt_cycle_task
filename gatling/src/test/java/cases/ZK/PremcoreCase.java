@@ -16,7 +16,7 @@ public class PremcoreCase extends Methods {
     public static HttpRequestActionBuilder UC01_GET_v2_premcore_get_request_info =
             http("UC01_GET_/api/v2/premcore/get-request-info")
                     .get("/api/v2/premcore/get-request-info")
-                    .queryParam("ucpIds", "#{premcoreUcpIds}")
+                    .queryParam("ucpIds", "#{ucp_ids}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 }

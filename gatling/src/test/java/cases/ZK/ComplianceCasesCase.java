@@ -39,19 +39,19 @@ public class ComplianceCasesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_compliance_cases_By_id =
             http("UC04_DELETE_/api/v2/compliance-cases/{id}")
-                    .delete("/api/v2/compliance-cases/#{complianceCasesId}")
+                    .delete("/api/v2/compliance-cases/#{compliance_case_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     public static HttpRequestActionBuilder UC05_GET_v2_compliance_cases_By_id =
             http("UC05_GET_/api/v2/compliance-cases/{id}")
-                    .get("/api/v2/compliance-cases/#{complianceCasesId}")
+                    .get("/api/v2/compliance-cases/#{compliance_case_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     public static HttpRequestActionBuilder UC06_PATCH_v2_compliance_cases_By_id =
             http("UC06_PATCH_/api/v2/compliance-cases/{id}")
-                    .patch("/api/v2/compliance-cases/#{complianceCasesId}")
+                    .patch("/api/v2/compliance-cases/#{compliance_case_id}")
                     .body(ElFileBody(JSONS_PATH + "ComplianceCases/ComplianceCaseApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -59,7 +59,7 @@ public class ComplianceCasesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_compliance_cases_By_id =
             http("UC07_PUT_/api/v2/compliance-cases/{id}")
-                    .put("/api/v2/compliance-cases/#{complianceCasesId}")
+                    .put("/api/v2/compliance-cases/#{compliance_case_id}")
                     .body(ElFileBody(JSONS_PATH + "ComplianceCases/ComplianceCaseApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

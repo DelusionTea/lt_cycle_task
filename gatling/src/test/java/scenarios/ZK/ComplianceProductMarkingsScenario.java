@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.complianceProductMarkings;
+import static feeders.ZK.ZKFeeder.complianceProductMarkings;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ComplianceProductMarkingsScenario {
@@ -42,6 +44,8 @@ public class ComplianceProductMarkingsScenario {
 
     public static ScenarioBuilder scn = scenario("ComplianceProductMarkings")
             .feed(defaultFeeder)
+            .feed(complianceProductMarkings)
+            .feed(complianceProductMarkings)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ComplianceProductMarkingsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ComplianceProductMarkings")
             .feed(defaultFeeder)
+            .feed(complianceProductMarkings)
+            .feed(complianceProductMarkings)
             .feed(rqUidsFeeder)
             .exec(ComplianceProductMarkingsCase.UC01_GET_v2_compliance_product_markings)
             .exec(ComplianceProductMarkingsCase.UC02_POST_v2_compliance_product_markings)

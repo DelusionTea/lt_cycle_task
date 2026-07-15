@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.organizationExtensions;
+import static feeders.ZK.ZKFeeder.organizationExtensions;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class OrganizationExtensionsScenario {
@@ -58,6 +60,8 @@ public class OrganizationExtensionsScenario {
 
     public static ScenarioBuilder scn = scenario("OrganizationExtensions")
             .feed(defaultFeeder)
+            .feed(organizationExtensions)
+            .feed(organizationExtensions)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -77,6 +81,8 @@ public class OrganizationExtensionsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug OrganizationExtensions")
             .feed(defaultFeeder)
+            .feed(organizationExtensions)
+            .feed(organizationExtensions)
             .feed(rqUidsFeeder)
             .exec(OrganizationExtensionsCase.UC01_GET_v2_organization_extensions)
             .exec(OrganizationExtensionsCase.UC02_POST_v2_organization_extensions)

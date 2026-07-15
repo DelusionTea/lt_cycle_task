@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.constructorPfParameters;
+import static feeders.ZK.ZKFeeder.constructorPfParameters;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ConstructorPfParametersScenario {
@@ -42,6 +44,8 @@ public class ConstructorPfParametersScenario {
 
     public static ScenarioBuilder scn = scenario("ConstructorPfParameters")
             .feed(defaultFeeder)
+            .feed(constructorPfParameters)
+            .feed(constructorPfParameters)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ConstructorPfParametersScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ConstructorPfParameters")
             .feed(defaultFeeder)
+            .feed(constructorPfParameters)
+            .feed(constructorPfParameters)
             .feed(rqUidsFeeder)
             .exec(ConstructorPfParametersCase.UC01_GET_v1_constructor_pf_parameters)
             .exec(ConstructorPfParametersCase.UC02_POST_v1_constructor_pf_parameters)

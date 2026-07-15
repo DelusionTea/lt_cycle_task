@@ -41,21 +41,21 @@ public class EmployeeNotificationsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v1_employee_notifications_By_id =
             http("UC04_DELETE_/api/v1/employee-notifications/{id}")
-                    .delete("/api/v1/employee-notifications/#{employeeNotificationsId}")
+                    .delete("/api/v1/employee-notifications/#{notification_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v1_employee_notifications_By_id =
             http("UC05_GET_/api/v1/employee-notifications/{id}")
-                    .get("/api/v1/employee-notifications/#{employeeNotificationsId}")
+                    .get("/api/v1/employee-notifications/#{notification_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v1_employee_notifications_By_id =
             http("UC06_PATCH_/api/v1/employee-notifications/{id}")
-                    .patch("/api/v1/employee-notifications/#{employeeNotificationsId}")
+                    .patch("/api/v1/employee-notifications/#{notification_id}")
                     .body(ElFileBody(JSONS_PATH + "EmployeeNotifications/EmployeeNotificationApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class EmployeeNotificationsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v1_employee_notifications_By_id =
             http("UC07_PUT_/api/v1/employee-notifications/{id}")
-                    .put("/api/v1/employee-notifications/#{employeeNotificationsId}")
+                    .put("/api/v1/employee-notifications/#{notification_id}")
                     .body(ElFileBody(JSONS_PATH + "EmployeeNotifications/EmployeeNotificationApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

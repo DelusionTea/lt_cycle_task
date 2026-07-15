@@ -41,20 +41,20 @@ public class FileLoadingHistoryCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v4_file_loading_history_By_id =
             http("UC04_DELETE_/api/v4/file-loading-history/{id}")
-                    .delete("/api/v4/file-loading-history/#{fileLoadingHistoryId}")
+                    .delete("/api/v4/file-loading-history/#{history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     public static HttpRequestActionBuilder UC05_GET_v4_file_loading_history_By_id =
             http("UC05_GET_/api/v4/file-loading-history/{id}")
-                    .get("/api/v4/file-loading-history/#{fileLoadingHistoryId}")
+                    .get("/api/v4/file-loading-history/#{history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v4_file_loading_history_By_id =
             http("UC06_PATCH_/api/v4/file-loading-history/{id}")
-                    .patch("/api/v4/file-loading-history/#{fileLoadingHistoryId}")
+                    .patch("/api/v4/file-loading-history/#{history_id}")
                     .body(ElFileBody(JSONS_PATH + "FileLoadingHistory/FileLoadingHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class FileLoadingHistoryCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v4_file_loading_history_By_id =
             http("UC07_PUT_/api/v4/file-loading-history/{id}")
-                    .put("/api/v4/file-loading-history/#{fileLoadingHistoryId}")
+                    .put("/api/v4/file-loading-history/#{history_id}")
                     .body(ElFileBody(JSONS_PATH + "FileLoadingHistory/FileLoadingHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

@@ -25,6 +25,18 @@
             <version>3.9.5</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.gatling</groupId>
+            <artifactId>gatling-jdbc-java</artifactId>
+            <version>3.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

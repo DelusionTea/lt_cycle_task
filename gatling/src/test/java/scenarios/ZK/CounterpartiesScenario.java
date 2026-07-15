@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.counterparties;
+import static feeders.ZK.ZKFeeder.counterparties;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class CounterpartiesScenario {
@@ -58,6 +60,8 @@ public class CounterpartiesScenario {
 
     public static ScenarioBuilder scn = scenario("Counterparties")
             .feed(defaultFeeder)
+            .feed(counterparties)
+            .feed(counterparties)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -77,6 +81,8 @@ public class CounterpartiesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug Counterparties")
             .feed(defaultFeeder)
+            .feed(counterparties)
+            .feed(counterparties)
             .feed(rqUidsFeeder)
             .exec(CounterpartiesCase.UC01_GET_v2_counterparties)
             .exec(CounterpartiesCase.UC02_POST_v2_counterparties)

@@ -41,21 +41,21 @@ public class FinOperationsReferenceMappingCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v1_fin_operations_reference_mapping_By_id =
             http("UC04_DELETE_/api/v1/fin-operations-reference-mapping/{id}")
-                    .delete("/api/v1/fin-operations-reference-mapping/#{finOperationsReferenceMappingId}")
+                    .delete("/api/v1/fin-operations-reference-mapping/#{operation_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v1_fin_operations_reference_mapping_By_id =
             http("UC05_GET_/api/v1/fin-operations-reference-mapping/{id}")
-                    .get("/api/v1/fin-operations-reference-mapping/#{finOperationsReferenceMappingId}")
+                    .get("/api/v1/fin-operations-reference-mapping/#{operation_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v1_fin_operations_reference_mapping_By_id =
             http("UC06_PATCH_/api/v1/fin-operations-reference-mapping/{id}")
-                    .patch("/api/v1/fin-operations-reference-mapping/#{finOperationsReferenceMappingId}")
+                    .patch("/api/v1/fin-operations-reference-mapping/#{operation_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/ReferenceMappingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class FinOperationsReferenceMappingCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v1_fin_operations_reference_mapping_By_id =
             http("UC07_PUT_/api/v1/fin-operations-reference-mapping/{id}")
-                    .put("/api/v1/fin-operations-reference-mapping/#{finOperationsReferenceMappingId}")
+                    .put("/api/v1/fin-operations-reference-mapping/#{operation_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/ReferenceMappingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

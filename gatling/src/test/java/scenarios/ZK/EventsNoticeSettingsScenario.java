@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.eventsNoticeSettings;
+import static feeders.ZK.ZKFeeder.eventsNoticeSettings;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class EventsNoticeSettingsScenario {
@@ -42,6 +44,8 @@ public class EventsNoticeSettingsScenario {
 
     public static ScenarioBuilder scn = scenario("EventsNoticeSettings")
             .feed(defaultFeeder)
+            .feed(eventsNoticeSettings)
+            .feed(eventsNoticeSettings)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class EventsNoticeSettingsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug EventsNoticeSettings")
             .feed(defaultFeeder)
+            .feed(eventsNoticeSettings)
+            .feed(eventsNoticeSettings)
             .feed(rqUidsFeeder)
             .exec(EventsNoticeSettingsCase.UC01_GET_v2_events_notice_settings)
             .exec(EventsNoticeSettingsCase.UC02_POST_v2_events_notice_settings)

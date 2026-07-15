@@ -1,6 +1,6 @@
 {
   "type": "DEFAULT",
-  "groupConditionId": "#{eventsNoticeConditionsGroupConditionId}",
+  "groupConditionId": "#{group_condition_id}",
   "executionPosition": 1,
   "dictionaryName": "DECISIONS_COMPLIANCE",
   "dictionaryCode": "Online control"

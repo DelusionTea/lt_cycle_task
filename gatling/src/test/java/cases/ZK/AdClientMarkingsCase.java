@@ -41,21 +41,21 @@ public class AdClientMarkingsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v1_ad_client_markings_By_id =
             http("UC04_DELETE_/api/v1/ad-client-markings/{id}")
-                    .delete("/api/v1/ad-client-markings/#{adClientMarkingsId}")
+                    .delete("/api/v1/ad-client-markings/#{marking_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v1_ad_client_markings_By_id =
             http("UC05_GET_/api/v1/ad-client-markings/{id}")
-                    .get("/api/v1/ad-client-markings/#{adClientMarkingsId}")
+                    .get("/api/v1/ad-client-markings/#{marking_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v1_ad_client_markings_By_id =
             http("UC06_PATCH_/api/v1/ad-client-markings/{id}")
-                    .patch("/api/v1/ad-client-markings/#{adClientMarkingsId}")
+                    .patch("/api/v1/ad-client-markings/#{marking_id}")
                     .body(ElFileBody(JSONS_PATH + "AdClientMarkings/AdClientMarkingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class AdClientMarkingsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v1_ad_client_markings_By_id =
             http("UC07_PUT_/api/v1/ad-client-markings/{id}")
-                    .put("/api/v1/ad-client-markings/#{adClientMarkingsId}")
+                    .put("/api/v1/ad-client-markings/#{marking_id}")
                     .body(ElFileBody(JSONS_PATH + "AdClientMarkings/AdClientMarkingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -72,7 +72,7 @@ public class AdClientMarkingsCase extends Methods {
     public static HttpRequestActionBuilder UC08_DELETE_v2_ad_client_markings_batch =
             http("UC08_DELETE_/api/v2/ad-client-markings/batch")
                     .delete("/api/v2/ad-client-markings/batch")
-                    .queryParam("ids", "#{adClientMarkingsIds}")
+                    .queryParam("ids", "#{marking_ids}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 

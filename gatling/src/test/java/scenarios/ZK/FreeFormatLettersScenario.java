@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.freeFormatLetters;
+import static feeders.ZK.ZKFeeder.freeFormatLetters;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class FreeFormatLettersScenario {
@@ -46,6 +48,8 @@ public class FreeFormatLettersScenario {
 
     public static ScenarioBuilder scn = scenario("FreeFormatLetters")
             .feed(defaultFeeder)
+            .feed(freeFormatLetters)
+            .feed(freeFormatLetters)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -62,6 +66,8 @@ public class FreeFormatLettersScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug FreeFormatLetters")
             .feed(defaultFeeder)
+            .feed(freeFormatLetters)
+            .feed(freeFormatLetters)
             .feed(rqUidsFeeder)
             .exec(FreeFormatLettersCase.UC01_GET_v2_free_format_letters)
             .exec(FreeFormatLettersCase.UC02_POST_v2_free_format_letters)

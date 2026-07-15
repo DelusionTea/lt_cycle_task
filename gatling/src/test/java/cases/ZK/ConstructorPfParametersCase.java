@@ -41,21 +41,21 @@ public class ConstructorPfParametersCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v1_constructor_pf_parameters_By_id =
             http("UC04_DELETE_/api/v1/constructor-pf-parameters/{id}")
-                    .delete("/api/v1/constructor-pf-parameters/#{constructorPfParametersId}")
+                    .delete("/api/v1/constructor-pf-parameters/#{parameter_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v1_constructor_pf_parameters_By_id =
             http("UC05_GET_/api/v1/constructor-pf-parameters/{id}")
-                    .get("/api/v1/constructor-pf-parameters/#{constructorPfParametersId}")
+                    .get("/api/v1/constructor-pf-parameters/#{parameter_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v1_constructor_pf_parameters_By_id =
             http("UC06_PATCH_/api/v1/constructor-pf-parameters/{id}")
-                    .patch("/api/v1/constructor-pf-parameters/#{constructorPfParametersId}")
+                    .patch("/api/v1/constructor-pf-parameters/#{parameter_id}")
                     .body(ElFileBody(JSONS_PATH + "ConstructorPfParameters/ConstructorPfParameterApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class ConstructorPfParametersCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v1_constructor_pf_parameters_By_id =
             http("UC07_PUT_/api/v1/constructor-pf-parameters/{id}")
-                    .put("/api/v1/constructor-pf-parameters/#{constructorPfParametersId}")
+                    .put("/api/v1/constructor-pf-parameters/#{parameter_id}")
                     .body(ElFileBody(JSONS_PATH + "ConstructorPfParameters/ConstructorPfParameterApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

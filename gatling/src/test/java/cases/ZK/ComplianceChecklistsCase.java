@@ -23,14 +23,14 @@ public class ComplianceChecklistsCase extends Methods {
 
     public static HttpRequestActionBuilder UC02_PATCH_v2_compliance_checklists_comments_By_id =
             http("UC02_PATCH_/api/v2/compliance-checklists/comments/{id}")
-                    .patch("/api/v2/compliance-checklists/comments/#{complianceChecklistsId}")
+                    .patch("/api/v2/compliance-checklists/comments/#{checklist_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/UpdateChecklistComment_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     public static HttpRequestActionBuilder UC03_GET_v2_compliance_checklists_By_requestId =
             http("UC03_GET_/api/v2/compliance-checklists/{requestId}")
-                    .get("/api/v2/compliance-checklists/#{complianceChecklistsRequestId}")
+                    .get("/api/v2/compliance-checklists/#{compliance_request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 }

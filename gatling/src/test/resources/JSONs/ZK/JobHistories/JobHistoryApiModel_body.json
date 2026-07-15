@@ -6,5 +6,5 @@
   "totalProcessed": 1,
   "comment": "Работа автопроцедуры завершена успешно",
   "totalError": 0,
-  "executionId": "#{jobHistoriesExecutionId}"
+  "executionId": "#{execution_id}"
 }

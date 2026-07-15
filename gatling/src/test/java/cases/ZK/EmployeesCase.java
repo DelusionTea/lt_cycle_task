@@ -15,7 +15,7 @@ public class EmployeesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC01_GET_v2_employees_By_employeeNumber =
             http("UC01_GET_/api/v2/employees/{employeeNumber}")
-                    .get("/api/v2/employees/#{employeesEmployeeNumber}")
+                    .get("/api/v2/employees/#{employee_number}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 }

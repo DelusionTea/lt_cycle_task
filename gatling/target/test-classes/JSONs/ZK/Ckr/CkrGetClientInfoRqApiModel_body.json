@@ -1,6 +1,6 @@
 {
   "message": {
-    "ucpId": "#{ckrUcpId}"
+    "ucpId": "#{ucp_id}"
   },
   "rqUid": "sample_rqUid"
 }

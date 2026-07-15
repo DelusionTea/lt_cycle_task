@@ -1,5 +1,5 @@
 {
-  "fflId": "#{attachmentsForClientFflId}",
-  "attachmentId": "#{attachmentsForClientAttachmentId}",
+  "fflId": "#{ffl_id}",
+  "attachmentId": "#{attachment_id}",
   "documentTitle": "title1"
 }

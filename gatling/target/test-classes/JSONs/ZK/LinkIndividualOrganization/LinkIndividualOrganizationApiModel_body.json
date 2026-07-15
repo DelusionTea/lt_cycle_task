@@ -1,5 +1,5 @@
 {
-  "ucpSflId": "#{linkIndividualOrganizationUcpSflId}",
-  "organizationId": "#{linkIndividualOrganizationOrganizationId}",
+  "ucpSflId": "#{ucp_sfl_id}",
+  "organizationId": "#{organization_id}",
   "relationType": "Администратор"
 }

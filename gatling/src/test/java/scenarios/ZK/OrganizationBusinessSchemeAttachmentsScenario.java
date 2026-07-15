@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.organizationBusinessSchemeAttachments;
+import static feeders.ZK.ZKFeeder.organizationBusinessSchemeAttachments;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class OrganizationBusinessSchemeAttachmentsScenario {
@@ -42,6 +44,8 @@ public class OrganizationBusinessSchemeAttachmentsScenario {
 
     public static ScenarioBuilder scn = scenario("OrganizationBusinessSchemeAttachments")
             .feed(defaultFeeder)
+            .feed(organizationBusinessSchemeAttachments)
+            .feed(organizationBusinessSchemeAttachments)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class OrganizationBusinessSchemeAttachmentsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug OrganizationBusinessSchemeAttachments")
             .feed(defaultFeeder)
+            .feed(organizationBusinessSchemeAttachments)
+            .feed(organizationBusinessSchemeAttachments)
             .feed(rqUidsFeeder)
             .exec(OrganizationBusinessSchemeAttachmentsCase.UC01_GET_v1_organization_business_scheme_attachments)
             .exec(OrganizationBusinessSchemeAttachmentsCase.UC02_POST_v1_organization_business_scheme_attachments)

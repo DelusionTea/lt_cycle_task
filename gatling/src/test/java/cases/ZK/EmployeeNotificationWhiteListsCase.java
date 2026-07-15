@@ -41,21 +41,21 @@ public class EmployeeNotificationWhiteListsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v1_employee_notification_white_lists_By_id =
             http("UC04_DELETE_/api/v1/employee-notification-white-lists/{id}")
-                    .delete("/api/v1/employee-notification-white-lists/#{employeeNotificationWhiteListsId}")
+                    .delete("/api/v1/employee-notification-white-lists/#{wl_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v1_employee_notification_white_lists_By_id =
             http("UC05_GET_/api/v1/employee-notification-white-lists/{id}")
-                    .get("/api/v1/employee-notification-white-lists/#{employeeNotificationWhiteListsId}")
+                    .get("/api/v1/employee-notification-white-lists/#{wl_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v1_employee_notification_white_lists_By_id =
             http("UC06_PATCH_/api/v1/employee-notification-white-lists/{id}")
-                    .patch("/api/v1/employee-notification-white-lists/#{employeeNotificationWhiteListsId}")
+                    .patch("/api/v1/employee-notification-white-lists/#{wl_id}")
                     .body(ElFileBody(JSONS_PATH + "EmployeeNotificationWhiteLists/EmployeeNotificationWhiteListApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class EmployeeNotificationWhiteListsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v1_employee_notification_white_lists_By_id =
             http("UC07_PUT_/api/v1/employee-notification-white-lists/{id}")
-                    .put("/api/v1/employee-notification-white-lists/#{employeeNotificationWhiteListsId}")
+                    .put("/api/v1/employee-notification-white-lists/#{wl_id}")
                     .body(ElFileBody(JSONS_PATH + "EmployeeNotificationWhiteLists/EmployeeNotificationWhiteListApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

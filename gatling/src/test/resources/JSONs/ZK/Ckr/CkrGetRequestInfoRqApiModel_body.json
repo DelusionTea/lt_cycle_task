@@ -1,7 +1,7 @@
 {
   "message": {
-    "sourceId": "#{ckrSourceId}",
-    "ucpIds": "#{ckrUcpIds}"
+    "sourceId": "#{source_id}",
+    "ucpIds": "#{ucp_ids}"
   },
   "rqUid": "sample_rqUid"
 }

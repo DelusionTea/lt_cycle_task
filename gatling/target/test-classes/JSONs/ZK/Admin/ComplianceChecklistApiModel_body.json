@@ -1,8 +1,8 @@
 {
   "docType": "Тип документа",
   "subType": "Подтип документа",
-  "crmRowId": "#{adminCrmRowId}",
-  "complianceRequestId": "#{adminComplianceRequestId}",
-  "complianceCommentId": "#{adminComplianceCommentId}",
+  "crmRowId": "#{crm_row_id}",
+  "complianceRequestId": "#{compliance_request_id}",
+  "complianceCommentId": "#{compliance_comment_id}",
   "counterpartyInn": 543432
 }

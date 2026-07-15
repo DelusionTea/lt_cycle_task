@@ -1,5 +1,5 @@
 {
   "request": {
-    "freeFormatLetterId": "#{ecmFreeFormatLetterId}"
+    "freeFormatLetterId": "#{free_format_letter_id}"
   }
 }

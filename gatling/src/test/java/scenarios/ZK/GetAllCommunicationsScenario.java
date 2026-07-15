@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.getAllCommunications;
+import static feeders.ZK.ZKFeeder.getAllCommunications;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class GetAllCommunicationsScenario {
@@ -18,6 +20,8 @@ public class GetAllCommunicationsScenario {
 
     public static ScenarioBuilder scn = scenario("GetAllCommunications")
             .feed(defaultFeeder)
+            .feed(getAllCommunications)
+            .feed(getAllCommunications)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -27,6 +31,8 @@ public class GetAllCommunicationsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug GetAllCommunications")
             .feed(defaultFeeder)
+            .feed(getAllCommunications)
+            .feed(getAllCommunications)
             .feed(rqUidsFeeder)
             .exec(GetAllCommunicationsCase.UC01_GET_v1_get_all_communications);
 }

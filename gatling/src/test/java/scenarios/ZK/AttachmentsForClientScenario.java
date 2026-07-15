@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.attachmentsForClient;
+import static feeders.ZK.ZKFeeder.attachmentsForClient;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class AttachmentsForClientScenario {
@@ -42,6 +44,8 @@ public class AttachmentsForClientScenario {
 
     public static ScenarioBuilder scn = scenario("AttachmentsForClient")
             .feed(defaultFeeder)
+            .feed(attachmentsForClient)
+            .feed(attachmentsForClient)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class AttachmentsForClientScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug AttachmentsForClient")
             .feed(defaultFeeder)
+            .feed(attachmentsForClient)
+            .feed(attachmentsForClient)
             .feed(rqUidsFeeder)
             .exec(AttachmentsForClientCase.UC01_GET_v2_attachments_for_client)
             .exec(AttachmentsForClientCase.UC02_POST_v2_attachments_for_client)

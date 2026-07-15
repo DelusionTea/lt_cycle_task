@@ -1,4 +1,4 @@
 {
-  "employeeNumber": "#{employeeNotificationWhiteListsEmployeeNumber}",
+  "employeeNumber": "#{employee_number}",
   "subject": "Тема уведомления"
 }

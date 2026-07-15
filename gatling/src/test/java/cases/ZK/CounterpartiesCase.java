@@ -32,7 +32,7 @@ public class CounterpartiesCase extends Methods {
     public static HttpRequestActionBuilder UC03_DELETE_v2_counterparties_batch =
             http("UC03_DELETE_/api/v2/counterparties/batch")
                     .delete("/api/v2/counterparties/batch")
-                    .queryParam("ids", "#{counterpartiesIds}")
+                    .queryParam("ids", "#{counterparty_ids}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -71,21 +71,21 @@ public class CounterpartiesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC08_DELETE_v2_counterparties_By_id =
             http("UC08_DELETE_/api/v2/counterparties/{id}")
-                    .delete("/api/v2/counterparties/#{counterpartiesId}")
+                    .delete("/api/v2/counterparties/#{counterparty_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC09_GET_v2_counterparties_By_id =
             http("UC09_GET_/api/v2/counterparties/{id}")
-                    .get("/api/v2/counterparties/#{counterpartiesId}")
+                    .get("/api/v2/counterparties/#{counterparty_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC10_PATCH_v2_counterparties_By_id =
             http("UC10_PATCH_/api/v2/counterparties/{id}")
-                    .patch("/api/v2/counterparties/#{counterpartiesId}")
+                    .patch("/api/v2/counterparties/#{counterparty_id}")
                     .body(ElFileBody(JSONS_PATH + "Counterparties/CounterpartyApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -93,7 +93,7 @@ public class CounterpartiesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC11_PUT_v2_counterparties_By_id =
             http("UC11_PUT_/api/v2/counterparties/{id}")
-                    .put("/api/v2/counterparties/#{counterpartiesId}")
+                    .put("/api/v2/counterparties/#{counterparty_id}")
                     .body(ElFileBody(JSONS_PATH + "Counterparties/CounterpartyApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

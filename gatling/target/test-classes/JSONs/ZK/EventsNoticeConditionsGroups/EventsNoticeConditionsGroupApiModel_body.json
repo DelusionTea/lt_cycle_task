@@ -1,5 +1,5 @@
 {
   "name": "Отказы",
-  "noticeSettingId": "#{eventsNoticeConditionsGroupsNoticeSettingId}",
+  "noticeSettingId": "#{notice_setting_id}",
   "executionPosition": 1
 }

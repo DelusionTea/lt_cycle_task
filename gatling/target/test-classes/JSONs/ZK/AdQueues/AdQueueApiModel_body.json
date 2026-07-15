@@ -1,5 +1,5 @@
 {
-  "employeeNumber": "#{adQueuesEmployeeNumber}",
+  "employeeNumber": "#{employee_number}",
   "distributionMark": "Признак",
   "markValue": "Значение"
 }

@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.complianceEmployees;
+import static feeders.ZK.ZKFeeder.complianceEmployees;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ComplianceEmployeesScenario {
@@ -42,6 +44,8 @@ public class ComplianceEmployeesScenario {
 
     public static ScenarioBuilder scn = scenario("ComplianceEmployees")
             .feed(defaultFeeder)
+            .feed(complianceEmployees)
+            .feed(complianceEmployees)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ComplianceEmployeesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ComplianceEmployees")
             .feed(defaultFeeder)
+            .feed(complianceEmployees)
+            .feed(complianceEmployees)
             .feed(rqUidsFeeder)
             .exec(ComplianceEmployeesCase.UC01_GET_v2_compliance_employees)
             .exec(ComplianceEmployeesCase.UC02_POST_v2_compliance_employees)

@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.accountNumbers;
+import static feeders.ZK.ZKFeeder.accountNumbers;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class AccountNumbersScenario {
@@ -42,6 +44,8 @@ public class AccountNumbersScenario {
 
     public static ScenarioBuilder scn = scenario("AccountNumbers")
             .feed(defaultFeeder)
+            .feed(accountNumbers)
+            .feed(accountNumbers)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class AccountNumbersScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug AccountNumbers")
             .feed(defaultFeeder)
+            .feed(accountNumbers)
+            .feed(accountNumbers)
             .feed(rqUidsFeeder)
             .exec(AccountNumbersCase.UC01_GET_v2_account_numbers)
             .exec(AccountNumbersCase.UC02_POST_v2_account_numbers)

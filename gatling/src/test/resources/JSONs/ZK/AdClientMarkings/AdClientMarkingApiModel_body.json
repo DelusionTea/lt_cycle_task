@@ -1,5 +1,5 @@
 {
-  "complianceOrganizationId": "#{adClientMarkingsComplianceOrganizationId}",
+  "complianceOrganizationId": "#{organization_id}",
   "distributionMark": "Признак",
   "markValue": "Значение"
 }

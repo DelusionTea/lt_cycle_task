@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.proactiveTasks;
+import static feeders.ZK.ZKFeeder.proactiveTasks;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ProactiveTasksScenario {
@@ -42,6 +44,8 @@ public class ProactiveTasksScenario {
 
     public static ScenarioBuilder scn = scenario("ProactiveTasks")
             .feed(defaultFeeder)
+            .feed(proactiveTasks)
+            .feed(proactiveTasks)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ProactiveTasksScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ProactiveTasks")
             .feed(defaultFeeder)
+            .feed(proactiveTasks)
+            .feed(proactiveTasks)
             .feed(rqUidsFeeder)
             .exec(ProactiveTasksCase.UC01_GET_v1_proactive_tasks)
             .exec(ProactiveTasksCase.UC02_POST_v1_proactive_tasks)

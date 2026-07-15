@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.pilotLog;
+import static feeders.ZK.ZKFeeder.pilotLog;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class PilotLogScenario {
@@ -42,6 +44,8 @@ public class PilotLogScenario {
 
     public static ScenarioBuilder scn = scenario("PilotLog")
             .feed(defaultFeeder)
+            .feed(pilotLog)
+            .feed(pilotLog)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class PilotLogScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug PilotLog")
             .feed(defaultFeeder)
+            .feed(pilotLog)
+            .feed(pilotLog)
             .feed(rqUidsFeeder)
             .exec(PilotLogCase.UC01_GET_v2_pilot_log)
             .exec(PilotLogCase.UC02_POST_v2_pilot_log)

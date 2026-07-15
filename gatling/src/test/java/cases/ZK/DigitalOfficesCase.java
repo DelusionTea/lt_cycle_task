@@ -40,21 +40,21 @@ public class DigitalOfficesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_digital_offices_By_id =
             http("UC04_DELETE_/api/v2/digital-offices/{id}")
-                    .delete("/api/v2/digital-offices/#{digitalOfficesId}")
+                    .delete("/api/v2/digital-offices/#{office_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_digital_offices_By_id =
             http("UC05_GET_/api/v2/digital-offices/{id}")
-                    .get("/api/v2/digital-offices/#{digitalOfficesId}")
+                    .get("/api/v2/digital-offices/#{office_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_digital_offices_By_id =
             http("UC06_PATCH_/api/v2/digital-offices/{id}")
-                    .patch("/api/v2/digital-offices/#{digitalOfficesId}")
+                    .patch("/api/v2/digital-offices/#{office_id}")
                     .body(ElFileBody(JSONS_PATH + "DigitalOffices/DigitalOfficeApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class DigitalOfficesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_digital_offices_By_id =
             http("UC07_PUT_/api/v2/digital-offices/{id}")
-                    .put("/api/v2/digital-offices/#{digitalOfficesId}")
+                    .put("/api/v2/digital-offices/#{office_id}")
                     .body(ElFileBody(JSONS_PATH + "DigitalOffices/DigitalOfficeApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

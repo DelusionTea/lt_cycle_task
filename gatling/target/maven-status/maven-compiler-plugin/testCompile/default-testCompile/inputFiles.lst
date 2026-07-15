@@ -160,6 +160,7 @@
 /Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/OrganizationAttributesCase.java
 /Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/RehabilitationBufferChecklistsCase.java
 /Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/IntegrationLogReportsCase.java
+/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/feeders/ZK/ZKDbConfig.java
 /Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/DboContractCase.java
 /Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/FreeFormatLettersCase.java
 /Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/DigitalUserCompliancesScenario.java

@@ -1,7 +1,7 @@
 {
   "message": {
-    "sourceId": "#{ivrSourceId}",
-    "ucpIds": "#{ivrUcpIds}"
+    "sourceId": "#{source_id}",
+    "ucpIds": "#{ucp_ids}"
   },
   "rqUid": "sample_rqUid"
 }

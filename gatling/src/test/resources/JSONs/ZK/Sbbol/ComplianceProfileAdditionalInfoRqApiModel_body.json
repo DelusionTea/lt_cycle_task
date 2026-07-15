@@ -1,4 +1,4 @@
 {
-  "ucpId": "#{sbbolUcpId}",
+  "ucpId": "#{ucp_id}",
   "clientComment": "Дополнительная информация о схеме работы"
 }

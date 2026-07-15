@@ -1,6 +1,6 @@
 {
-  "pprbId": "#{sbbolPprbId}",
-  "digitalOrgId": "#{sbbolDigitalOrgId}",
-  "ucpId": "#{sbbolUcpId}",
+  "pprbId": "#{pprb_id}",
+  "digitalOrgId": "#{digital_org_id}",
+  "ucpId": "#{ucp_id}",
   "channel": "WEB"
 }

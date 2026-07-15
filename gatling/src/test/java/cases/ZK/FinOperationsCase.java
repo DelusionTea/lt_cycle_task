@@ -22,7 +22,7 @@ public class FinOperationsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC02_GET_v3_fin_operations_By_id =
             http("UC02_GET_/api/v3/fin-operations/{id}")
-                    .get("/api/v3/fin-operations/#{finOperationsId}")
+                    .get("/api/v3/fin-operations/#{operation_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 }

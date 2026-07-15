@@ -41,21 +41,21 @@ public class OrganizationBusinessSchemeAttachmentsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v1_organization_business_scheme_attachments_By_id =
             http("UC04_DELETE_/api/v1/organization-business-scheme-attachments/{id}")
-                    .delete("/api/v1/organization-business-scheme-attachments/#{organizationBusinessSchemeAttachmentsId}")
+                    .delete("/api/v1/organization-business-scheme-attachments/#{attachment_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v1_organization_business_scheme_attachments_By_id =
             http("UC05_GET_/api/v1/organization-business-scheme-attachments/{id}")
-                    .get("/api/v1/organization-business-scheme-attachments/#{organizationBusinessSchemeAttachmentsId}")
+                    .get("/api/v1/organization-business-scheme-attachments/#{attachment_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v1_organization_business_scheme_attachments_By_id =
             http("UC06_PATCH_/api/v1/organization-business-scheme-attachments/{id}")
-                    .patch("/api/v1/organization-business-scheme-attachments/#{organizationBusinessSchemeAttachmentsId}")
+                    .patch("/api/v1/organization-business-scheme-attachments/#{attachment_id}")
                     .body(ElFileBody(JSONS_PATH + "OrganizationBusinessSchemeAttachments/OrganizationBusinessSchemeAttachmentApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class OrganizationBusinessSchemeAttachmentsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v1_organization_business_scheme_attachments_By_id =
             http("UC07_PUT_/api/v1/organization-business-scheme-attachments/{id}")
-                    .put("/api/v1/organization-business-scheme-attachments/#{organizationBusinessSchemeAttachmentsId}")
+                    .put("/api/v1/organization-business-scheme-attachments/#{attachment_id}")
                     .body(ElFileBody(JSONS_PATH + "OrganizationBusinessSchemeAttachments/OrganizationBusinessSchemeAttachmentApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

@@ -15,7 +15,7 @@ public class AllTasksCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC01_GET_v1_all_tasks_opened_tasks_By_ucpId =
             http("UC01_GET_/api/v1/all-tasks/opened-tasks/{ucpId}")
-                    .get("/api/v1/all-tasks/opened-tasks/#{allTasksUcpId}")
+                    .get("/api/v1/all-tasks/opened-tasks/#{ucp_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 }

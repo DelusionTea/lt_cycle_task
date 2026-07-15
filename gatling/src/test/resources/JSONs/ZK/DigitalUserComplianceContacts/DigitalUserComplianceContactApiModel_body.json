@@ -1,6 +1,6 @@
 {
   "activeFlag": true,
-  "digitalUserComplianceId": "#{digitalUserComplianceContactsDigitalUserComplianceId}",
+  "digitalUserComplianceId": "#{digital_user_compliance_id}",
   "contactType": "notificationEmail",
   "contact": 79163333333,
   "confirmed": true,

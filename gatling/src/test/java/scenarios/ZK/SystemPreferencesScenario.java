@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.systemPreferences;
+import static feeders.ZK.ZKFeeder.systemPreferences;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class SystemPreferencesScenario {
@@ -42,6 +44,8 @@ public class SystemPreferencesScenario {
 
     public static ScenarioBuilder scn = scenario("SystemPreferences")
             .feed(defaultFeeder)
+            .feed(systemPreferences)
+            .feed(systemPreferences)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class SystemPreferencesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug SystemPreferences")
             .feed(defaultFeeder)
+            .feed(systemPreferences)
+            .feed(systemPreferences)
             .feed(rqUidsFeeder)
             .exec(SystemPreferencesCase.UC01_GET_v2_system_preferences)
             .exec(SystemPreferencesCase.UC02_POST_v2_system_preferences)

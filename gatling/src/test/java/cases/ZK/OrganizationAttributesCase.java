@@ -32,7 +32,7 @@ public class OrganizationAttributesCase extends Methods {
     public static HttpRequestActionBuilder UC03_DELETE_v1_organization_attributes_batch =
             http("UC03_DELETE_/api/v1/organization-attributes/batch")
                     .delete("/api/v1/organization-attributes/batch")
-                    .queryParam("ids", "#{organizationAttributesIds}")
+                    .queryParam("ids", "#{attribute_ids}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -71,21 +71,21 @@ public class OrganizationAttributesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC08_DELETE_v1_organization_attributes_By_id =
             http("UC08_DELETE_/api/v1/organization-attributes/{id}")
-                    .delete("/api/v1/organization-attributes/#{organizationAttributesId}")
+                    .delete("/api/v1/organization-attributes/#{attribute_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC09_GET_v1_organization_attributes_By_id =
             http("UC09_GET_/api/v1/organization-attributes/{id}")
-                    .get("/api/v1/organization-attributes/#{organizationAttributesId}")
+                    .get("/api/v1/organization-attributes/#{attribute_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC10_PATCH_v1_organization_attributes_By_id =
             http("UC10_PATCH_/api/v1/organization-attributes/{id}")
-                    .patch("/api/v1/organization-attributes/#{organizationAttributesId}")
+                    .patch("/api/v1/organization-attributes/#{attribute_id}")
                     .body(ElFileBody(JSONS_PATH + "OrganizationAttributes/OrganizationAttributeApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -93,7 +93,7 @@ public class OrganizationAttributesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC11_PUT_v1_organization_attributes_By_id =
             http("UC11_PUT_/api/v1/organization-attributes/{id}")
-                    .put("/api/v1/organization-attributes/#{organizationAttributesId}")
+                    .put("/api/v1/organization-attributes/#{attribute_id}")
                     .body(ElFileBody(JSONS_PATH + "OrganizationAttributes/OrganizationAttributeApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

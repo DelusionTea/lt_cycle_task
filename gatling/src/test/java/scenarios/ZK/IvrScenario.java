@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.ckr;
+import static feeders.ZK.ZKFeeder.ckr;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class IvrScenario {
@@ -18,6 +20,8 @@ public class IvrScenario {
 
     public static ScenarioBuilder scn = scenario("Ivr")
             .feed(defaultFeeder)
+            .feed(ckr)
+            .feed(ckr)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -27,6 +31,8 @@ public class IvrScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug Ivr")
             .feed(defaultFeeder)
+            .feed(ckr)
+            .feed(ckr)
             .feed(rqUidsFeeder)
             .exec(IvrCase.UC01_POST_v2_ivr_get_request_info);
 }

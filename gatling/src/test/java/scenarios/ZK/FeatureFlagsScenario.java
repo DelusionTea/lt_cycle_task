@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.featureFlags;
+import static feeders.ZK.ZKFeeder.featureFlags;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class FeatureFlagsScenario {
@@ -42,6 +44,8 @@ public class FeatureFlagsScenario {
 
     public static ScenarioBuilder scn = scenario("FeatureFlags")
             .feed(defaultFeeder)
+            .feed(featureFlags)
+            .feed(featureFlags)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class FeatureFlagsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug FeatureFlags")
             .feed(defaultFeeder)
+            .feed(featureFlags)
+            .feed(featureFlags)
             .feed(rqUidsFeeder)
             .exec(FeatureFlagsCase.UC01_GET_v2_feature_flags)
             .exec(FeatureFlagsCase.UC02_POST_v2_feature_flags)

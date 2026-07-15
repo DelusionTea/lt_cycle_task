@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.reports;
+import static feeders.ZK.ZKFeeder.reports;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ReportsScenario {
@@ -42,6 +44,8 @@ public class ReportsScenario {
 
     public static ScenarioBuilder scn = scenario("Reports")
             .feed(defaultFeeder)
+            .feed(reports)
+            .feed(reports)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ReportsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug Reports")
             .feed(defaultFeeder)
+            .feed(reports)
+            .feed(reports)
             .feed(rqUidsFeeder)
             .exec(ReportsCase.UC01_GET_v1_reports)
             .exec(ReportsCase.UC02_POST_v1_reports)

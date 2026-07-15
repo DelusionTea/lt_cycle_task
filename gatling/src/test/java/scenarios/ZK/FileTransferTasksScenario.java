@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.fileTransferTasks;
+import static feeders.ZK.ZKFeeder.fileTransferTasks;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class FileTransferTasksScenario {
@@ -42,6 +44,8 @@ public class FileTransferTasksScenario {
 
     public static ScenarioBuilder scn = scenario("FileTransferTasks")
             .feed(defaultFeeder)
+            .feed(fileTransferTasks)
+            .feed(fileTransferTasks)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class FileTransferTasksScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug FileTransferTasks")
             .feed(defaultFeeder)
+            .feed(fileTransferTasks)
+            .feed(fileTransferTasks)
             .feed(rqUidsFeeder)
             .exec(FileTransferTasksCase.UC01_GET_v1_file_transfer_tasks)
             .exec(FileTransferTasksCase.UC02_POST_v1_file_transfer_tasks)

@@ -40,21 +40,21 @@ public class CatalogRecommendationsCibCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_catalog_recommendations_cib_By_id =
             http("UC04_DELETE_/api/v2/catalog-recommendations-cib/{id}")
-                    .delete("/api/v2/catalog-recommendations-cib/#{catalogRecommendationsCibId}")
+                    .delete("/api/v2/catalog-recommendations-cib/#{cib_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_catalog_recommendations_cib_By_id =
             http("UC05_GET_/api/v2/catalog-recommendations-cib/{id}")
-                    .get("/api/v2/catalog-recommendations-cib/#{catalogRecommendationsCibId}")
+                    .get("/api/v2/catalog-recommendations-cib/#{cib_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_catalog_recommendations_cib_By_id =
             http("UC06_PATCH_/api/v2/catalog-recommendations-cib/{id}")
-                    .patch("/api/v2/catalog-recommendations-cib/#{catalogRecommendationsCibId}")
+                    .patch("/api/v2/catalog-recommendations-cib/#{cib_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/CatalogRecommendationCibApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class CatalogRecommendationsCibCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_catalog_recommendations_cib_By_id =
             http("UC07_PUT_/api/v2/catalog-recommendations-cib/{id}")
-                    .put("/api/v2/catalog-recommendations-cib/#{catalogRecommendationsCibId}")
+                    .put("/api/v2/catalog-recommendations-cib/#{cib_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/CatalogRecommendationCibApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

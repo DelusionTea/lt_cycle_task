@@ -41,21 +41,21 @@ public class RequestHistoriesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_request_histories_By_id =
             http("UC04_DELETE_/api/v2/request-histories/{id}")
-                    .delete("/api/v2/request-histories/#{requestHistoriesId}")
+                    .delete("/api/v2/request-histories/#{request_history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_request_histories_By_id =
             http("UC05_GET_/api/v2/request-histories/{id}")
-                    .get("/api/v2/request-histories/#{requestHistoriesId}")
+                    .get("/api/v2/request-histories/#{request_history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_request_histories_By_id =
             http("UC06_PATCH_/api/v2/request-histories/{id}")
-                    .patch("/api/v2/request-histories/#{requestHistoriesId}")
+                    .patch("/api/v2/request-histories/#{request_history_id}")
                     .body(ElFileBody(JSONS_PATH + "RequestHistories/ComplianceRequestHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class RequestHistoriesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_request_histories_By_id =
             http("UC07_PUT_/api/v2/request-histories/{id}")
-                    .put("/api/v2/request-histories/#{requestHistoriesId}")
+                    .put("/api/v2/request-histories/#{request_history_id}")
                     .body(ElFileBody(JSONS_PATH + "RequestHistories/ComplianceRequestHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

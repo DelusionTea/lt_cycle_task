@@ -1,12 +1,12 @@
 {
-  "ucpId": "#{complianceRecommendationsUcpId}",
-  "crmRowId": "#{complianceRecommendationsCrmRowId}",
+  "ucpId": "#{ucp_id}",
+  "crmRowId": "#{crm_row_id}",
   "triggerCode": "Код триггера",
   "triggerName": "Наименование триггера",
   "recommendation": "Рекомендация",
   "sendToSbbolFlag": true,
   "offeredToClientFlag": true,
-  "complianceCaseId": "#{complianceRecommendationsComplianceCaseId}",
-  "complianceRequestId": "#{complianceRecommendationsComplianceRequestId}",
-  "complianceOrganizationId": "#{complianceRecommendationsComplianceOrganizationId}"
+  "complianceCaseId": "#{compliance_case_id}",
+  "complianceRequestId": "#{compliance_request_id}",
+  "complianceOrganizationId": "#{organization_id}"
 }

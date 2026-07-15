@@ -40,21 +40,21 @@ public class IntegrationLogReportsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_integration_log_reports_By_id =
             http("UC04_DELETE_/api/v2/integration-log-reports/{id}")
-                    .delete("/api/v2/integration-log-reports/#{integrationLogReportsId}")
+                    .delete("/api/v2/integration-log-reports/#{logging_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_integration_log_reports_By_id =
             http("UC05_GET_/api/v2/integration-log-reports/{id}")
-                    .get("/api/v2/integration-log-reports/#{integrationLogReportsId}")
+                    .get("/api/v2/integration-log-reports/#{logging_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_integration_log_reports_By_id =
             http("UC06_PATCH_/api/v2/integration-log-reports/{id}")
-                    .patch("/api/v2/integration-log-reports/#{integrationLogReportsId}")
+                    .patch("/api/v2/integration-log-reports/#{logging_id}")
                     .body(ElFileBody(JSONS_PATH + "IntegrationLogReports/IntegrationLogReportApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class IntegrationLogReportsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_integration_log_reports_By_id =
             http("UC07_PUT_/api/v2/integration-log-reports/{id}")
-                    .put("/api/v2/integration-log-reports/#{integrationLogReportsId}")
+                    .put("/api/v2/integration-log-reports/#{logging_id}")
                     .body(ElFileBody(JSONS_PATH + "IntegrationLogReports/IntegrationLogReportApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

@@ -1,8 +1,8 @@
 {
-  "ucpId": "#{adminUcpId}",
+  "ucpId": "#{ucp_id}",
   "value": "Positive decision",
   "valueDate": "2023-10-01T12:00Z",
   "comment": "Комментарий",
-  "complianceOrganizationId": "#{adminComplianceOrganizationId}",
-  "complianceCaseId": "#{adminComplianceCaseId}"
+  "complianceOrganizationId": "#{organization_id}",
+  "complianceCaseId": "#{compliance_case_id}"
 }

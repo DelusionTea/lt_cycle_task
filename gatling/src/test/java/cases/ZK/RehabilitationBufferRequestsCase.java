@@ -41,28 +41,28 @@ public class RehabilitationBufferRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_POST_v2_rehabilitation_buffer_requests_process_rehabilitation_request_By_id =
             http("UC04_POST_/api/v2/rehabilitation-buffer-requests/process-rehabilitation-request/{id}")
-                    .post("/api/v2/rehabilitation-buffer-requests/process-rehabilitation-request/#{rehabilitationBufferRequestsId}")
+                    .post("/api/v2/rehabilitation-buffer-requests/process-rehabilitation-request/#{request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_DELETE_v2_rehabilitation_buffer_requests_By_id =
             http("UC05_DELETE_/api/v2/rehabilitation-buffer-requests/{id}")
-                    .delete("/api/v2/rehabilitation-buffer-requests/#{rehabilitationBufferRequestsId}")
+                    .delete("/api/v2/rehabilitation-buffer-requests/#{request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_GET_v2_rehabilitation_buffer_requests_By_id =
             http("UC06_GET_/api/v2/rehabilitation-buffer-requests/{id}")
-                    .get("/api/v2/rehabilitation-buffer-requests/#{rehabilitationBufferRequestsId}")
+                    .get("/api/v2/rehabilitation-buffer-requests/#{request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PATCH_v2_rehabilitation_buffer_requests_By_id =
             http("UC07_PATCH_/api/v2/rehabilitation-buffer-requests/{id}")
-                    .patch("/api/v2/rehabilitation-buffer-requests/#{rehabilitationBufferRequestsId}")
+                    .patch("/api/v2/rehabilitation-buffer-requests/#{request_id}")
                     .body(ElFileBody(JSONS_PATH + "RehabilitationBufferRequests/RehabilitationBufferRequestApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -70,7 +70,7 @@ public class RehabilitationBufferRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC08_PUT_v2_rehabilitation_buffer_requests_By_id =
             http("UC08_PUT_/api/v2/rehabilitation-buffer-requests/{id}")
-                    .put("/api/v2/rehabilitation-buffer-requests/#{rehabilitationBufferRequestsId}")
+                    .put("/api/v2/rehabilitation-buffer-requests/#{request_id}")
                     .body(ElFileBody(JSONS_PATH + "RehabilitationBufferRequests/RehabilitationBufferRequestApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

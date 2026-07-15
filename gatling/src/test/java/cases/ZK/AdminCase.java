@@ -41,21 +41,21 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_admin_attribute_display_configs_By_id =
             http("UC04_DELETE_/api/v2/admin/attribute-display-configs/{id}")
-                    .delete("/api/v2/admin/attribute-display-configs/#{adminId}")
+                    .delete("/api/v2/admin/attribute-display-configs/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_admin_attribute_display_configs_By_id =
             http("UC05_GET_/api/v2/admin/attribute-display-configs/{id}")
-                    .get("/api/v2/admin/attribute-display-configs/#{adminId}")
+                    .get("/api/v2/admin/attribute-display-configs/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_admin_attribute_display_configs_By_id =
             http("UC06_PATCH_/api/v2/admin/attribute-display-configs/{id}")
-                    .patch("/api/v2/admin/attribute-display-configs/#{adminId}")
+                    .patch("/api/v2/admin/attribute-display-configs/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/AttributeDisplayConfigApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_admin_attribute_display_configs_By_id =
             http("UC07_PUT_/api/v2/admin/attribute-display-configs/{id}")
-                    .put("/api/v2/admin/attribute-display-configs/#{adminId}")
+                    .put("/api/v2/admin/attribute-display-configs/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/AttributeDisplayConfigApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -95,21 +95,21 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC11_DELETE_v2_admin_compliance_case_decisions_By_id =
             http("UC11_DELETE_/api/v2/admin/compliance-case-decisions/{id}")
-                    .delete("/api/v2/admin/compliance-case-decisions/#{adminId}")
+                    .delete("/api/v2/admin/compliance-case-decisions/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC12_GET_v2_admin_compliance_case_decisions_By_id =
             http("UC12_GET_/api/v2/admin/compliance-case-decisions/{id}")
-                    .get("/api/v2/admin/compliance-case-decisions/#{adminId}")
+                    .get("/api/v2/admin/compliance-case-decisions/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC13_PATCH_v2_admin_compliance_case_decisions_By_id =
             http("UC13_PATCH_/api/v2/admin/compliance-case-decisions/{id}")
-                    .patch("/api/v2/admin/compliance-case-decisions/#{adminId}")
+                    .patch("/api/v2/admin/compliance-case-decisions/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceCaseDecisionApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -117,7 +117,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC14_PUT_v2_admin_compliance_case_decisions_By_id =
             http("UC14_PUT_/api/v2/admin/compliance-case-decisions/{id}")
-                    .put("/api/v2/admin/compliance-case-decisions/#{adminId}")
+                    .put("/api/v2/admin/compliance-case-decisions/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceCaseDecisionApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -150,20 +150,20 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC18_DELETE_v2_admin_compliance_checklists_By_id =
             http("UC18_DELETE_/api/v2/admin/compliance-checklists/{id}")
-                    .delete("/api/v2/admin/compliance-checklists/#{adminId}")
+                    .delete("/api/v2/admin/compliance-checklists/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC19_GET_v2_admin_compliance_checklists_By_id =
             http("UC19_GET_/api/v2/admin/compliance-checklists/{id}")
-                    .get("/api/v2/admin/compliance-checklists/#{adminId}")
+                    .get("/api/v2/admin/compliance-checklists/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     public static HttpRequestActionBuilder UC20_PATCH_v2_admin_compliance_checklists_By_id =
             http("UC20_PATCH_/api/v2/admin/compliance-checklists/{id}")
-                    .patch("/api/v2/admin/compliance-checklists/#{adminId}")
+                    .patch("/api/v2/admin/compliance-checklists/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceChecklistApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -171,7 +171,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC21_PUT_v2_admin_compliance_checklists_By_id =
             http("UC21_PUT_/api/v2/admin/compliance-checklists/{id}")
-                    .put("/api/v2/admin/compliance-checklists/#{adminId}")
+                    .put("/api/v2/admin/compliance-checklists/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceChecklistApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -201,21 +201,21 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC25_DELETE_v2_admin_compliance_communications_By_id =
             http("UC25_DELETE_/api/v2/admin/compliance-communications/{id}")
-                    .delete("/api/v2/admin/compliance-communications/#{adminId}")
+                    .delete("/api/v2/admin/compliance-communications/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC26_GET_v2_admin_compliance_communications_By_id =
             http("UC26_GET_/api/v2/admin/compliance-communications/{id}")
-                    .get("/api/v2/admin/compliance-communications/#{adminId}")
+                    .get("/api/v2/admin/compliance-communications/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC27_PATCH_v2_admin_compliance_communications_By_id =
             http("UC27_PATCH_/api/v2/admin/compliance-communications/{id}")
-                    .patch("/api/v2/admin/compliance-communications/#{adminId}")
+                    .patch("/api/v2/admin/compliance-communications/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceCommunicationApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -223,7 +223,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC28_PUT_v2_admin_compliance_communications_By_id =
             http("UC28_PUT_/api/v2/admin/compliance-communications/{id}")
-                    .put("/api/v2/admin/compliance-communications/#{adminId}")
+                    .put("/api/v2/admin/compliance-communications/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceCommunicationApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -255,20 +255,20 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC32_DELETE_v2_admin_compliance_tasks_By_id =
             http("UC32_DELETE_/api/v2/admin/compliance-tasks/{id}")
-                    .delete("/api/v2/admin/compliance-tasks/#{adminId}")
+                    .delete("/api/v2/admin/compliance-tasks/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     public static HttpRequestActionBuilder UC33_GET_v2_admin_compliance_tasks_By_id =
             http("UC33_GET_/api/v2/admin/compliance-tasks/{id}")
-                    .get("/api/v2/admin/compliance-tasks/#{adminId}")
+                    .get("/api/v2/admin/compliance-tasks/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC34_PATCH_v2_admin_compliance_tasks_By_id =
             http("UC34_PATCH_/api/v2/admin/compliance-tasks/{id}")
-                    .patch("/api/v2/admin/compliance-tasks/#{adminId}")
+                    .patch("/api/v2/admin/compliance-tasks/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/TaskApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -276,7 +276,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC35_PUT_v2_admin_compliance_tasks_By_id =
             http("UC35_PUT_/api/v2/admin/compliance-tasks/{id}")
-                    .put("/api/v2/admin/compliance-tasks/#{adminId}")
+                    .put("/api/v2/admin/compliance-tasks/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/TaskApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -309,21 +309,21 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC39_DELETE_v2_admin_fin_operations_settings_By_id =
             http("UC39_DELETE_/api/v2/admin/fin-operations-settings/{id}")
-                    .delete("/api/v2/admin/fin-operations-settings/#{adminId}")
+                    .delete("/api/v2/admin/fin-operations-settings/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC40_GET_v2_admin_fin_operations_settings_By_id =
             http("UC40_GET_/api/v2/admin/fin-operations-settings/{id}")
-                    .get("/api/v2/admin/fin-operations-settings/#{adminId}")
+                    .get("/api/v2/admin/fin-operations-settings/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC41_PATCH_v2_admin_fin_operations_settings_By_id =
             http("UC41_PATCH_/api/v2/admin/fin-operations-settings/{id}")
-                    .patch("/api/v2/admin/fin-operations-settings/#{adminId}")
+                    .patch("/api/v2/admin/fin-operations-settings/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/ComplianceFinOperationSettingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -331,7 +331,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC42_PUT_v2_admin_fin_operations_settings_By_id =
             http("UC42_PUT_/api/v2/admin/fin-operations-settings/{id}")
-                    .put("/api/v2/admin/fin-operations-settings/#{adminId}")
+                    .put("/api/v2/admin/fin-operations-settings/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/ComplianceFinOperationSettingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -362,7 +362,7 @@ public class AdminCase extends Methods {
     public static HttpRequestActionBuilder UC46_GET_v2_admin_organizations_check_actual_id =
             http("UC46_GET_/api/v2/admin/organizations/check-actual-id")
                     .get("/api/v2/admin/organizations/check-actual-id")
-                    .queryParam("ucpId", "#{adminUcpId}")
+                    .queryParam("ucpId", "#{ucp_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -370,28 +370,28 @@ public class AdminCase extends Methods {
     public static HttpRequestActionBuilder UC47_POST_v2_admin_organizations_check_actual_id_or_create =
             http("UC47_POST_/api/v2/admin/organizations/check-actual-id-or-create")
                     .post("/api/v2/admin/organizations/check-actual-id-or-create")
-                    .queryParam("ucpId", "#{adminUcpId}")
+                    .queryParam("ucpId", "#{ucp_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC48_DELETE_v2_admin_organizations_By_id =
             http("UC48_DELETE_/api/v2/admin/organizations/{id}")
-                    .delete("/api/v2/admin/organizations/#{adminId}")
+                    .delete("/api/v2/admin/organizations/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC49_GET_v2_admin_organizations_By_id =
             http("UC49_GET_/api/v2/admin/organizations/{id}")
-                    .get("/api/v2/admin/organizations/#{adminId}")
+                    .get("/api/v2/admin/organizations/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC50_PATCH_v2_admin_organizations_By_id =
             http("UC50_PATCH_/api/v2/admin/organizations/{id}")
-                    .patch("/api/v2/admin/organizations/#{adminId}")
+                    .patch("/api/v2/admin/organizations/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceOrganizationApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -399,7 +399,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC51_PUT_v2_admin_organizations_By_id =
             http("UC51_PUT_/api/v2/admin/organizations/{id}")
-                    .put("/api/v2/admin/organizations/#{adminId}")
+                    .put("/api/v2/admin/organizations/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceOrganizationApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -433,28 +433,28 @@ public class AdminCase extends Methods {
     public static HttpRequestActionBuilder UC55_GET_v3_admin_compliance_requests_by_ucp_id_for_mmb =
             http("UC55_GET_/api/v3/admin/compliance-requests/by-ucp-id-for-mmb")
                     .get("/api/v3/admin/compliance-requests/by-ucp-id-for-mmb")
-                    .queryParam("ucpId", "#{adminUcpId}")
+                    .queryParam("ucpId", "#{ucp_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC56_DELETE_v3_admin_compliance_requests_By_id =
             http("UC56_DELETE_/api/v3/admin/compliance-requests/{id}")
-                    .delete("/api/v3/admin/compliance-requests/#{adminId}")
+                    .delete("/api/v3/admin/compliance-requests/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC57_GET_v3_admin_compliance_requests_By_id =
             http("UC57_GET_/api/v3/admin/compliance-requests/{id}")
-                    .get("/api/v3/admin/compliance-requests/#{adminId}")
+                    .get("/api/v3/admin/compliance-requests/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC58_PATCH_v3_admin_compliance_requests_By_id =
             http("UC58_PATCH_/api/v3/admin/compliance-requests/{id}")
-                    .patch("/api/v3/admin/compliance-requests/#{adminId}")
+                    .patch("/api/v3/admin/compliance-requests/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceRequestApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -462,7 +462,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC59_PUT_v3_admin_compliance_requests_By_id =
             http("UC59_PUT_/api/v3/admin/compliance-requests/{id}")
-                    .put("/api/v3/admin/compliance-requests/#{adminId}")
+                    .put("/api/v3/admin/compliance-requests/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceRequestApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -496,28 +496,28 @@ public class AdminCase extends Methods {
     public static HttpRequestActionBuilder UC63_GET_v3_admin_fin_operations_by_ucp_id_for_mmb =
             http("UC63_GET_/api/v3/admin/fin-operations/by-ucp-id-for-mmb")
                     .get("/api/v3/admin/fin-operations/by-ucp-id-for-mmb")
-                    .queryParam("ucpId", "#{adminUcpId}")
+                    .queryParam("ucpId", "#{ucp_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC64_DELETE_v3_admin_fin_operations_By_id =
             http("UC64_DELETE_/api/v3/admin/fin-operations/{id}")
-                    .delete("/api/v3/admin/fin-operations/#{adminId}")
+                    .delete("/api/v3/admin/fin-operations/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC65_GET_v3_admin_fin_operations_By_id =
             http("UC65_GET_/api/v3/admin/fin-operations/{id}")
-                    .get("/api/v3/admin/fin-operations/#{adminId}")
+                    .get("/api/v3/admin/fin-operations/#{organization_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC66_PATCH_v3_admin_fin_operations_By_id =
             http("UC66_PATCH_/api/v3/admin/fin-operations/{id}")
-                    .patch("/api/v3/admin/fin-operations/#{adminId}")
+                    .patch("/api/v3/admin/fin-operations/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceFinOperationApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -525,7 +525,7 @@ public class AdminCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC67_PUT_v3_admin_fin_operations_By_id =
             http("UC67_PUT_/api/v3/admin/fin-operations/{id}")
-                    .put("/api/v3/admin/fin-operations/#{adminId}")
+                    .put("/api/v3/admin/fin-operations/#{organization_id}")
                     .body(ElFileBody(JSONS_PATH + "Admin/ComplianceFinOperationApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

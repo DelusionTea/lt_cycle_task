@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.tasks;
+import static feeders.ZK.ZKFeeder.tasks;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class GetCalendarScenario {
@@ -18,6 +20,8 @@ public class GetCalendarScenario {
 
     public static ScenarioBuilder scn = scenario("GetCalendar")
             .feed(defaultFeeder)
+            .feed(tasks)
+            .feed(tasks)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -27,6 +31,8 @@ public class GetCalendarScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug GetCalendar")
             .feed(defaultFeeder)
+            .feed(tasks)
+            .feed(tasks)
             .feed(rqUidsFeeder)
             .exec(GetCalendarCase.UC01_GET_v2_get_calendar);
 }

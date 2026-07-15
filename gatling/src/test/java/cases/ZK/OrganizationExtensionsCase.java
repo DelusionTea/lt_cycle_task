@@ -31,7 +31,7 @@ public class OrganizationExtensionsCase extends Methods {
     public static HttpRequestActionBuilder UC03_DELETE_v2_organization_extensions_batch =
             http("UC03_DELETE_/api/v2/organization-extensions/batch")
                     .delete("/api/v2/organization-extensions/batch")
-                    .queryParam("ids", "#{organizationExtensionsIds}")
+                    .queryParam("ids", "#{ext_ids}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -71,27 +71,27 @@ public class OrganizationExtensionsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC08_DELETE_v2_organization_extensions_By_id =
             http("UC08_DELETE_/api/v2/organization-extensions/{id}")
-                    .delete("/api/v2/organization-extensions/#{organizationExtensionsId}")
+                    .delete("/api/v2/organization-extensions/#{ext_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC09_GET_v2_organization_extensions_By_id =
             http("UC09_GET_/api/v2/organization-extensions/{id}")
-                    .get("/api/v2/organization-extensions/#{organizationExtensionsId}")
+                    .get("/api/v2/organization-extensions/#{ext_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     public static HttpRequestActionBuilder UC10_PATCH_v2_organization_extensions_By_id =
             http("UC10_PATCH_/api/v2/organization-extensions/{id}")
-                    .patch("/api/v2/organization-extensions/#{organizationExtensionsId}")
+                    .patch("/api/v2/organization-extensions/#{ext_id}")
                     .body(ElFileBody(JSONS_PATH + "OrganizationExtensions/OrganizationExtensionApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     public static HttpRequestActionBuilder UC11_PUT_v2_organization_extensions_By_id =
             http("UC11_PUT_/api/v2/organization-extensions/{id}")
-                    .put("/api/v2/organization-extensions/#{organizationExtensionsId}")
+                    .put("/api/v2/organization-extensions/#{ext_id}")
                     .body(ElFileBody(JSONS_PATH + "OrganizationExtensions/OrganizationExtensionApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

@@ -1,11 +1,11 @@
 {
-  "ucpId": "#{adminUcpId}",
-  "crmRowId": "#{adminCrmRowId}",
+  "ucpId": "#{ucp_id}",
+  "crmRowId": "#{crm_row_id}",
   "orderBy": 762358892,
   "taskTimeZone": 1,
   "type": "MOP Calling",
   "autoFlag": true,
-  "employeeNumber": "#{adminEmployeeNumber}",
+  "employeeNumber": "#{employee_number}",
   "statusDate": "2023-10-01T12:00Z",
   "sendDate": "2023-10-01T12:00Z",
   "errorText": "Текст ошибки",
@@ -15,8 +15,8 @@
   "callBackPhone": 79998887766,
   "taskStatusSetDocuments": "IN_PROGRESS",
   "contactName": "ФИО",
-  "complianceRequestId": "#{adminComplianceRequestId}",
-  "complianceOrganizationId": "#{adminComplianceOrganizationId}",
-  "individualRequestId": "#{adminIndividualRequestId}",
+  "complianceRequestId": "#{compliance_request_id}",
+  "complianceOrganizationId": "#{organization_id}",
+  "individualRequestId": "#{individual_request_id}",
   "decisionDate": "2023-10-01T12:00Z"
 }

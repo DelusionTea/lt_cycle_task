@@ -1,8 +1,8 @@
 {
-  "ucpId": "#{dboContractUcpId}",
-  "complianceOrganizationId": "#{dboContractComplianceOrganizationId}",
-  "digitalOfficeId": "#{dboContractDigitalOfficeId}",
-  "dboContractId": "#{dboContractId}",
+  "ucpId": "#{ucp_id}",
+  "complianceOrganizationId": "#{organization_id}",
+  "digitalOfficeId": "#{digital_office_id}",
+  "dboContractId": "#{contract_id}",
   "createDate": "2023-10-01T12:00Z",
   "status": "active",
   "statusDescription": "Описание причины",

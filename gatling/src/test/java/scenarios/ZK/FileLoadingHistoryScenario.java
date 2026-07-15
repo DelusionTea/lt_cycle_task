@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.fileLoadingHistory;
+import static feeders.ZK.ZKFeeder.fileLoadingHistory;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class FileLoadingHistoryScenario {
@@ -42,6 +44,8 @@ public class FileLoadingHistoryScenario {
 
     public static ScenarioBuilder scn = scenario("FileLoadingHistory")
             .feed(defaultFeeder)
+            .feed(fileLoadingHistory)
+            .feed(fileLoadingHistory)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class FileLoadingHistoryScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug FileLoadingHistory")
             .feed(defaultFeeder)
+            .feed(fileLoadingHistory)
+            .feed(fileLoadingHistory)
             .feed(rqUidsFeeder)
             .exec(FileLoadingHistoryCase.UC01_GET_v4_file_loading_history)
             .exec(FileLoadingHistoryCase.UC02_POST_v4_file_loading_history)

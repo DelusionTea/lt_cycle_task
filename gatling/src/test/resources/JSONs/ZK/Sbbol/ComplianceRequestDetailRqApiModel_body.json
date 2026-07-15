@@ -1,5 +1,5 @@
 {
-  "pprbId": "#{sbbolPprbId}",
-  "crmId": "#{sbbolCrmId}",
+  "pprbId": "#{pprb_id}",
+  "crmId": "#{crm_id}",
   "channel": "WEB"
 }

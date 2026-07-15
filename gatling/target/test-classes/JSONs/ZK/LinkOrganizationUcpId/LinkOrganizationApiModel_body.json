@@ -1,4 +1,4 @@
 {
-  "organizationId": "#{linkOrganizationUcpIdOrganizationId}",
-  "ucpId": "#{linkOrganizationUcpIdUcpId}"
+  "organizationId": "#{organization_id}",
+  "ucpId": "#{ucp_id}"
 }

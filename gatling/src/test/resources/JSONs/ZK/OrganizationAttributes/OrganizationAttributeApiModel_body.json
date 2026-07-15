@@ -1,5 +1,5 @@
 {
-  "organizationId": "#{organizationAttributesOrganizationId}",
+  "organizationId": "#{organization_id}",
   "type": "type",
   "taxSystem": "type",
   "otherBanksName": "type"

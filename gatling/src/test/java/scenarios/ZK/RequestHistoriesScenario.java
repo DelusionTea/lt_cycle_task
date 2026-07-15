@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.complianceRequests;
+import static feeders.ZK.ZKFeeder.complianceRequests;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class RequestHistoriesScenario {
@@ -42,6 +44,8 @@ public class RequestHistoriesScenario {
 
     public static ScenarioBuilder scn = scenario("RequestHistories")
             .feed(defaultFeeder)
+            .feed(complianceRequests)
+            .feed(complianceRequests)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class RequestHistoriesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug RequestHistories")
             .feed(defaultFeeder)
+            .feed(complianceRequests)
+            .feed(complianceRequests)
             .feed(rqUidsFeeder)
             .exec(RequestHistoriesCase.UC01_GET_v2_request_histories)
             .exec(RequestHistoriesCase.UC02_POST_v2_request_histories)

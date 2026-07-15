@@ -17,7 +17,7 @@ public class SbbolCase extends Methods {
     public static HttpRequestActionBuilder UC01_GET_v1_sbbol_compliance_requests_callback_cancel =
             http("UC01_GET_/api/v1/sbbol/compliance-requests/callback/cancel")
                     .get("/api/v1/sbbol/compliance-requests/callback/cancel")
-                    .queryParam("taskId", "#{sbbolTaskId}")
+                    .queryParam("taskId", "#{taskid}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -55,7 +55,7 @@ public class SbbolCase extends Methods {
 
     public static HttpRequestActionBuilder UC06_GET_v1_sbbol_compliance_requests_start_rehabilitation_By_requestId =
             http("UC06_GET_/api/v1/sbbol/compliance-requests/start-rehabilitation/{requestId}")
-                    .get("/api/v1/sbbol/compliance-requests/start-rehabilitation/#{sbbolRequestId}")
+                    .get("/api/v1/sbbol/compliance-requests/start-rehabilitation/#{compliance_request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -92,7 +92,7 @@ public class SbbolCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC11_DELETE_v2_sbbol_compliance_requests_attachments_By_id =
             http("UC11_DELETE_/api/v2/sbbol/compliance-requests/attachments/{id}")
-                    .delete("/api/v2/sbbol/compliance-requests/attachments/#{sbbolId}")
+                    .delete("/api/v2/sbbol/compliance-requests/attachments/#{compliance_request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -215,7 +215,7 @@ public class SbbolCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC27_GET_v2_sbbol_compliance_requests_organization_by_ucp_id_By_ucpId =
             http("UC27_GET_/api/v2/sbbol/compliance-requests/organization/by-ucp-id/{ucpId}")
-                    .get("/api/v2/sbbol/compliance-requests/organization/by-ucp-id/#{sbbolUcpId}")
+                    .get("/api/v2/sbbol/compliance-requests/organization/by-ucp-id/#{ucp_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -259,7 +259,7 @@ public class SbbolCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC33_POST_v2_sbbol_compliance_requests_send_to_bank_By_requestId =
             http("UC33_POST_/api/v2/sbbol/compliance-requests/send-to-bank/{requestId}")
-                    .post("/api/v2/sbbol/compliance-requests/send-to-bank/#{sbbolRequestId}")
+                    .post("/api/v2/sbbol/compliance-requests/send-to-bank/#{compliance_request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -273,7 +273,7 @@ public class SbbolCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC35_GET_v2_sbbol_free_format_letters_detail_By_freeFormatLetterId =
             http("UC35_GET_/api/v2/sbbol/free-format-letters/detail/{freeFormatLetterId}")
-                    .get("/api/v2/sbbol/free-format-letters/detail/#{sbbolFreeFormatLetterId}")
+                    .get("/api/v2/sbbol/free-format-letters/detail/#{free_format_letter_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -288,7 +288,7 @@ public class SbbolCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC37_POST_v2_sbbol_free_format_letters_send_to_bank_By_freeFormatLetterId =
             http("UC37_POST_/api/v2/sbbol/free-format-letters/send-to-bank/{freeFormatLetterId}")
-                    .post("/api/v2/sbbol/free-format-letters/send-to-bank/#{sbbolFreeFormatLetterId}")
+                    .post("/api/v2/sbbol/free-format-letters/send-to-bank/#{free_format_letter_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -319,7 +319,7 @@ public class SbbolCase extends Methods {
     public static HttpRequestActionBuilder UC41_GET_v3_sbbol_compliance_requests_fin_operation_operation_by_case =
             http("UC41_GET_/api/v3/sbbol/compliance-requests/fin-operation/operation-by-case")
                     .get("/api/v3/sbbol/compliance-requests/fin-operation/operation-by-case")
-                    .queryParam("caseId", "#{sbbolCaseId}")
+                    .queryParam("caseId", "#{case_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -334,7 +334,7 @@ public class SbbolCase extends Methods {
     public static HttpRequestActionBuilder UC43_GET_v3_sbbol_compliance_requests_fin_operation_operations_by_request =
             http("UC43_GET_/api/v3/sbbol/compliance-requests/fin-operation/operations-by-request")
                     .get("/api/v3/sbbol/compliance-requests/fin-operation/operations-by-request")
-                    .queryParam("requestId", "#{sbbolRequestId}")
+                    .queryParam("requestId", "#{compliance_request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 

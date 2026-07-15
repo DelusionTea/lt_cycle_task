@@ -50,14 +50,14 @@ public class IndividualRequestsCase extends Methods {
     public static HttpRequestActionBuilder UC05_GET_v2_individual_requests_get_individual_request_for_mmb =
             http("UC05_GET_/api/v2/individual-requests/get-individual-request-for-mmb")
                     .get("/api/v2/individual-requests/get-individual-request-for-mmb")
-                    .queryParam("ucpId", "#{individualRequestsUcpId}")
+                    .queryParam("ucpId", "#{ucp_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PUT_v2_individual_requests_process_sfl_ties_By_individualRequestId =
             http("UC06_PUT_/api/v2/individual-requests/process-sfl-ties/{individualRequestId}")
-                    .put("/api/v2/individual-requests/process-sfl-ties/#{individualRequestsIndividualRequestId}")
+                    .put("/api/v2/individual-requests/process-sfl-ties/#{individual_request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
@@ -72,21 +72,21 @@ public class IndividualRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC08_DELETE_v2_individual_requests_By_id =
             http("UC08_DELETE_/api/v2/individual-requests/{id}")
-                    .delete("/api/v2/individual-requests/#{individualRequestsId}")
+                    .delete("/api/v2/individual-requests/#{individual_request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC09_GET_v2_individual_requests_By_id =
             http("UC09_GET_/api/v2/individual-requests/{id}")
-                    .get("/api/v2/individual-requests/#{individualRequestsId}")
+                    .get("/api/v2/individual-requests/#{individual_request_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC10_PATCH_v2_individual_requests_By_id =
             http("UC10_PATCH_/api/v2/individual-requests/{id}")
-                    .patch("/api/v2/individual-requests/#{individualRequestsId}")
+                    .patch("/api/v2/individual-requests/#{individual_request_id}")
                     .body(ElFileBody(JSONS_PATH + "IndividualRequests/IndividualRequestApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -94,7 +94,7 @@ public class IndividualRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC11_PUT_v2_individual_requests_By_id =
             http("UC11_PUT_/api/v2/individual-requests/{id}")
-                    .put("/api/v2/individual-requests/#{individualRequestsId}")
+                    .put("/api/v2/individual-requests/#{individual_request_id}")
                     .body(ElFileBody(JSONS_PATH + "IndividualRequests/IndividualRequestApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -102,7 +102,7 @@ public class IndividualRequestsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC12_PUT_v2_individual_requests_By_individualRequestId_assign =
             http("UC12_PUT_/api/v2/individual-requests/{individualRequestId}/assign")
-                    .put("/api/v2/individual-requests/#{individualRequestsIndividualRequestId}/assign")
+                    .put("/api/v2/individual-requests/#{individual_request_id}/assign")
                     .body(ElFileBody(JSONS_PATH + "IndividualRequests/IndividualRequestAssignApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

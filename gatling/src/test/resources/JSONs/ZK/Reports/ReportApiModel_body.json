@@ -2,6 +2,6 @@
   "name": "name",
   "type": "type",
   "size": 2,
-  "fileEcmId": "#{reportsFileEcmId}",
+  "fileEcmId": "#{file_ecm_id}",
   "protectedFlag": false
 }

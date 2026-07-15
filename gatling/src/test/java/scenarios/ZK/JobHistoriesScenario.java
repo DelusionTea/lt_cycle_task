@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.jobHistories;
+import static feeders.ZK.ZKFeeder.jobHistories;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class JobHistoriesScenario {
@@ -42,6 +44,8 @@ public class JobHistoriesScenario {
 
     public static ScenarioBuilder scn = scenario("JobHistories")
             .feed(defaultFeeder)
+            .feed(jobHistories)
+            .feed(jobHistories)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class JobHistoriesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug JobHistories")
             .feed(defaultFeeder)
+            .feed(jobHistories)
+            .feed(jobHistories)
             .feed(rqUidsFeeder)
             .exec(JobHistoriesCase.UC01_GET_v2_job_histories)
             .exec(JobHistoriesCase.UC02_POST_v2_job_histories)

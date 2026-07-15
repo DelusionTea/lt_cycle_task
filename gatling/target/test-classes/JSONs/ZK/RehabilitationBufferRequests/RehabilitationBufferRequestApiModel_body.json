@@ -1,11 +1,11 @@
 {
-  "fccmRequestId": "#{rehabilitationBufferRequestsFccmRequestId}",
-  "ucpId": "#{rehabilitationBufferRequestsUcpId}",
+  "fccmRequestId": "#{fccm_request_id}",
+  "ucpId": "#{ucp_id}",
   "mopComment": "Комментарий",
   "textRequest": "Комментарий",
   "sbbolStatusRequest": "ACTIVE",
-  "complianceFinOperationId": "#{rehabilitationBufferRequestsComplianceFinOperationId}",
-  "organizationId": "#{rehabilitationBufferRequestsOrganizationId}",
-  "complianceCaseId": "#{rehabilitationBufferRequestsComplianceCaseId}",
-  "complianceRequestId": "#{rehabilitationBufferRequestsComplianceRequestId}"
+  "complianceFinOperationId": "#{compliance_fin_operation_id}",
+  "organizationId": "#{organization_id}",
+  "complianceCaseId": "#{compliance_case_id}",
+  "complianceRequestId": "#{compliance_request_id}"
 }

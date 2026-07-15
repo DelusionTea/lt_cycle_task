@@ -41,21 +41,21 @@ public class EventsNoticeConditionsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_events_notice_conditions_By_id =
             http("UC04_DELETE_/api/v2/events-notice-conditions/{id}")
-                    .delete("/api/v2/events-notice-conditions/#{eventsNoticeConditionsId}")
+                    .delete("/api/v2/events-notice-conditions/#{condition_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_events_notice_conditions_By_id =
             http("UC05_GET_/api/v2/events-notice-conditions/{id}")
-                    .get("/api/v2/events-notice-conditions/#{eventsNoticeConditionsId}")
+                    .get("/api/v2/events-notice-conditions/#{condition_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_events_notice_conditions_By_id =
             http("UC06_PATCH_/api/v2/events-notice-conditions/{id}")
-                    .patch("/api/v2/events-notice-conditions/#{eventsNoticeConditionsId}")
+                    .patch("/api/v2/events-notice-conditions/#{condition_id}")
                     .body(ElFileBody(JSONS_PATH + "EventsNoticeConditions/EventsNoticeConditionApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class EventsNoticeConditionsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_events_notice_conditions_By_id =
             http("UC07_PUT_/api/v2/events-notice-conditions/{id}")
-                    .put("/api/v2/events-notice-conditions/#{eventsNoticeConditionsId}")
+                    .put("/api/v2/events-notice-conditions/#{condition_id}")
                     .body(ElFileBody(JSONS_PATH + "EventsNoticeConditions/EventsNoticeConditionApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

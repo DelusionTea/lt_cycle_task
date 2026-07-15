@@ -76,6 +76,7 @@ cases/ZK/FinOperationsAttributesCase.class
 cases/ZK/ComplianceCasesCase.class
 scenarios/ZK/BlackListsScenario.class
 scenarios/ZK/ComplianceChecklistsScenario.class
+feeders/ZK/ZKDbConfig.class
 cases/ZK/ReferenceValueLinksCase.class
 cases/ZK/GetAllCommunicationsCase.class
 cases/ZK/CounterpartiesCase.class

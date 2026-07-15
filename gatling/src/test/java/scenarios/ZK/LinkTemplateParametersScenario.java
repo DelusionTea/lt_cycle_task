@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.linkTemplateParameters;
+import static feeders.ZK.ZKFeeder.linkTemplateParameters;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class LinkTemplateParametersScenario {
@@ -42,6 +44,8 @@ public class LinkTemplateParametersScenario {
 
     public static ScenarioBuilder scn = scenario("LinkTemplateParameters")
             .feed(defaultFeeder)
+            .feed(linkTemplateParameters)
+            .feed(linkTemplateParameters)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class LinkTemplateParametersScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug LinkTemplateParameters")
             .feed(defaultFeeder)
+            .feed(linkTemplateParameters)
+            .feed(linkTemplateParameters)
             .feed(rqUidsFeeder)
             .exec(LinkTemplateParametersCase.UC01_GET_v2_link_template_parameters)
             .exec(LinkTemplateParametersCase.UC02_POST_v2_link_template_parameters)

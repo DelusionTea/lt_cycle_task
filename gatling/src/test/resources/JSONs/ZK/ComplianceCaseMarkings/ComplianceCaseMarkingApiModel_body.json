@@ -1,4 +1,4 @@
 {
   "type": "NoRequest",
-  "complianceCaseId": "#{complianceCaseMarkingsComplianceCaseId}"
+  "complianceCaseId": "#{compliance_case_id}"
 }

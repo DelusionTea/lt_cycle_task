@@ -1,5 +1,5 @@
 {
-  "employeeNumber": "#{complianceRequestsEmployeeNumber}",
+  "employeeNumber": "#{employee_number}",
   "status": "sample_status",
   "updatedBy": "sample_updatedBy"
 }

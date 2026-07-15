@@ -56,21 +56,21 @@ public class ProactiveOnboardingsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_DELETE_v1_proactive_onboardings_By_id =
             http("UC06_DELETE_/api/v1/proactive-onboardings/{id}")
-                    .delete("/api/v1/proactive-onboardings/#{proactiveOnboardingsId}")
+                    .delete("/api/v1/proactive-onboardings/#{onboarding_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_GET_v1_proactive_onboardings_By_id =
             http("UC07_GET_/api/v1/proactive-onboardings/{id}")
-                    .get("/api/v1/proactive-onboardings/#{proactiveOnboardingsId}")
+                    .get("/api/v1/proactive-onboardings/#{onboarding_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC08_PATCH_v1_proactive_onboardings_By_id =
             http("UC08_PATCH_/api/v1/proactive-onboardings/{id}")
-                    .patch("/api/v1/proactive-onboardings/#{proactiveOnboardingsId}")
+                    .patch("/api/v1/proactive-onboardings/#{onboarding_id}")
                     .body(ElFileBody(JSONS_PATH + "ProactiveOnboardings/ProactiveOnboardingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -78,7 +78,7 @@ public class ProactiveOnboardingsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC09_PUT_v1_proactive_onboardings_By_id =
             http("UC09_PUT_/api/v1/proactive-onboardings/{id}")
-                    .put("/api/v1/proactive-onboardings/#{proactiveOnboardingsId}")
+                    .put("/api/v1/proactive-onboardings/#{onboarding_id}")
                     .body(ElFileBody(JSONS_PATH + "ProactiveOnboardings/ProactiveOnboardingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

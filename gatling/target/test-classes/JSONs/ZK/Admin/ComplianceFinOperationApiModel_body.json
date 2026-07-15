@@ -1,17 +1,17 @@
 {
-  "ucpId": "#{adminUcpId}",
-  "fccmOperationId": "#{adminFccmOperationId}",
+  "ucpId": "#{ucp_id}",
+  "fccmOperationId": "#{fccm_operation_id}",
   "type": "Payment order",
   "subtype": "Debit",
   "status": "Approve",
-  "crmRowId": "#{adminCrmRowId}",
+  "crmRowId": "#{crm_row_id}",
   "operationDate": "2023-10-01T12:00Z",
   "clientTimeZone": 1,
   "sbbolStatusOperation": "ACTIVE",
-  "complianceRequestId": "#{adminComplianceRequestId}",
-  "complianceCaseId": "#{adminComplianceCaseId}",
-  "complianceOrganizationId": "#{adminComplianceOrganizationId}",
-  "rehabilitationBufferRequestId": "#{adminRehabilitationBufferRequestId}",
-  "ermCkOperationId": "#{adminErmCkOperationId}",
-  "rehabilitationCaseId": "#{adminRehabilitationCaseId}"
+  "complianceRequestId": "#{compliance_request_id}",
+  "complianceCaseId": "#{compliance_case_id}",
+  "complianceOrganizationId": "#{organization_id}",
+  "rehabilitationBufferRequestId": "#{rehabilitation_buffer_request_id}",
+  "ermCkOperationId": "#{erm_ck_operation_id}",
+  "rehabilitationCaseId": "#{rehabilitation_case_id}"
 }

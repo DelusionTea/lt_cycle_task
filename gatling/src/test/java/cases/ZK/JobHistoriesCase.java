@@ -40,21 +40,21 @@ public class JobHistoriesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_job_histories_By_id =
             http("UC04_DELETE_/api/v2/job-histories/{id}")
-                    .delete("/api/v2/job-histories/#{jobHistoriesId}")
+                    .delete("/api/v2/job-histories/#{history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_job_histories_By_id =
             http("UC05_GET_/api/v2/job-histories/{id}")
-                    .get("/api/v2/job-histories/#{jobHistoriesId}")
+                    .get("/api/v2/job-histories/#{history_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_job_histories_By_id =
             http("UC06_PATCH_/api/v2/job-histories/{id}")
-                    .patch("/api/v2/job-histories/#{jobHistoriesId}")
+                    .patch("/api/v2/job-histories/#{history_id}")
                     .body(ElFileBody(JSONS_PATH + "JobHistories/JobHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class JobHistoriesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_job_histories_By_id =
             http("UC07_PUT_/api/v2/job-histories/{id}")
-                    .put("/api/v2/job-histories/#{jobHistoriesId}")
+                    .put("/api/v2/job-histories/#{history_id}")
                     .body(ElFileBody(JSONS_PATH + "JobHistories/JobHistoryApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

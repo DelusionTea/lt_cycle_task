@@ -41,21 +41,21 @@ public class ComplianceTemplateParametersCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_compliance_template_parameters_By_id =
             http("UC04_DELETE_/api/v2/compliance-template-parameters/{id}")
-                    .delete("/api/v2/compliance-template-parameters/#{complianceTemplateParametersId}")
+                    .delete("/api/v2/compliance-template-parameters/#{template_parameter_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_compliance_template_parameters_By_id =
             http("UC05_GET_/api/v2/compliance-template-parameters/{id}")
-                    .get("/api/v2/compliance-template-parameters/#{complianceTemplateParametersId}")
+                    .get("/api/v2/compliance-template-parameters/#{template_parameter_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_compliance_template_parameters_By_id =
             http("UC06_PATCH_/api/v2/compliance-template-parameters/{id}")
-                    .patch("/api/v2/compliance-template-parameters/#{complianceTemplateParametersId}")
+                    .patch("/api/v2/compliance-template-parameters/#{template_parameter_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/TemplateParameterApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class ComplianceTemplateParametersCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_compliance_template_parameters_By_id =
             http("UC07_PUT_/api/v2/compliance-template-parameters/{id}")
-                    .put("/api/v2/compliance-template-parameters/#{complianceTemplateParametersId}")
+                    .put("/api/v2/compliance-template-parameters/#{template_parameter_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/TemplateParameterApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

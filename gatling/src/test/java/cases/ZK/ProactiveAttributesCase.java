@@ -40,21 +40,21 @@ public class ProactiveAttributesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v1_proactive_attributes_By_id =
             http("UC04_DELETE_/api/v1/proactive-attributes/{id}")
-                    .delete("/api/v1/proactive-attributes/#{proactiveAttributesId}")
+                    .delete("/api/v1/proactive-attributes/#{attributes_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v1_proactive_attributes_By_id =
             http("UC05_GET_/api/v1/proactive-attributes/{id}")
-                    .get("/api/v1/proactive-attributes/#{proactiveAttributesId}")
+                    .get("/api/v1/proactive-attributes/#{attributes_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v1_proactive_attributes_By_id =
             http("UC06_PATCH_/api/v1/proactive-attributes/{id}")
-                    .patch("/api/v1/proactive-attributes/#{proactiveAttributesId}")
+                    .patch("/api/v1/proactive-attributes/#{attributes_id}")
                     .body(ElFileBody(JSONS_PATH + "ProactiveAttributes/ProactiveAttributesApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class ProactiveAttributesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v1_proactive_attributes_By_id =
             http("UC07_PUT_/api/v1/proactive-attributes/{id}")
-                    .put("/api/v1/proactive-attributes/#{proactiveAttributesId}")
+                    .put("/api/v1/proactive-attributes/#{attributes_id}")
                     .body(ElFileBody(JSONS_PATH + "ProactiveAttributes/ProactiveAttributesApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

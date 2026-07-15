@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.complianceTemplates;
+import static feeders.ZK.ZKFeeder.complianceTemplates;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ComplianceTemplatesScenario {
@@ -42,6 +44,8 @@ public class ComplianceTemplatesScenario {
 
     public static ScenarioBuilder scn = scenario("ComplianceTemplates")
             .feed(defaultFeeder)
+            .feed(complianceTemplates)
+            .feed(complianceTemplates)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ComplianceTemplatesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ComplianceTemplates")
             .feed(defaultFeeder)
+            .feed(complianceTemplates)
+            .feed(complianceTemplates)
             .feed(rqUidsFeeder)
             .exec(ComplianceTemplatesCase.UC01_GET_v2_compliance_templates)
             .exec(ComplianceTemplatesCase.UC02_POST_v2_compliance_templates)

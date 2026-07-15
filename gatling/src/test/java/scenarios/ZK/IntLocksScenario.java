@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.intLocks;
+import static feeders.ZK.ZKFeeder.intLocks;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class IntLocksScenario {
@@ -42,6 +44,8 @@ public class IntLocksScenario {
 
     public static ScenarioBuilder scn = scenario("IntLocks")
             .feed(defaultFeeder)
+            .feed(intLocks)
+            .feed(intLocks)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class IntLocksScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug IntLocks")
             .feed(defaultFeeder)
+            .feed(intLocks)
+            .feed(intLocks)
             .feed(rqUidsFeeder)
             .exec(IntLocksCase.UC01_DELETE_v2_int_locks)
             .exec(IntLocksCase.UC02_PATCH_v2_int_locks)

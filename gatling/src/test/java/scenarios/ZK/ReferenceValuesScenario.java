@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.referenceValues;
+import static feeders.ZK.ZKFeeder.referenceValues;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ReferenceValuesScenario {
@@ -42,6 +44,8 @@ public class ReferenceValuesScenario {
 
     public static ScenarioBuilder scn = scenario("ReferenceValues")
             .feed(defaultFeeder)
+            .feed(referenceValues)
+            .feed(referenceValues)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ReferenceValuesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ReferenceValues")
             .feed(defaultFeeder)
+            .feed(referenceValues)
+            .feed(referenceValues)
             .feed(rqUidsFeeder)
             .exec(ReferenceValuesCase.UC01_GET_v2_reference_values)
             .exec(ReferenceValuesCase.UC02_POST_v2_reference_values)

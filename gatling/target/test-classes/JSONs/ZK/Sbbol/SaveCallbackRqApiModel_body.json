@@ -1,8 +1,8 @@
 {
-  "requestId": "#{sbbolRequestId}",
-  "taskId": "#{sbbolTaskId}",
-  "ucpId": "#{sbbolUcpId}",
-  "employeeNumber": "#{sbbolEmployeeNumber}",
+  "requestId": "#{compliance_request_id}",
+  "taskId": "#{taskid}",
+  "ucpId": "#{ucp_id}",
+  "employeeNumber": "#{employee_number}",
   "callbackContact": "Иванов Иван Иванович",
   "callbackPhone": "+7 (954) 333-45-67",
   "callbackDate": "2025-12-19",

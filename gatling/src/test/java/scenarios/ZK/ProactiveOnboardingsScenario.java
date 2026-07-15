@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.proactiveOnboardings;
+import static feeders.ZK.ZKFeeder.proactiveOnboardings;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ProactiveOnboardingsScenario {
@@ -50,6 +52,8 @@ public class ProactiveOnboardingsScenario {
 
     public static ScenarioBuilder scn = scenario("ProactiveOnboardings")
             .feed(defaultFeeder)
+            .feed(proactiveOnboardings)
+            .feed(proactiveOnboardings)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -67,6 +71,8 @@ public class ProactiveOnboardingsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ProactiveOnboardings")
             .feed(defaultFeeder)
+            .feed(proactiveOnboardings)
+            .feed(proactiveOnboardings)
             .feed(rqUidsFeeder)
             .exec(ProactiveOnboardingsCase.UC01_GET_v1_proactive_onboardings)
             .exec(ProactiveOnboardingsCase.UC02_POST_v1_proactive_onboardings)

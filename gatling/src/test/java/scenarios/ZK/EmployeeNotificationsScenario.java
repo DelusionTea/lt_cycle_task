@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.employeeNotifications;
+import static feeders.ZK.ZKFeeder.employeeNotifications;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class EmployeeNotificationsScenario {
@@ -42,6 +44,8 @@ public class EmployeeNotificationsScenario {
 
     public static ScenarioBuilder scn = scenario("EmployeeNotifications")
             .feed(defaultFeeder)
+            .feed(employeeNotifications)
+            .feed(employeeNotifications)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class EmployeeNotificationsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug EmployeeNotifications")
             .feed(defaultFeeder)
+            .feed(employeeNotifications)
+            .feed(employeeNotifications)
             .feed(rqUidsFeeder)
             .exec(EmployeeNotificationsCase.UC01_GET_v1_employee_notifications)
             .exec(EmployeeNotificationsCase.UC02_POST_v1_employee_notifications)

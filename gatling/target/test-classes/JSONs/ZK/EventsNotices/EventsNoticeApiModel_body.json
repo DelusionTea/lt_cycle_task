@@ -1,5 +1,5 @@
 {
   "typeCommunication": "SMS",
-  "groupConditionId": "#{eventsNoticesGroupConditionId}",
-  "templateId": "#{eventsNoticesTemplateId}"
+  "groupConditionId": "#{group_condition_id}",
+  "templateId": "#{template_id}"
 }

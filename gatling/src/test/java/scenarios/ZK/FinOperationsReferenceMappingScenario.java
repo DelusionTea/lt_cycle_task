@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.finOperationsReferenceMapping;
+import static feeders.ZK.ZKFeeder.finOperationsReferenceMapping;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class FinOperationsReferenceMappingScenario {
@@ -42,6 +44,8 @@ public class FinOperationsReferenceMappingScenario {
 
     public static ScenarioBuilder scn = scenario("FinOperationsReferenceMapping")
             .feed(defaultFeeder)
+            .feed(finOperationsReferenceMapping)
+            .feed(finOperationsReferenceMapping)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class FinOperationsReferenceMappingScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug FinOperationsReferenceMapping")
             .feed(defaultFeeder)
+            .feed(finOperationsReferenceMapping)
+            .feed(finOperationsReferenceMapping)
             .feed(rqUidsFeeder)
             .exec(FinOperationsReferenceMappingCase.UC01_GET_v1_fin_operations_reference_mapping)
             .exec(FinOperationsReferenceMappingCase.UC02_POST_v1_fin_operations_reference_mapping)

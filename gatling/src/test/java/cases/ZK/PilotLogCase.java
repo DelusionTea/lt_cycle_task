@@ -40,21 +40,21 @@ public class PilotLogCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_pilot_log_By_id =
             http("UC04_DELETE_/api/v2/pilot-log/{id}")
-                    .delete("/api/v2/pilot-log/#{pilotLogId}")
+                    .delete("/api/v2/pilot-log/#{pilot_log_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_pilot_log_By_id =
             http("UC05_GET_/api/v2/pilot-log/{id}")
-                    .get("/api/v2/pilot-log/#{pilotLogId}")
+                    .get("/api/v2/pilot-log/#{pilot_log_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_pilot_log_By_id =
             http("UC06_PATCH_/api/v2/pilot-log/{id}")
-                    .patch("/api/v2/pilot-log/#{pilotLogId}")
+                    .patch("/api/v2/pilot-log/#{pilot_log_id}")
                     .body(ElFileBody(JSONS_PATH + "PilotLog/PilotLogApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class PilotLogCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_pilot_log_By_id =
             http("UC07_PUT_/api/v2/pilot-log/{id}")
-                    .put("/api/v2/pilot-log/#{pilotLogId}")
+                    .put("/api/v2/pilot-log/#{pilot_log_id}")
                     .body(ElFileBody(JSONS_PATH + "PilotLog/PilotLogApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

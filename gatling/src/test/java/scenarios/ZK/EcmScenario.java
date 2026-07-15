@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.complianceRequests;
+import static feeders.ZK.ZKFeeder.complianceRequests;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class EcmScenario {
@@ -26,6 +28,8 @@ public class EcmScenario {
 
     public static ScenarioBuilder scn = scenario("Ecm")
             .feed(defaultFeeder)
+            .feed(complianceRequests)
+            .feed(complianceRequests)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -37,6 +41,8 @@ public class EcmScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug Ecm")
             .feed(defaultFeeder)
+            .feed(complianceRequests)
+            .feed(complianceRequests)
             .feed(rqUidsFeeder)
             .exec(EcmCase.UC01_POST_v2_ecm_create_contents)
             .exec(EcmCase.UC02_POST_v2_ecm_create_structure)

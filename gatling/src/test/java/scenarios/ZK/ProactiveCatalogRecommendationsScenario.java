@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.proactiveCatalogRecommendations;
+import static feeders.ZK.ZKFeeder.proactiveCatalogRecommendations;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ProactiveCatalogRecommendationsScenario {
@@ -42,6 +44,8 @@ public class ProactiveCatalogRecommendationsScenario {
 
     public static ScenarioBuilder scn = scenario("ProactiveCatalogRecommendations")
             .feed(defaultFeeder)
+            .feed(proactiveCatalogRecommendations)
+            .feed(proactiveCatalogRecommendations)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ProactiveCatalogRecommendationsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ProactiveCatalogRecommendations")
             .feed(defaultFeeder)
+            .feed(proactiveCatalogRecommendations)
+            .feed(proactiveCatalogRecommendations)
             .feed(rqUidsFeeder)
             .exec(ProactiveCatalogRecommendationsCase.UC01_GET_v1_proactive_catalog_recommendations)
             .exec(ProactiveCatalogRecommendationsCase.UC02_POST_v1_proactive_catalog_recommendations)

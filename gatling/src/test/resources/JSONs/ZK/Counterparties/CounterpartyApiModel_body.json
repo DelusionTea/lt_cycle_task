@@ -1,9 +1,9 @@
 {
-  "organizationId": "#{counterpartiesOrganizationId}",
+  "organizationId": "#{organization_id}",
   "name": "name",
-  "inn": "#{counterpartiesInn}",
+  "inn": "#{inn}",
   "kpp": "kpp",
-  "ucpId": "#{counterpartiesUcpId}",
+  "ucpId": "#{ucp_id}",
   "paymentTerms": "paymentTerms",
   "contractFlag": true,
   "comment": "comment",

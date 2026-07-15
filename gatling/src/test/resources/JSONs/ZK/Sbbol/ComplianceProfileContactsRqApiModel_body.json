@@ -1,4 +1,4 @@
 {
-  "ucpId": "#{sbbolUcpId}",
+  "ucpId": "#{ucp_id}",
   "url": "https://example.com"
 }

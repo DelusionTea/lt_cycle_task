@@ -1,10 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="10.12.7">
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/feeders/ZK/ZKFeeder.java">
-</file>
-<file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/feeders/ZK/Headers.java">
-</file>
-<file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/feeders/ZK/Methods.java">
+<error line="37" column="47" severity="warning" message="Name &apos;organizations&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="43" column="47" severity="warning" message="Name &apos;tasks&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="49" column="47" severity="warning" message="Name &apos;accountNumbers&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="51" severity="warning" message="Line is longer than 150 characters (found 230)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="55" column="47" severity="warning" message="Name &apos;adClientMarkings&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="57" severity="warning" message="Line is longer than 150 characters (found 211)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="61" column="47" severity="warning" message="Name &apos;adCounters&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="67" column="47" severity="warning" message="Name &apos;adQueues&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="73" column="47" severity="warning" message="Name &apos;attachmentsForClient&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="75" severity="warning" message="Line is longer than 150 characters (found 184)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="79" column="47" severity="warning" message="Name &apos;blackLists&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="85" column="47" severity="warning" message="Name &apos;catalogRecommendationsCib&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="91" column="47" severity="warning" message="Name &apos;ckr&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="93" severity="warning" message="Line is longer than 150 characters (found 219)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="97" column="47" severity="warning" message="Name &apos;complianceAssistantSubscriptions&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="99" severity="warning" message="Line is longer than 150 characters (found 208)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="103" column="47" severity="warning" message="Name &apos;complianceCaseMarkings&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="105" severity="warning" message="Line is longer than 150 characters (found 165)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="109" column="47" severity="warning" message="Name &apos;complianceCases&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="111" severity="warning" message="Line is longer than 150 characters (found 211)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="115" column="47" severity="warning" message="Name &apos;complianceChecklists&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="117" severity="warning" message="Line is longer than 150 characters (found 170)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="121" column="47" severity="warning" message="Name &apos;complianceDeputyEmployees&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="127" column="47" severity="warning" message="Name &apos;complianceEmployees&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="129" severity="warning" message="Line is longer than 150 characters (found 217)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="133" column="47" severity="warning" message="Name &apos;complianceHistoryClient&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="139" column="47" severity="warning" message="Name &apos;compliancePrintedFormConfig&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="145" column="47" severity="warning" message="Name &apos;complianceProductMarkings&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="147" severity="warning" message="Line is longer than 150 characters (found 202)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="151" column="47" severity="warning" message="Name &apos;complianceRecommendations&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="153" severity="warning" message="Line is longer than 150 characters (found 304)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="157" column="47" severity="warning" message="Name &apos;complianceRequestMarkings&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="159" severity="warning" message="Line is longer than 150 characters (found 174)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="163" column="47" severity="warning" message="Name &apos;complianceRequests&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="165" severity="warning" message="Line is longer than 150 characters (found 165)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="169" column="47" severity="warning" message="Name &apos;complianceTemplateParameters&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="175" column="47" severity="warning" message="Name &apos;complianceTemplates&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="181" column="47" severity="warning" message="Name &apos;constructor&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="187" column="47" severity="warning" message="Name &apos;constructorPfParameters&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="193" column="47" severity="warning" message="Name &apos;counterparties&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="195" severity="warning" message="Line is longer than 150 characters (found 250)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="199" column="47" severity="warning" message="Name &apos;dboContract&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="201" severity="warning" message="Line is longer than 150 characters (found 211)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="205" column="47" severity="warning" message="Name &apos;digitalOffices&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="207" severity="warning" message="Line is longer than 150 characters (found 197)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="211" column="47" severity="warning" message="Name &apos;digitalUserComplianceContacts&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="213" severity="warning" message="Line is longer than 150 characters (found 189)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="217" column="47" severity="warning" message="Name &apos;digitalUserCompliances&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="219" severity="warning" message="Line is longer than 150 characters (found 224)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="223" column="47" severity="warning" message="Name &apos;employeeNotificationWhiteLists&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="225" severity="warning" message="Line is longer than 150 characters (found 155)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="229" column="47" severity="warning" message="Name &apos;employeeNotifications&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="231" severity="warning" message="Line is longer than 150 characters (found 188)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="235" column="47" severity="warning" message="Name &apos;eventsHistories&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="237" severity="warning" message="Line is longer than 150 characters (found 375)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="241" column="47" severity="warning" message="Name &apos;eventsNoticeConditions&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="247" column="47" severity="warning" message="Name &apos;eventsNoticeConditionsGroups&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="253" column="47" severity="warning" message="Name &apos;eventsNoticeSettings&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="259" column="47" severity="warning" message="Name &apos;featureFlags&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="265" column="47" severity="warning" message="Name &apos;fileLoadingHistory&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="267" severity="warning" message="Line is longer than 150 characters (found 264)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="271" column="47" severity="warning" message="Name &apos;fileTransferTasks&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="273" severity="warning" message="Line is longer than 150 characters (found 163)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="277" column="47" severity="warning" message="Name &apos;finOperations&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="283" column="47" severity="warning" message="Name &apos;finOperationsAttributes&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="285" severity="warning" message="Line is longer than 150 characters (found 186)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="289" column="47" severity="warning" message="Name &apos;finOperationsReferenceMapping&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="295" column="47" severity="warning" message="Name &apos;freeFormatLetters&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="297" severity="warning" message="Line is longer than 150 characters (found 256)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="301" column="47" severity="warning" message="Name &apos;getAllCommunications&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="307" column="47" severity="warning" message="Name &apos;individualRequestHistory&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="309" severity="warning" message="Line is longer than 150 characters (found 396)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="313" column="47" severity="warning" message="Name &apos;infrastructures&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="315" severity="warning" message="Line is longer than 150 characters (found 184)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="319" column="47" severity="warning" message="Name &apos;intLocks&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="321" severity="warning" message="Line is longer than 150 characters (found 156)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="325" column="47" severity="warning" message="Name &apos;integrationLogReports&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="331" column="47" severity="warning" message="Name &apos;jobHistories&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="337" column="47" severity="warning" message="Name &apos;linkIndividualOrganization&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="339" severity="warning" message="Line is longer than 150 characters (found 172)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="343" column="47" severity="warning" message="Name &apos;linkOrganizationUcpId&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="345" severity="warning" message="Line is longer than 150 characters (found 175)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="349" column="47" severity="warning" message="Name &apos;linkTemplateParameters&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="351" severity="warning" message="Line is longer than 150 characters (found 212)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="355" column="47" severity="warning" message="Name &apos;organizationAttributes&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="357" severity="warning" message="Line is longer than 150 characters (found 231)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="361" column="47" severity="warning" message="Name &apos;organizationBusinessScheme&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="367" column="47" severity="warning" message="Name &apos;organizationBusinessSchemeAttachments&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="369" severity="warning" message="Line is longer than 150 characters (found 160)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="373" column="47" severity="warning" message="Name &apos;organizationExtensions&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="375" severity="warning" message="Line is longer than 150 characters (found 213)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="379" column="47" severity="warning" message="Name &apos;pilotLog&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="381" severity="warning" message="Line is longer than 150 characters (found 153)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="385" column="47" severity="warning" message="Name &apos;proactiveAttributes&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="387" severity="warning" message="Line is longer than 150 characters (found 175)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="391" column="47" severity="warning" message="Name &apos;proactiveCatalogRecommendations&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="397" column="47" severity="warning" message="Name &apos;proactiveCommunications&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="399" severity="warning" message="Line is longer than 150 characters (found 405)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="403" column="47" severity="warning" message="Name &apos;proactiveOnboardings&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="405" severity="warning" message="Line is longer than 150 characters (found 217)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="409" column="47" severity="warning" message="Name &apos;proactiveTasks&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="411" severity="warning" message="Line is longer than 150 characters (found 259)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="415" column="47" severity="warning" message="Name &apos;processSettings&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="421" column="47" severity="warning" message="Name &apos;referenceValueLinks&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="427" column="47" severity="warning" message="Name &apos;referenceValues&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="433" column="47" severity="warning" message="Name &apos;rehabilitationBufferChecklists&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="435" severity="warning" message="Line is longer than 150 characters (found 221)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="439" column="47" severity="warning" message="Name &apos;rehabilitationBufferRequests&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="441" severity="warning" message="Line is longer than 150 characters (found 379)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="445" column="47" severity="warning" message="Name &apos;reports&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="451" column="47" severity="warning" message="Name &apos;systemPreferences&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
+<error line="555" column="47" severity="warning" message="Name &apos;defaultFeeder&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/feeders/ZK/ZKProtocol.java">
 <error line="18" column="45" severity="warning" message="Name &apos;httpProtocol&apos; must match pattern &apos;^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ConstantNameCheck"/>
@@ -49,11 +157,7 @@
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/CompliancePrintedFormConfigCase.java">
 </file>
-<file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/PrintFormsCase.java">
-</file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/PremcoreCase.java">
-</file>
-<file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/GetAllCommunicationsCase.java">
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/DboContractCase.java">
 </file>
@@ -70,8 +174,6 @@
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/OrganizationsCase.java">
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/OrganizationAttributesCase.java">
-</file>
-<file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/CkrCase.java">
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/IntLocksCase.java">
 </file>
@@ -98,8 +200,6 @@
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/FinOperationsReferenceMappingCase.java">
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/LinkIndividualOrganizationCase.java">
-</file>
-<file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/EcmCase.java">
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/AccountNumbersCase.java">
 </file>
@@ -157,8 +257,6 @@
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/FeatureFlagsCase.java">
 </file>
-<file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/GetCalendarCase.java">
-</file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/ReferenceValuesCase.java">
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/CatalogRecommendationsCibCase.java">
@@ -173,176 +271,294 @@
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/ComplianceTasksCase.java">
 </file>
-<file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/cases/ZK/IvrCase.java">
-</file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/simulations/ZK/All/ZK_all_debug.java">
 <error line="7" column="1" severity="warning" message="Wrong order for &apos;scenarios.ZK.*&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
 <error line="19" column="14" severity="warning" message="Name &apos;ZK_all_debug&apos; must match pattern &apos;^[A-Z][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.TypeNameCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/OrganizationExtensionsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.organizationExtensions." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ConstructorPfParametersScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.constructorPfParameters&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.constructorPfParameters." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/AttachmentsForClientScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.attachmentsForClient&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.attachmentsForClient." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceCaseMarkingsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceCaseMarkings&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceCaseMarkings." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EmployeeNotificationWhiteListsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.employeeNotificationWhiteLists." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/CounterpartiesScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.counterparties&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.counterparties." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/GetAllCommunicationsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.getAllCommunications." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceChecklistsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceChecklists&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceChecklists." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/DigitalUserCompliancesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.digitalUserCompliances." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/IvrScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.ckr&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.ckr." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/FeatureFlagsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.featureFlags." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/IntegrationLogReportsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.integrationLogReports." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/RequestHistoriesScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceRequests&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceRequests." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/AllTasksScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.tasks." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceTasksScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.tasks." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ProactiveCommunicationsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.proactiveCommunications." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/SbbolScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceRequests&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceRequests." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ReferenceValuesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.referenceValues." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EmployeeNotificationsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.employeeNotifications." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/FinOperationsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.finOperations." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/LinkOrganizationUcpIdScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.linkOrganizationUcpId." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/FileLoadingHistoryScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.fileLoadingHistory." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EmployeesScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceEmployees&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceEmployees." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/InfrastructureScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceRequests&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceRequests." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceTemplatesScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceTemplates&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceTemplates." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EventsHistoriesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.eventsHistories." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/FinOperationsReferenceMappingScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.finOperationsReferenceMapping." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ConstructorScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.constructor&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.constructor." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/FreeFormatLettersScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.freeFormatLetters." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EventsNoticeConditionsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.eventsNoticeConditions." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ProactiveTasksScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.proactiveTasks." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceEmployeesScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceEmployees&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceEmployees." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/FileTransferTasksScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.fileTransferTasks." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/DigitalUserComplianceContactsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.digitalUserComplianceContacts." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ProactiveAttributesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.proactiveAttributes." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/SystemPreferencesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.systemPreferences." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EcmScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceRequests&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceRequests." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceRequestMarkingsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceRequestMarkings&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceRequestMarkings." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/LinkTemplateParametersScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.linkTemplateParameters." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ReportsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.reports." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EventsNoticeConditionsGroupsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.eventsNoticeConditionsGroups." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/PrintFormsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.constructor&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.constructor." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ProactiveCatalogRecommendationsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.proactiveCatalogRecommendations." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/AccountNumbersScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.accountNumbers&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.accountNumbers." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/IndividualRequestsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.ckr&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.ckr." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/AdminScenario.java">
+<error line="13" column="1" severity="warning" message="Extra separation in import group before &apos;io.gatling.javaapi.core.CoreDsl.*&apos;" source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="13" column="1" severity="warning" message="&apos;import&apos; has more than 1 empty lines before." source="com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/AdClientMarkingsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.adClientMarkings&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.adClientMarkings." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ProactiveOnboardingsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.proactiveOnboardings." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceCasesScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceCases&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceCases." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/AdQueuesScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.adQueues&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.adQueues." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceAssistantSubscriptionsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceAssistantSubscriptions&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceAssistantSubscriptions." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/RehabilitationBufferRequestsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.rehabilitationBufferRequests." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/PilotLogScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.pilotLog." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/CompliancePrintedFormConfigScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.compliancePrintedFormConfig&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.compliancePrintedFormConfig." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/OrganizationAttributesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.organizationAttributes." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/FinOperationsAttributesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.finOperationsAttributes." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceTemplateParametersScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceTemplateParameters&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceTemplateParameters." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/JobHistoriesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.jobHistories." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/OrganizationBusinessSchemeScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.organizationBusinessScheme." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceDeputyEmployeesScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceDeputyEmployees&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceDeputyEmployees." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceRequestsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceRequests&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceRequests." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceHistoryClientScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceHistoryClient&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceHistoryClient." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/DboContractScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.dboContract&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.dboContract." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceRecommendationsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceRecommendations&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceRecommendations." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/LinkIndividualOrganizationScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.linkIndividualOrganization." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ComplianceProductMarkingsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.complianceProductMarkings&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.complianceProductMarkings." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EventsNoticesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.eventsNoticeSettings." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ProcessSettingsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.processSettings." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/AdCountersScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.adCounters&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.adCounters." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/CkrScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.ckr&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.ckr." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/IntLocksScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.intLocks." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/CatalogRecommendationsCibScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.catalogRecommendationsCib&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.catalogRecommendationsCib." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/IndividualRequestHistoryScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.individualRequestHistory." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/EventsNoticeSettingsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.eventsNoticeSettings." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/ReferenceValueLinksScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.referenceValueLinks." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/InfrastructuresScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.infrastructures." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/GetCalendarScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.tasks." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/OrganizationBusinessSchemeAttachmentsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.organizationBusinessSchemeAttachments." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/BlackListsScenario.java">
+<error line="11" column="1" severity="warning" message="Wrong order for &apos;feeders.ZK.ZKFeeder.blackLists&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.blackLists." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/RehabilitationBufferChecklistsScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.rehabilitationBufferChecklists." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/PremcoreScenario.java">
+<error line="13" column="1" severity="warning" message="Extra separation in import group before &apos;io.gatling.javaapi.core.CoreDsl.*&apos;" source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="13" column="1" severity="warning" message="&apos;import&apos; has more than 1 empty lines before." source="com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/OrganizationsScenario.java">
+<error line="13" column="1" severity="warning" message="Extra separation in import group before &apos;io.gatling.javaapi.core.CoreDsl.*&apos;" source="com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderCheck"/>
+<error line="13" column="1" severity="warning" message="&apos;import&apos; has more than 1 empty lines before." source="com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck"/>
 </file>
 <file name="/Users/svetlanachernysheva/Documents/LT/gatling/src/test/java/scenarios/ZK/DigitalOfficesScenario.java">
+<error line="12" column="1" severity="warning" message="Duplicate import to line 11 - feeders.ZK.ZKFeeder.digitalOffices." source="com.puppycrawl.tools.checkstyle.checks.imports.RedundantImportCheck"/>
 </file>
 </checkstyle>

@@ -1,4 +1,4 @@
 {
   "searchDescription": "sample_searchDescription",
-  "ucpId": "#{sbbolUcpId}"
+  "ucpId": "#{ucp_id}"
 }

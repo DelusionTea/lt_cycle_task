@@ -41,21 +41,21 @@ public class BlackListsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_black_lists_By_id =
             http("UC04_DELETE_/api/v2/black-lists/{id}")
-                    .delete("/api/v2/black-lists/#{blackListsId}")
+                    .delete("/api/v2/black-lists/#{blacklist_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_black_lists_By_id =
             http("UC05_GET_/api/v2/black-lists/{id}")
-                    .get("/api/v2/black-lists/#{blackListsId}")
+                    .get("/api/v2/black-lists/#{blacklist_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_black_lists_By_id =
             http("UC06_PATCH_/api/v2/black-lists/{id}")
-                    .patch("/api/v2/black-lists/#{blackListsId}")
+                    .patch("/api/v2/black-lists/#{blacklist_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/BlacklistApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class BlackListsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_black_lists_By_id =
             http("UC07_PUT_/api/v2/black-lists/{id}")
-                    .put("/api/v2/black-lists/#{blackListsId}")
+                    .put("/api/v2/black-lists/#{blacklist_id}")
                     .body(ElFileBody(JSONS_PATH + "shared/BlacklistApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

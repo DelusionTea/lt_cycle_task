@@ -1,8 +1,8 @@
 {
-  "employeeNumber": "#{employeeNotificationsEmployeeNumber}",
+  "employeeNumber": "#{employee_number}",
   "viewedFlag": true,
   "subject": "писмо комплайнс",
   "text": "text of notification employee",
   "priority": 100,
-  "reportId": "#{employeeNotificationsReportId}"
+  "reportId": "#{report_id}"
 }

@@ -1,5 +1,5 @@
 {
   "clientLastResponseDate": "2026-01-01T00:00:00Z",
-  "complianceRequestId": "#{complianceTasksComplianceRequestId}",
+  "complianceRequestId": "#{compliance_request_id}",
   "updatedBy": "sample_updatedBy"
 }

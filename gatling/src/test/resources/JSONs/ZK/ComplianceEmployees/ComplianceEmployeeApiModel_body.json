@@ -1,5 +1,5 @@
 {
-  "employeeNumber": "#{complianceEmployeesEmployeeNumber}",
+  "employeeNumber": "#{employee_number}",
   "status": "NEW",
   "lastName": "Фамилия",
   "firstName": "Имя",
@@ -10,6 +10,6 @@
   "officePhone": 994558448377,
   "avayaPhone": 994558448377,
   "avayaCode": "code1337",
-  "individualRequestId": "#{complianceEmployeesIndividualRequestId}",
+  "individualRequestId": "#{individual_request_id}",
   "employeeEndDate": "Thu Jan 01 03:00:00 MSK 2026"
 }

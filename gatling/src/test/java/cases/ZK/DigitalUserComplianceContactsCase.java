@@ -39,21 +39,21 @@ public class DigitalUserComplianceContactsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_digital_user_compliance_contacts_By_id =
             http("UC04_DELETE_/api/v2/digital-user-compliance-contacts/{id}")
-                    .delete("/api/v2/digital-user-compliance-contacts/#{digitalUserComplianceContactsId}")
+                    .delete("/api/v2/digital-user-compliance-contacts/#{contact_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_digital_user_compliance_contacts_By_id =
             http("UC05_GET_/api/v2/digital-user-compliance-contacts/{id}")
-                    .get("/api/v2/digital-user-compliance-contacts/#{digitalUserComplianceContactsId}")
+                    .get("/api/v2/digital-user-compliance-contacts/#{contact_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_digital_user_compliance_contacts_By_id =
             http("UC06_PATCH_/api/v2/digital-user-compliance-contacts/{id}")
-                    .patch("/api/v2/digital-user-compliance-contacts/#{digitalUserComplianceContactsId}")
+                    .patch("/api/v2/digital-user-compliance-contacts/#{contact_id}")
                     .body(ElFileBody(JSONS_PATH + "DigitalUserComplianceContacts/DigitalUserComplianceContactApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -61,7 +61,7 @@ public class DigitalUserComplianceContactsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_digital_user_compliance_contacts_By_id =
             http("UC07_PUT_/api/v2/digital-user-compliance-contacts/{id}")
-                    .put("/api/v2/digital-user-compliance-contacts/#{digitalUserComplianceContactsId}")
+                    .put("/api/v2/digital-user-compliance-contacts/#{contact_id}")
                     .body(ElFileBody(JSONS_PATH + "DigitalUserComplianceContacts/DigitalUserComplianceContactApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

@@ -1,6 +1,6 @@
 {
-  "ucpId": "#{proactiveOnboardingsUcpId}",
-  "complianceOrganizationId": "#{proactiveOnboardingsComplianceOrganizationId}",
+  "ucpId": "#{ucp_id}",
+  "complianceOrganizationId": "#{organization_id}",
   "accountNumber": 40803473727936113130,
   "accountDate": "Sun Oct 01 03:00:00 MSK 2023",
   "okved": 74.4,
@@ -14,5 +14,5 @@
   "sbbolChannelViewed": "VIEWED",
   "sbbolDateViewed": "2025-03-26T14:13:03.077Z",
   "errorText": "Error text",
-  "employeeNumber": "#{proactiveOnboardingsEmployeeNumber}"
+  "employeeNumber": "#{employee_number}"
 }

@@ -1,6 +1,6 @@
 {
-  "freeFormatLetterId": "#{ecmFreeFormatLetterId}",
-  "requestId": "#{ecmRequestId}",
-  "fccmRequestId": "#{ecmFccmRequestId}",
-  "ucpId": "#{ecmUcpId}"
+  "freeFormatLetterId": "#{free_format_letter_id}",
+  "requestId": "#{compliance_request_id}",
+  "fccmRequestId": "#{fccm_request_id}",
+  "ucpId": "#{ucp_id}"
 }

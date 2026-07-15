@@ -40,21 +40,21 @@ public class ComplianceEmployeesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_compliance_employees_By_id =
             http("UC04_DELETE_/api/v2/compliance-employees/{id}")
-                    .delete("/api/v2/compliance-employees/#{complianceEmployeesId}")
+                    .delete("/api/v2/compliance-employees/#{compliance_employee_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_compliance_employees_By_id =
             http("UC05_GET_/api/v2/compliance-employees/{id}")
-                    .get("/api/v2/compliance-employees/#{complianceEmployeesId}")
+                    .get("/api/v2/compliance-employees/#{compliance_employee_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_compliance_employees_By_id =
             http("UC06_PATCH_/api/v2/compliance-employees/{id}")
-                    .patch("/api/v2/compliance-employees/#{complianceEmployeesId}")
+                    .patch("/api/v2/compliance-employees/#{compliance_employee_id}")
                     .body(ElFileBody(JSONS_PATH + "ComplianceEmployees/ComplianceEmployeeApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class ComplianceEmployeesCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_compliance_employees_By_id =
             http("UC07_PUT_/api/v2/compliance-employees/{id}")
-                    .put("/api/v2/compliance-employees/#{complianceEmployeesId}")
+                    .put("/api/v2/compliance-employees/#{compliance_employee_id}")
                     .body(ElFileBody(JSONS_PATH + "ComplianceEmployees/ComplianceEmployeeApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

@@ -4,6 +4,6 @@
     "type": "sample_type"
   },
   "updateEntity": {
-    "listOfId": "#{complianceChecklistsListOfId}"
+    "listOfId": "#{list_of_id}"
   }
 }

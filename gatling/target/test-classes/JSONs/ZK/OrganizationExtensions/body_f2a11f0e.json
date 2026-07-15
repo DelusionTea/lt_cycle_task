@@ -1,5 +1,5 @@
 [
   {
-    "organizationId": "#{organizationExtensionsOrganizationId}"
+    "organizationId": "#{organization_id}"
   }
 ]

@@ -46,21 +46,21 @@ public class FreeFormatLettersCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_DELETE_v2_free_format_letters_By_id =
             http("UC05_DELETE_/api/v2/free-format-letters/{id}")
-                    .delete("/api/v2/free-format-letters/#{freeFormatLettersId}")
+                    .delete("/api/v2/free-format-letters/#{letter_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_GET_v2_free_format_letters_By_id =
             http("UC06_GET_/api/v2/free-format-letters/{id}")
-                    .get("/api/v2/free-format-letters/#{freeFormatLettersId}")
+                    .get("/api/v2/free-format-letters/#{letter_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PATCH_v2_free_format_letters_By_id =
             http("UC07_PATCH_/api/v2/free-format-letters/{id}")
-                    .patch("/api/v2/free-format-letters/#{freeFormatLettersId}")
+                    .patch("/api/v2/free-format-letters/#{letter_id}")
                     .body(ElFileBody(JSONS_PATH + "FreeFormatLetters/ComplianceFreeFormatLetterApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -68,7 +68,7 @@ public class FreeFormatLettersCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC08_PUT_v2_free_format_letters_By_id =
             http("UC08_PUT_/api/v2/free-format-letters/{id}")
-                    .put("/api/v2/free-format-letters/#{freeFormatLettersId}")
+                    .put("/api/v2/free-format-letters/#{letter_id}")
                     .body(ElFileBody(JSONS_PATH + "FreeFormatLetters/ComplianceFreeFormatLetterApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

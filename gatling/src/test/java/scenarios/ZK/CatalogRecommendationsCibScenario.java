@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.catalogRecommendationsCib;
+import static feeders.ZK.ZKFeeder.catalogRecommendationsCib;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class CatalogRecommendationsCibScenario {
@@ -42,6 +44,8 @@ public class CatalogRecommendationsCibScenario {
 
     public static ScenarioBuilder scn = scenario("CatalogRecommendationsCib")
             .feed(defaultFeeder)
+            .feed(catalogRecommendationsCib)
+            .feed(catalogRecommendationsCib)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class CatalogRecommendationsCibScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug CatalogRecommendationsCib")
             .feed(defaultFeeder)
+            .feed(catalogRecommendationsCib)
+            .feed(catalogRecommendationsCib)
             .feed(rqUidsFeeder)
             .exec(CatalogRecommendationsCibCase.UC01_GET_v2_catalog_recommendations_cib)
             .exec(CatalogRecommendationsCibCase.UC02_POST_v2_catalog_recommendations_cib)

@@ -40,21 +40,21 @@ public class AttachmentsForClientCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_attachments_for_client_By_id =
             http("UC04_DELETE_/api/v2/attachments-for-client/{id}")
-                    .delete("/api/v2/attachments-for-client/#{attachmentsForClientId}")
+                    .delete("/api/v2/attachments-for-client/#{client_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_attachments_for_client_By_id =
             http("UC05_GET_/api/v2/attachments-for-client/{id}")
-                    .get("/api/v2/attachments-for-client/#{attachmentsForClientId}")
+                    .get("/api/v2/attachments-for-client/#{client_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_attachments_for_client_By_id =
             http("UC06_PATCH_/api/v2/attachments-for-client/{id}")
-                    .patch("/api/v2/attachments-for-client/#{attachmentsForClientId}")
+                    .patch("/api/v2/attachments-for-client/#{client_id}")
                     .body(ElFileBody(JSONS_PATH + "AttachmentsForClient/ComplianceAttachmentsForClientApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -62,7 +62,7 @@ public class AttachmentsForClientCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_attachments_for_client_By_id =
             http("UC07_PUT_/api/v2/attachments-for-client/{id}")
-                    .put("/api/v2/attachments-for-client/#{attachmentsForClientId}")
+                    .put("/api/v2/attachments-for-client/#{client_id}")
                     .body(ElFileBody(JSONS_PATH + "AttachmentsForClient/ComplianceAttachmentsForClientApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

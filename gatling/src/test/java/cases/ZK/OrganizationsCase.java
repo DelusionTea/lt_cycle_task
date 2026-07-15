@@ -15,8 +15,8 @@ public class OrganizationsCase extends Methods {
     public static HttpRequestActionBuilder UC01_GET_v4_organizations =
             http("UC01_GET_/api/v4/organizations")
                     .get("/api/v4/organizations")
-                    .queryParam("ucpId", "#{organizationsUcpId}")
-                    .queryParam("inn", "#{organizationsInn}")
+                    .queryParam("ucpId", "#{ucp_id}")
+                    .queryParam("inn", "#{inn}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 }

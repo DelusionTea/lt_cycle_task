@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.infrastructures;
+import static feeders.ZK.ZKFeeder.infrastructures;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class InfrastructuresScenario {
@@ -58,6 +60,8 @@ public class InfrastructuresScenario {
 
     public static ScenarioBuilder scn = scenario("Infrastructures")
             .feed(defaultFeeder)
+            .feed(infrastructures)
+            .feed(infrastructures)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -77,6 +81,8 @@ public class InfrastructuresScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug Infrastructures")
             .feed(defaultFeeder)
+            .feed(infrastructures)
+            .feed(infrastructures)
             .feed(rqUidsFeeder)
             .exec(InfrastructuresCase.UC01_GET_v2_infrastructures)
             .exec(InfrastructuresCase.UC02_POST_v2_infrastructures)

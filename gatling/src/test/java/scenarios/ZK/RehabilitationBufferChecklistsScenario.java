@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.rehabilitationBufferChecklists;
+import static feeders.ZK.ZKFeeder.rehabilitationBufferChecklists;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class RehabilitationBufferChecklistsScenario {
@@ -42,6 +44,8 @@ public class RehabilitationBufferChecklistsScenario {
 
     public static ScenarioBuilder scn = scenario("RehabilitationBufferChecklists")
             .feed(defaultFeeder)
+            .feed(rehabilitationBufferChecklists)
+            .feed(rehabilitationBufferChecklists)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class RehabilitationBufferChecklistsScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug RehabilitationBufferChecklists")
             .feed(defaultFeeder)
+            .feed(rehabilitationBufferChecklists)
+            .feed(rehabilitationBufferChecklists)
             .feed(rqUidsFeeder)
             .exec(RehabilitationBufferChecklistsCase.UC01_GET_v2_rehabilitation_buffer_checklists)
             .exec(RehabilitationBufferChecklistsCase.UC02_POST_v2_rehabilitation_buffer_checklists)

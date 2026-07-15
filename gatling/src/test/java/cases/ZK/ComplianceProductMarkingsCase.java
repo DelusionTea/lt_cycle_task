@@ -41,21 +41,21 @@ public class ComplianceProductMarkingsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_compliance_product_markings_By_id =
             http("UC04_DELETE_/api/v2/compliance-product-markings/{id}")
-                    .delete("/api/v2/compliance-product-markings/#{complianceProductMarkingsId}")
+                    .delete("/api/v2/compliance-product-markings/#{marking_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_compliance_product_markings_By_id =
             http("UC05_GET_/api/v2/compliance-product-markings/{id}")
-                    .get("/api/v2/compliance-product-markings/#{complianceProductMarkingsId}")
+                    .get("/api/v2/compliance-product-markings/#{marking_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_compliance_product_markings_By_id =
             http("UC06_PATCH_/api/v2/compliance-product-markings/{id}")
-                    .patch("/api/v2/compliance-product-markings/#{complianceProductMarkingsId}")
+                    .patch("/api/v2/compliance-product-markings/#{marking_id}")
                     .body(ElFileBody(JSONS_PATH + "ComplianceProductMarkings/ProductMarkingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -63,7 +63,7 @@ public class ComplianceProductMarkingsCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_compliance_product_markings_By_id =
             http("UC07_PUT_/api/v2/compliance-product-markings/{id}")
-                    .put("/api/v2/compliance-product-markings/#{complianceProductMarkingsId}")
+                    .put("/api/v2/compliance-product-markings/#{marking_id}")
                     .body(ElFileBody(JSONS_PATH + "ComplianceProductMarkings/ProductMarkingApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

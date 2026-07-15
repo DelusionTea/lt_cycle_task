@@ -1,5 +1,5 @@
 {
-  "processSettingId": "#{pilotLogProcessSettingId}",
+  "processSettingId": "#{process_setting_id}",
   "processName": "PROCESS_NAME",
   "category": "CATEGORY",
   "log": "LOG",

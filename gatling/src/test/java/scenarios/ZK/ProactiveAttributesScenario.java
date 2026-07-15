@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.proactiveAttributes;
+import static feeders.ZK.ZKFeeder.proactiveAttributes;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class ProactiveAttributesScenario {
@@ -42,6 +44,8 @@ public class ProactiveAttributesScenario {
 
     public static ScenarioBuilder scn = scenario("ProactiveAttributes")
             .feed(defaultFeeder)
+            .feed(proactiveAttributes)
+            .feed(proactiveAttributes)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class ProactiveAttributesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug ProactiveAttributes")
             .feed(defaultFeeder)
+            .feed(proactiveAttributes)
+            .feed(proactiveAttributes)
             .feed(rqUidsFeeder)
             .exec(ProactiveAttributesCase.UC01_GET_v1_proactive_attributes)
             .exec(ProactiveAttributesCase.UC02_POST_v1_proactive_attributes)

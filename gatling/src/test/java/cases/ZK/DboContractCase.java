@@ -39,21 +39,21 @@ public class DboContractCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC04_DELETE_v2_dbo_contract_By_id =
             http("UC04_DELETE_/api/v2/dbo-contract/{id}")
-                    .delete("/api/v2/dbo-contract/#{dboContractId}")
+                    .delete("/api/v2/dbo-contract/#{contract_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC05_GET_v2_dbo_contract_By_id =
             http("UC05_GET_/api/v2/dbo-contract/{id}")
-                    .get("/api/v2/dbo-contract/#{dboContractId}")
+                    .get("/api/v2/dbo-contract/#{contract_id}")
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
 
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC06_PATCH_v2_dbo_contract_By_id =
             http("UC06_PATCH_/api/v2/dbo-contract/{id}")
-                    .patch("/api/v2/dbo-contract/#{dboContractId}")
+                    .patch("/api/v2/dbo-contract/#{contract_id}")
                     .body(ElFileBody(JSONS_PATH + "DboContract/DboContractApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));
@@ -61,7 +61,7 @@ public class DboContractCase extends Methods {
     // Низконагружен не попал в профиль
     public static HttpRequestActionBuilder UC07_PUT_v2_dbo_contract_By_id =
             http("UC07_PUT_/api/v2/dbo-contract/{id}")
-                    .put("/api/v2/dbo-contract/#{dboContractId}")
+                    .put("/api/v2/dbo-contract/#{contract_id}")
                     .body(ElFileBody(JSONS_PATH + "DboContract/DboContractApiModel_body.json"))
                     .headers(Headers.getCommonHeaders())
                     .check(status().is(200));

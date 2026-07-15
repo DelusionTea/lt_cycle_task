@@ -1,6 +1,6 @@
 {
   "name": "name",
-  "ecmId": "#{organizationBusinessSchemeAttachmentsEcmId}",
+  "ecmId": "#{ecm_id}",
   "fileStatus": "fileStatus",
   "section": "section"
 }

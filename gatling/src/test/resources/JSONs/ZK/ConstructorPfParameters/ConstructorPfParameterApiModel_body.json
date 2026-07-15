@@ -1,5 +1,5 @@
 {
-  "parentId": "#{constructorPfParametersParentId}",
+  "parentId": "#{parent_id}",
   "pfParameter": "pfParameter",
   "parameterType": "parameterType",
   "value": "value",

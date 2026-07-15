@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.digitalUserCompliances;
+import static feeders.ZK.ZKFeeder.digitalUserCompliances;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class DigitalUserCompliancesScenario {
@@ -42,6 +44,8 @@ public class DigitalUserCompliancesScenario {
 
     public static ScenarioBuilder scn = scenario("DigitalUserCompliances")
             .feed(defaultFeeder)
+            .feed(digitalUserCompliances)
+            .feed(digitalUserCompliances)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class DigitalUserCompliancesScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug DigitalUserCompliances")
             .feed(defaultFeeder)
+            .feed(digitalUserCompliances)
+            .feed(digitalUserCompliances)
             .feed(rqUidsFeeder)
             .exec(DigitalUserCompliancesCase.UC01_GET_v2_digital_user_compliances)
             .exec(DigitalUserCompliancesCase.UC02_POST_v2_digital_user_compliances)

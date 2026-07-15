@@ -1,8 +1,8 @@
 {
-  "complianceRequestId": "#{fileLoadingHistoryComplianceRequestId}",
-  "fflId": "#{fileLoadingHistoryFflId}",
-  "cephId": "#{fileLoadingHistoryCephId}",
-  "ecmId": "#{fileLoadingHistoryEcmId}",
+  "complianceRequestId": "#{compliance_request_id}",
+  "fflId": "#{ffl_id}",
+  "cephId": "#{ceph_id}",
+  "ecmId": "#{ecm_id}",
   "channel": "WEB",
   "fileStatus": "UPLOADED",
   "name": "Договор_№123.pdf",
@@ -13,5 +13,5 @@
   "ecmErrorCode": "ECM:TIMEOUT",
   "sentToBank": true,
   "targetFolderTransferAttempts": 1,
-  "ecmFolderId": "#{fileLoadingHistoryEcmFolderId}"
+  "ecmFolderId": "#{ecm_folder_id}"
 }

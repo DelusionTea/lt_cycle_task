@@ -1,8 +1,8 @@
 {
-  "ucpId": "#{adminUcpId}",
+  "ucpId": "#{ucp_id}",
   "name": "Тестовая организация",
   "segment": "Сегмент",
-  "inn": "#{adminInn}",
+  "inn": "#{inn}",
   "kpp": "КПП",
   "keyClientFlag": true,
   "serviceMode": "Модель обслуживания",

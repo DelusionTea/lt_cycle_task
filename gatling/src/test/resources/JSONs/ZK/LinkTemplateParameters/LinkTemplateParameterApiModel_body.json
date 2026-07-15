@@ -1,6 +1,6 @@
 {
-  "templateId": "#{linkTemplateParametersTemplateId}",
-  "templateParameterId": "#{linkTemplateParametersTemplateParameterId}",
+  "templateId": "#{template_id}",
+  "templateParameterId": "#{template_parameter_id}",
   "templateName": "Наименование шаблона",
   "templateDisplayName": "Отображаемое наименование шаблона",
   "parameterCode": "PLANNED_COMPLETION",

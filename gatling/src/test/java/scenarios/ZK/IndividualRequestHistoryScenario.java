@@ -8,6 +8,8 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 
 import static feeders.ZK.Methods.rqUidsFeeder;
 import static feeders.ZK.ZKFeeder.defaultFeeder;
+import static feeders.ZK.ZKFeeder.individualRequestHistory;
+import static feeders.ZK.ZKFeeder.individualRequestHistory;
 import static io.gatling.javaapi.core.CoreDsl.*;
 
 public class IndividualRequestHistoryScenario {
@@ -42,6 +44,8 @@ public class IndividualRequestHistoryScenario {
 
     public static ScenarioBuilder scn = scenario("IndividualRequestHistory")
             .feed(defaultFeeder)
+            .feed(individualRequestHistory)
+            .feed(individualRequestHistory)
             .feed(rqUidsFeeder)
             .forever().on(
                     randomSwitch().on(
@@ -57,6 +61,8 @@ public class IndividualRequestHistoryScenario {
 
     public static ScenarioBuilder Debug = scenario("Debug IndividualRequestHistory")
             .feed(defaultFeeder)
+            .feed(individualRequestHistory)
+            .feed(individualRequestHistory)
             .feed(rqUidsFeeder)
             .exec(IndividualRequestHistoryCase.UC01_GET_v2_individual_request_history)
             .exec(IndividualRequestHistoryCase.UC02_POST_v2_individual_request_history)
