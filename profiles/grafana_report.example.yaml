@@ -1,0 +1,7 @@
+applications:
+  efsFinmonWeb:
+    grafana_application: finmonweb
+    confluence_parent_page_id: "123456789"
+  pprbSberrating:
+    grafana_application: pprb-sberraiting
+    confluence_parent_page_id: "987654321"

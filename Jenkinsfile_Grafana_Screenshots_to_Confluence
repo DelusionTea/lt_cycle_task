@@ -1,0 +1,202 @@
+// Jenkins job: Grafana screenshots -> Confluence (child page).
+// Все рендеры выполняются на генераторе нагрузки через SSH.
+
+pipeline {
+    agent {
+        node { label 'sberlinux&&Linux_Default' }
+    }
+    parameters {
+        string(name: 'APPLICATION', defaultValue: 'efsFinmonWeb',
+               description: 'Ключ АС для grafana_report.yaml (grafana_application + parent page)')
+        string(name: 'FROM_TIME', defaultValue: '', description: 'Unix epoch seconds (from)')
+        string(name: 'TO_TIME', defaultValue: '', description: 'Unix epoch seconds (to)')
+        string(name: 'PAGE_TITLE_SUFFIX', defaultValue: '', description: 'Суффикс для заголовка страницы (опц.)')
+        booleanParam(name: 'RENDER_ONLY_MOST_LOADED_PODS', defaultValue: true, description: 'Только самые нагруженные поды.')
+        booleanParam(name: 'USE_PROXY', defaultValue: true, description: 'Использовать datasource proxy Grafana.')
+        booleanParam(name: 'DRY_RUN', defaultValue: false, description: 'Не публиковать в Confluence, только dry-run.')
+        string(name: 'GRAFANA_URL', defaultValue: '', description: 'URL Grafana (опц., если не в grafana.yaml)')
+        string(name: 'GRAFANA_CONFIG_B64', defaultValue: '', description: 'base64 grafana.yaml (опц.)')
+        credentials(name: 'GRAFANA_TOKEN_CRED', defaultValue: '', description: 'Grafana token (Secret text).',
+                credentialType: 'org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl', required: true)
+        credentials(name: 'CREDS', defaultValue: '', description: 'SSH креды генератора.', credentialType: 'Username with password', required: true)
+        string(name: 'CONF_URL', defaultValue: '', description: 'Базовый URL Confluence.')
+        string(name: 'CONF_SPACE', defaultValue: '', description: 'Space key.')
+        credentials(name: 'CONF_CREDS', defaultValue: '', description: 'Креды Confluence.',
+                credentialType: 'Username with password', required: true)
+    }
+    options {
+        ansiColor('xterm')
+        buildDiscarder(logRotator(numToKeepStr: '30'))
+    }
+    environment {
+        WORK_DIR = "grafana_${BUILD_NUMBER}"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Resolve config') {
+            steps {
+                script {
+                    if (!fileExists('profiles/grafana_report.yaml')) {
+                        error('profiles/grafana_report.yaml не найден (создайте из example).')
+                    }
+                    def cfg = readYaml(file: 'profiles/grafana_report.yaml')
+                    def appCfg = cfg?.applications?.get(params.APPLICATION)
+                    if (!appCfg) {
+                        error("APPLICATION=${params.APPLICATION} не найден в profiles/grafana_report.yaml.")
+                    }
+                    env.GRAFANA_APPLICATION = appCfg.grafana_application
+                    env.CONF_PARENT_PAGE = appCfg.confluence_parent_page_id
+                    if (!env.GRAFANA_APPLICATION?.trim()) {
+                        error("grafana_application пустой для ${params.APPLICATION}.")
+                    }
+                    if (!env.CONF_PARENT_PAGE?.trim()) {
+                        error("confluence_parent_page_id пустой для ${params.APPLICATION}.")
+                    }
+                }
+            }
+        }
+        stage('Prepare bundle') {
+            steps {
+                script {
+                    sh "rm -rf test_files && mkdir -p test_files"
+                    sh "cp ltAuto/render_export.py ltAuto/publish_grafana_to_confluence.py resources/confluence_manger_v2.py test_files/"
+                    if (params.GRAFANA_CONFIG_B64?.trim()) {
+                        sh "echo '${params.GRAFANA_CONFIG_B64}' | base64 -d > test_files/grafana.yaml"
+                    } else {
+                        if (!fileExists('profiles/grafana.yaml')) {
+                            error('profiles/grafana.yaml не найден (создайте из profiles/grafana.example.yaml).')
+                        }
+                        sh "cp profiles/grafana.yaml test_files/"
+                    }
+                }
+            }
+        }
+        stage('Deploy to generator') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: params.CREDS,
+                            usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
+                        def sshScript = '''
+                            #!/bin/bash
+                            if ! cd "$HOME/jenkins_job"; then
+                                mkdir -p "$HOME/jenkins_job"
+                            fi
+                            mkdir -p "$HOME/jenkins_job/'''+env.WORK_DIR+'''"
+                        '''
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                        sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no -r test_files ${remoteHost}:jenkins_job/${env.WORK_DIR}"
+                    }
+                }
+            }
+        }
+        stage('Render on generator') {
+            steps {
+                script {
+                    def onlyLoaded = params.RENDER_ONLY_MOST_LOADED_PODS ? '1' : '0'
+                    def useProxy = params.USE_PROXY ? '1' : '0'
+                    def grafanaUrlArg = params.GRAFANA_URL?.trim() ? "--grafana_url \\\"${params.GRAFANA_URL.trim()}\\\"" : ""
+                    def useProxyArg = "--use_proxy ${useProxy}"
+                    withCredentials([
+                        usernamePassword(credentialsId: params.CREDS,
+                                usernameVariable: 'remoteHost', passwordVariable: 'remotePassword'),
+                        string(credentialsId: params.GRAFANA_TOKEN_CRED, variable: 'GRAFANA_TOKEN')
+                    ]) {
+                        def sshScript = '''
+                            #!/bin/bash
+                            set -e
+                            cd "$HOME/jenkins_job/'''+env.WORK_DIR+'''/test_files"
+                            export GRAFANA_TOKEN="'''+GRAFANA_TOKEN+'''"
+                            python3 render_export.py \
+                                --config grafana.yaml \
+                                --application "'''+env.GRAFANA_APPLICATION+'''" \
+                                --from_time "'''+params.FROM_TIME+'''" \
+                                --to_time "'''+params.TO_TIME+'''" \
+                                --results_path output/systemMetrics \
+                                --render_only_most_loaded_pods "'''+onlyLoaded+'''" \
+                                '''+grafanaUrlArg+''' '''+useProxyArg+'''
+                            PNG_COUNT=$(find output/systemMetrics -name "*.png" | wc -l)
+                            echo "PNG_COUNT=${PNG_COUNT}"
+                            if [ "${PNG_COUNT}" -le 0 ]; then
+                                exit 2
+                            fi
+                        '''
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                    }
+                }
+            }
+        }
+        stage('Publish to Confluence') {
+            when { expression { return !params.DRY_RUN } }
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: params.CREDS,
+                                usernameVariable: 'remoteHost', passwordVariable: 'remotePassword'),
+                        usernamePassword(credentialsId: params.CONF_CREDS,
+                                usernameVariable: 'confUser', passwordVariable: 'confPassword')
+                    ]) {
+                        def sshScript = '''
+                            #!/bin/bash
+                            set -e
+                            cd "$HOME/jenkins_job/'''+env.WORK_DIR+'''/test_files"
+                            python3 publish_grafana_to_confluence.py \
+                                --system_metrics_dir output/systemMetrics \
+                                --application "'''+params.APPLICATION+'''" \
+                                --parent_page "'''+env.CONF_PARENT_PAGE+'''" \
+                                --page_title_suffix "'''+params.PAGE_TITLE_SUFFIX+'''" \
+                                --build_url "'''+env.BUILD_URL+'''" \
+                                --url "'''+params.CONF_URL+'''" \
+                                --space "'''+params.CONF_SPACE+'''" \
+                                -u "'''+confUser+'''" \
+                                -p "'''+confPassword+'''"
+                        '''
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                    }
+                }
+            }
+        }
+        stage('Dry-run Confluence XML') {
+            when { expression { return params.DRY_RUN } }
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: params.CREDS,
+                            usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
+                        def sshScript = '''
+                            #!/bin/bash
+                            set -e
+                            cd "$HOME/jenkins_job/'''+env.WORK_DIR+'''/test_files"
+                            python3 publish_grafana_to_confluence.py \
+                                --system_metrics_dir output/systemMetrics \
+                                --application "'''+params.APPLICATION+'''" \
+                                --parent_page "'''+env.CONF_PARENT_PAGE+'''" \
+                                --page_title_suffix "'''+params.PAGE_TITLE_SUFFIX+'''" \
+                                --build_url "'''+env.BUILD_URL+'''" \
+                                --dry_run \
+                                --output_dir output
+                        '''
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                withCredentials([usernamePassword(credentialsId: params.CREDS,
+                        usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
+                    def sshScript = '''
+                        #!/bin/bash
+                        rm -rf "$HOME/jenkins_job/'''+env.WORK_DIR+'''"
+                    '''
+                    sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                }
+                sh "rm -rf test_files"
+            }
+        }
+    }
+}

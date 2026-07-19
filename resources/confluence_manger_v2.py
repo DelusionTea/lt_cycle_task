@@ -4,7 +4,6 @@ import traceback
 import mimetypes
 from typing import Dict, List
 
-import pandas as pd
 import requests
 import os
 import urllib3
