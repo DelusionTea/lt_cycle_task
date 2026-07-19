@@ -43,9 +43,8 @@
   `spec_validate.py` перед генерацией `profile.properties`.
 
 **Jenkins: spec‑first генерация**
-- В `Generate profile.properties` запускать `spec_to_profile.py` для существующих
-  `SDD/specs/<АС>/<Component>/spec.yaml`, и уже по `profile.spec.yaml`
-  строить `profile.properties` (spec‑first по умолчанию).
+- В `Generate profile.properties` запускать `spec_to_props.py` напрямую по
+  `SDD/specs/<АС>/<Component>/spec.yaml` (без `profile.spec.yaml`).
 
 **Контроль синхронизации**
 - Ввести проверку: если есть и `profile.yaml`, и `profile.spec.yaml`,
@@ -71,9 +70,9 @@
 - В `Jenkinsfile_NT_Start` добавлены параметры:
   - `USE_SDD_SPEC` (boolean)
   - `SPEC_PATH` (путь к spec.yaml)
-  - при `USE_SDD_SPEC=true` запускается `spec_validate.py` и `spec_to_profile.py`,
-    а `PROFILE_YAML` переключается на `SDD/profiles/.../profile.spec.yaml`.
+  - при `USE_SDD_SPEC=true` запускается `spec_validate.py` и `spec_to_props.py`
+    (без генерации `profile.spec.yaml`).
 - В `Jenkinsfile_Gatling_Foreground_Analyze_Mail` добавлены те же параметры
-  и spec‑first генерация профиля.
+  и spec‑first генерация профиля через `spec_to_props.py`.
 - В `Jenkinsfile_NT_Analyze_Report` добавлены те же параметры и подготовка
-  `profile.spec.yaml` перед парсингом.
+  временного профиля `profile.from.spec.yaml` перед парсингом.

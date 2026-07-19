@@ -86,11 +86,7 @@ pipeline {
                             error "USE_SDD_SPEC=true требует непустой SPEC_PATH."
                         }
                         env.SPEC_PATH = params.SPEC_PATH.trim()
-                        def specProfile = env.SPEC_PATH
-                            .replace("SDD/specs/", "SDD/profiles/")
-                            .replace("spec.yaml", "profile.spec.yaml")
-                        env.SDD_PROFILE = specProfile
-                        env.PROFILE_YAML = "../" + specProfile
+                        env.PROFILE_YAML = "profile.from.spec.yaml"
                     } else {
                         env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
                             params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
@@ -105,7 +101,7 @@ pipeline {
             steps {
                 sh """
                     python3 SDD/ltAuto/spec_validate.py --spec '${env.SPEC_PATH}'
-                    python3 SDD/ltAuto/spec_to_profile.py --spec '${env.SPEC_PATH}' --output '${env.SDD_PROFILE}'
+                    python3 SDD/ltAuto/spec_to_profile.py --spec '${env.SPEC_PATH}' --output '${env.PROFILE_YAML}'
                 """
             }
         }

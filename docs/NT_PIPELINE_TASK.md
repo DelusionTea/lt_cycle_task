@@ -1,7 +1,10 @@
 # Задача: внедрить и проверить пайплайн ночного НТ (SDD‑first)
 
 **Для кого:** человек без опыта в Gatling и Jenkins.  
-**Цель:** шаг‑за‑шагом создать SDD‑спеку, проверить её и запустить smoke‑прогон.
+**Цель:** параметризовать сценарии под SDD‑спеки и запустить первые Jenkins‑джобы.
+
+**Текущий этап:** все спеки уже созданы, **сценарии ещё не параметризованы** и
+**джобы не работают**.
 
 **Важно:** инструкцию можно выполнять буквально, без дополнительных знаний.
 
@@ -13,9 +16,8 @@
 
 ## 0. Что вы получите в итоге
 
-- **SDD‑спека**: `SDD/specs/<АС>/<Component>/spec.yaml`
-- **Проверка спеки**: `spec_validate.py` PASS
-- **Профиль из спеки**: `SDD/profiles/<АС>/<Component>/profile.spec.yaml`
+- **Параметризованные сценарии** (используют ProfileConfig)
+- **Валидные спеки** (`spec_validate.py` PASS)
 - **Smoke‑прогон** в Jenkins: Start → Analyze
 
 ---
@@ -37,67 +39,128 @@ pip install pyyaml requests pandas
 
 ---
 
-## 2. Создание SDD‑спеки (через скилл)
+## 1.1 Список Jenkins‑джоб для проверки
 
-### 2.1 Запустите скилл GigaCode
-
-В чате с агентом GigaCode отправьте:
-
-```text
-Прочитай docs/ai/AI_INSTRUCTION_GIGACODE.md.
-Используй skill: sdd-spec-writer
-АС: <АС>
-Компонент: <Component>
-```
-
-### 2.2 Что агент должен сделать
-
-Агент **должен** создать два файла:
-- `SDD/specs/<АС>/<Component>/spec.yaml`
-- `SDD/specs/<АС>/<Component>/spec.md`
-
-**Если агент не создал оба файла — значит, работа не завершена.**
-
-### 2.3 Что заполнить руками (если агент попросит)
-
-В `spec.md` допишите:
-- бизнес‑поток (2–4 пункта)
-- зависимости по данным/feeder
-- допущения
-
-Ничего не придумывайте — только факты.
+Проверьте, что в Jenkins доступны и запускаются:
+- `Jenkinsfile_NT_Start` (старт прогона)
+- `Jenkinsfile_NT_Analyze_Report` (анализ и отчёт)
+- `Jenkinsfile_Gatling_Foreground_Analyze_Mail` (foreground запуск, опционально)
+- `Jenkinsfile_Grafana_Screenshots_to_Confluence` (скриншоты Grafana, опционально)
 
 ---
 
-## 3. Проверка валидности спеки
+## 1.2 Какие файлы нужно скопировать
 
-Выполните:
+### В репозиторий с Gatling‑скриптами
+
+- `gatling/gatlingScripts/` целиком:
+  - `pom.xml`
+  - `ltAuto/` (все python‑скрипты)
+  - `profiles/` (включая `grafana.yaml`)
+  - `src/test/java/...` (cases, scenarios, simulations, config)
+
+### В Jenkins‑репозиторий
+
+- `Jenkinsfile_NT_Start`
+- `Jenkinsfile_NT_Analyze_Report`
+- `Jenkinsfile_Gatling_Foreground_Analyze_Mail` (если нужен foreground)
+- `Jenkinsfile_Grafana_Screenshots_to_Confluence` (если нужны PNG)
+
+---
+
+## 1.3 Подробные этапы прохождения (чек‑лист)
+
+### Этап 1 — Проверка спек
+1) Проверить наличие спеки:
+   - `SDD/specs/<АС>/<Component>/spec.yaml`
+2) Запустить валидатор:
+   - `python3 SDD/ltAuto/spec_validate.py --spec SDD/specs/<АС>/<Component>/spec.yaml`
+3) Если FAIL — исправить `id/label/count` по Case‑классам.
+
+### Этап 2 — Параметризация сценариев
+1) В `Scenario.java` заменить веса на `ProfileConfig.getWeight(...)`.
+2) Проверить:
+   - `python3 ltAuto/verify_profile.py --scenario src/test/java/scenarios/<АС>/<Scenario>.java --compile`
+
+### Этап 3 — Параметризация симуляций
+1) В `Simulation.java` заменить `injectOpen(...)` на `ProfileConfig.getInjectUsers(...)`.
+2) Использовать `ltAuto/inject_codemod.py` при необходимости.
+3) Проверить компиляцию:
+   - `mvn -q -DskipTests test-compile`
+
+### Этап 4 — Генерация properties из спеки
+1) Запустить:
+   - `python3 SDD/ltAuto/spec_to_props.py --spec SDD/specs/<АС>/<Component>/spec.yaml --output profile.properties`
+2) Убедиться, что файл `profile.properties` создан.
+
+### Этап 5 — Jenkins Start
+1) Запустить `Jenkinsfile_NT_Start` с параметрами из раздела 6.
+2) Проверить в логе:
+   - `PROFILE_YAML=(from spec)`
+   - `profile.properties` сформирован
+
+### Этап 6 — Jenkins Analyze
+1) Запустить `Jenkinsfile_NT_Analyze_Report` с параметрами из раздела 7.
+2) Дождаться стадий: Fetch → Parse → Compare → Confluence → Mail.
+
+### Этап 7 — Повторный прогон
+1) Запустить второй прогон.
+2) Проверить дельту в `compare_runs` и Confluence.
+
+---
+
+## 2. Проверка готовых спек
+
+### 2.1 Убедитесь, что спекы существуют
+
+- `SDD/specs/<АС>/<Component>/spec.yaml`
+- `SDD/specs/<АС>/<Component>/spec.md`
+
+### 2.2 Проверьте валидность спеки
 
 ```bash
 python3 SDD/ltAuto/spec_validate.py \
   --spec SDD/specs/<АС>/<Component>/spec.yaml
 ```
 
-### Если команда упала
-
-Сверьте:
-- `endpoints.id` = имя переменной в Case‑классе
-- `endpoints.label` = строка в `http("...")`
-- ключи `profile.count` есть в Case‑классе
-
-Исправьте и запустите повторно.
+Если FAIL — правим `id/label/count` по Case‑классам.
 
 ---
 
-## 4. Генерация профиля из спеки
+## 3. Параметризация сценариев и симуляций
 
+### 3.1 Сценарии (Scenario.java)
+
+Нужно заменить все веса на `ProfileConfig.getWeight(...)`.
+
+Проверка:
 ```bash
-python3 SDD/ltAuto/spec_to_profile.py \
-  --spec SDD/specs/<АС>/<Component>/spec.yaml
+python3 ltAuto/verify_profile.py \
+  --scenario src/test/java/scenarios/<АС>/<Scenario>.java \
+  --compile
 ```
 
-Файл появится здесь:
-`SDD/profiles/<АС>/<Component>/profile.spec.yaml`
+### 3.2 Симуляции (Simulation.java)
+
+Нужно подключить:
+- `ProfileConfig.getInjectUsers(...)`
+- `ProfileConfig.getDuration/getRampup`
+
+Используйте:
+- `ltAuto/weights_codemod.py`
+- `ltAuto/inject_codemod.py`
+
+Проверка: `mvn -q -DskipTests test-compile`
+
+---
+
+## 4. Генерация properties из спеки
+
+```bash
+python3 SDD/ltAuto/spec_to_props.py \
+  --spec SDD/specs/<АС>/<Component>/spec.yaml \
+  --output profile.properties
+```
 
 ---
 
@@ -131,7 +194,7 @@ python3 ltAuto/verify_profile.py \
 | `ACTION` | `ЗАПУСТИТЬ ТЕСТ` |
 
 Ожидаемо в логе:  
-`PROFILE_YAML=../SDD/profiles/.../profile.spec.yaml`
+`PROFILE_YAML=(from spec)`
 
 ---
 

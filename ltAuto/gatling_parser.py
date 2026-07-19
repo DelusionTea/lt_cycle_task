@@ -25,6 +25,8 @@ import yaml
 from case_parser import parse_case_classes
 from profile_paths import build_profile_base_dirs
 
+_REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Парсер Gatling simulation.log")
@@ -32,6 +34,8 @@ def parse_args():
                         help='Путь к simulation.log')
     parser.add_argument('--profile', default='profile.yaml',
                         help='Путь к YAML с профилем и SLA')
+    parser.add_argument('--spec', default='',
+                        help='Путь к spec.yaml (если задан — profile игнорируется)')
     parser.add_argument('--target_percent', type=float, default=None,
                         help='Целевой %% от профиля (по умолчанию из YAML или 100)')
     parser.add_argument('--output_dir', default='output',
@@ -93,6 +97,35 @@ def load_profile(path):
         return yaml.load(fh, Loader=yaml.FullLoader) or {}
 
 
+def load_spec(path):
+    with open(path, 'r', encoding='utf-8') as fh:
+        return yaml.load(fh, Loader=yaml.FullLoader) or {}
+
+
+def build_profile_from_spec(spec):
+    meta = spec.get('meta') or {}
+    profile = spec.get('profile') or {}
+    thresholds = profile.get('thresholds') or {}
+    cfg = {
+        'description': profile.get('description') or meta.get('description'),
+        'target_percent': profile.get('target_percent', 100),
+        'rampup': profile.get('rampup', 0),
+        'request_classes': list(spec.get('request_classes') or []),
+        'count': profile.get('count') or {},
+        'sla_per_label': profile.get('sla_per_label') or {},
+        'injection': spec.get('injection') or {},
+    }
+    if 'pct95' in thresholds:
+        cfg['95pct'] = thresholds.get('pct95')
+    if 'pct50' in thresholds:
+        cfg['50pct'] = thresholds.get('pct50')
+    if 'rps' in thresholds:
+        cfg['rps'] = thresholds.get('rps')
+    if 'error_count' in thresholds:
+        cfg['error_count'] = thresholds.get('error_count')
+    return cfg
+
+
 def collect_request_classes(cfg):
     """Собрать все ссылки на Case-классы из профиля (top-level + сценарии инъекции)."""
     classes = list(cfg.get('request_classes') or [])
@@ -106,17 +139,36 @@ def collect_request_classes(cfg):
     return list(dict.fromkeys(classes))
 
 
-def build_var_to_log(cfg, profile_path):
+def build_var_to_log(cfg, profile_path, base_dirs=None):
     """Карта {имя_переменной_Case: имя_запроса_в_логе} по request_classes профиля."""
     classes = collect_request_classes(cfg)
     if not classes:
         return {}
     try:
-        return parse_case_classes(classes, base_dirs=build_profile_base_dirs(profile_path))
+        if base_dirs is None:
+            base_dirs = build_profile_base_dirs(profile_path)
+        return parse_case_classes(classes, base_dirs=base_dirs)
     except FileNotFoundError as e:
         print("\033[93m[gatling_parser] {} — count-ключи по именам переменных "
               "не будут разрешены\033[0m".format(e))
         return {}
+
+
+def build_spec_base_dirs(spec):
+    meta = spec.get('meta') or {}
+    service = meta.get('service')
+    roots = [
+        _REPO_ROOT,
+        os.getcwd(),
+        os.path.join(_REPO_ROOT, "gatling"),
+        os.path.join(_REPO_ROOT, "gatling", "gatlingScripts"),
+    ]
+    if service:
+        roots.extend([
+            os.path.join(_REPO_ROOT, "gatling", "src", "test", "java", "cases", service),
+            os.path.join(_REPO_ROOT, "gatling", "gatlingScripts", "src", "test", "java", "cases", service),
+        ])
+    return list(dict.fromkeys(r for r in roots if r))
 
 
 def sla_value(cfg, key, default=None):
@@ -136,8 +188,15 @@ def per_label_sla(cfg, label, key, default):
 
 def main():
     args = parse_args()
-
-    cfg = load_profile(args.profile)
+    if args.spec:
+        spec = load_spec(args.spec)
+        cfg = build_profile_from_spec(spec)
+        base_dirs = build_spec_base_dirs(spec)
+        profile_path = None
+    else:
+        cfg = load_profile(args.profile)
+        base_dirs = None
+        profile_path = args.profile
 
     # Коэффициент масштабирования профиля
     target_percent = args.target_percent
@@ -150,7 +209,7 @@ def main():
     # count в yaml — запросов/час на 100% профиля; масштабируем на target_percent (k).
     # Ключи count могут быть заданы по имени переменной Case-класса — резолвим их
     # в имя запроса, которое Gatling пишет в лог (через request_classes профиля).
-    var_to_log = build_var_to_log(cfg, args.profile)
+    var_to_log = build_var_to_log(cfg, profile_path, base_dirs=base_dirs)
     raw_counts = {}
     for key, cnt in (cfg.get('count', {}) or {}).items():
         label = var_to_log.get(key, key)

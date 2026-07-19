@@ -31,10 +31,9 @@
 
 ```
 TARGET_PERCENT + SDD/spec.yaml (count) + Java Case-классы (request_classes)
-        │ spec_validate.py → spec_to_profile.py
+        │ spec_validate.py → spec_to_props.py
         ▼
-SDD/profiles/.../profile.spec.yaml
-        │ profile_to_props.py: веса = доли count по членам сценария (%)
+profile.properties (без profile.spec.yaml)
         ▼
 profile.properties ──scp──► remote: gatling_job/gatlingScripts/profile.properties
         │ (Start job: wrapper + nohup mvn gatling:test -DprofileProperties=...)
@@ -96,7 +95,7 @@ Jenkins-файлы — в отдельном каталоге **`gatlingJenkins/
 
 ### Python (`gatling/gatlingScripts/ltAuto/`)
 - `gatling_parser.py` — парс `simulation.log` (TSV: RUN/USER/REQUEST/GROUP).
-  Аргументы: `--simulation_log --profile --target_percent --output_dir --rampup
+  Аргументы: `--simulation_log --profile/--spec --target_percent --output_dir --rampup
   --script_name --silence`. Выход (контракт downstream):
   `rps_response_table.csv` (главная таблица для compare), `rps_table.csv`,
   `response_table.csv`, `checks_results.csv`, `test_result.csv` (1/0),
