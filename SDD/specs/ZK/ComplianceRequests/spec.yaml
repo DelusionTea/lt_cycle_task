@@ -1,0 +1,101 @@
+meta:
+  service: ZK
+  component: ComplianceRequests
+  scenario: ComplianceRequests
+  source: manual
+  swagger: false
+  description: "НТ для контроллера compliance-requests (ручная спек)"
+
+request_classes:
+  - src/test/java/cases/ZK/ComplianceRequestsCase.java
+
+data_sources:
+  feeders:
+    - name: defaultFeeder
+      source: ZKFeeder.defaultFeeder
+      required_fields: [ucp_id, inn]
+      fallback: stub
+    - name: complianceRequests
+      source: ZKFeeder.complianceRequests
+      required_fields: [compliance_request_id, employee_number]
+    - name: rqUidsFeeder
+      source: Methods.rqUidsFeeder
+      required_fields: [rq_uid]
+
+profile:
+  target_percent: 100
+  rampup: 0
+  thresholds:
+    pct95: 1000
+    pct50: 500
+    rps: 24
+    error_count: 100
+  count:
+    UC01_GET_v3_compliance_requests: 82248
+    UC02_GET_v3_compliance_requests_counters: 5144
+    UC03_PUT_v3_compliance_requests_By_id_assign: 0
+    UC04_PUT_v3_compliance_requests_By_id_close: 0
+    UC05_GET_v3_compliance_requests_By_id_detail: 0
+    UC06_PUT_v3_compliance_requests_By_id_from_to_bordo: 0
+    UC07_GET_v3_compliance_requests_By_id_preview: 0
+  sla_per_label: {}
+
+injection:
+  duration: 600
+  rampup: 60
+  scenarios:
+    ComplianceRequests:
+      users: 1457
+      request_classes:
+        - src/test/java/cases/ZK/ComplianceRequestsCase.java
+
+endpoints:
+  - id: UC01_GET_v3_compliance_requests
+    label: UC01_GET_/api/v3/compliance-requests
+    method: GET
+    path: /api/v3/compliance-requests
+    query:
+      filter: JSONs/ZK/shared/GetListCmplRequestsRqFilter_filter.json
+    checks:
+      status: 200
+  - id: UC02_GET_v3_compliance_requests_counters
+    label: UC02_GET_/api/v3/compliance-requests/counters
+    method: GET
+    path: /api/v3/compliance-requests/counters
+    query:
+      filter: JSONs/ZK/shared/GetCountersRqFilter_filter.json
+    checks:
+      status: 200
+  - id: UC03_PUT_v3_compliance_requests_By_id_assign
+    label: UC03_PUT_/api/v3/compliance-requests/{id}/assign
+    method: PUT
+    path: /api/v3/compliance-requests/#{compliance_request_id}/assign
+    body: JSONs/ZK/ComplianceRequests/ComplianceRequestAssign_body.json
+    checks:
+      status: 200
+  - id: UC04_PUT_v3_compliance_requests_By_id_close
+    label: UC04_PUT_/api/v3/compliance-requests/{id}/close
+    method: PUT
+    path: /api/v3/compliance-requests/#{compliance_request_id}/close
+    body: JSONs/ZK/shared/ComplianceRequestClose_body.json
+    checks:
+      status: 200
+  - id: UC05_GET_v3_compliance_requests_By_id_detail
+    label: UC05_GET_/api/v3/compliance-requests/{id}/detail
+    method: GET
+    path: /api/v3/compliance-requests/#{compliance_request_id}/detail
+    checks:
+      status: 200
+  - id: UC06_PUT_v3_compliance_requests_By_id_from_to_bordo
+    label: UC06_PUT_/api/v3/compliance-requests/{id}/from-to-bordo
+    method: PUT
+    path: /api/v3/compliance-requests/#{compliance_request_id}/from-to-bordo
+    body: JSONs/ZK/shared/ComplianceRequestFromToBordo_body.json
+    checks:
+      status: 200
+  - id: UC07_GET_v3_compliance_requests_By_id_preview
+    label: UC07_GET_/api/v3/compliance-requests/{id}/preview
+    method: GET
+    path: /api/v3/compliance-requests/#{compliance_request_id}/preview
+    checks:
+      status: 200
