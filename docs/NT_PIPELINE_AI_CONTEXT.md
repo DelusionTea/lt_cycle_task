@@ -30,7 +30,10 @@
 ## 3. Поток данных (контур)
 
 ```
-TARGET_PERCENT + profiles/profile.yaml (count) + Java Case-классы (request_classes)
+TARGET_PERCENT + SDD/spec.yaml (count) + Java Case-классы (request_classes)
+        │ spec_validate.py → spec_to_profile.py
+        ▼
+SDD/profiles/.../profile.spec.yaml
         │ profile_to_props.py: веса = доли count по членам сценария (%)
         ▼
 profile.properties ──scp──► remote: gatling_job/gatlingScripts/profile.properties
@@ -78,7 +81,8 @@ Jenkins-файлы — в отдельном каталоге **`gatlingJenkins/
 ### Jenkins (каталог `gatlingJenkins/`)
 - `Jenkinsfile_NT_Start` — старт-джоба. Cron `H 22 * * *`. Параметры: `START_TIME`,
   `packageSimulation`, `TARGET_PERCENT`, `ACTION` (`ЗАПУСТИТЬ ТЕСТ` /
-  `ТОЛЬКО ОБНОВИТЬ СКРИПТЫ`), `PROFILE_YAML`, `UNATTENDED`, `CREDS`.
+  `ТОЛЬКО ОБНОВИТЬ СКРИПТЫ`), `PROFILE_YAML`, `USE_SDD_SPEC`, `SPEC_PATH`,
+  `UNATTENDED`, `CREDS`.
   Ключевое: стадия `Generate profile.properties` (вызов `profile_to_props.py`),
   стадия `Run test (nohup)` генерит `gatling_wrapper.sh` (status/lock/pid/tarball).
   Remote-пути в `environment{}` (см. `REMOTE_*`). `post { aborted }` — аварийная
@@ -88,6 +92,7 @@ Jenkins-файлы — в отдельном каталоге **`gatlingJenkins/
   `Clone history (Bitbucket)` (+защита от повторной обработки `last_processed.txt`),
   `Parse Gatling`, `Grafana system metrics` (под `when {ENABLE_GRAFANA}`),
   `Compare runs`, `Persist history (Bitbucket)`, `Confluence summary`, `Notify (mail)`.
+  Параметры SDD: `USE_SDD_SPEC`, `SPEC_PATH` (спек‑first генерация профиля).
 
 ### Python (`gatling/gatlingScripts/ltAuto/`)
 - `gatling_parser.py` — парс `simulation.log` (TSV: RUN/USER/REQUEST/GROUP).
@@ -153,6 +158,8 @@ Jenkins-файлы — в отдельном каталоге **`gatlingJenkins/
   или прямо по лог-имени.
 - `grafana.example.yaml` — конфиг render_export: `grafana{url,tz,scale,width,
   height,use_proxy}`, `dashboards{default,dropapp}`, `applications{ключ→[datasource]}`.
+  Ключ `applications.<АС>` должен совпадать с `meta.service` в `SDD/specs/<АС>/.../spec.yaml`,
+  и для каждой АС должен быть список дашбордов для скриншотов.
 
 `.gitignore` исключает: `.venv/ output/ profile.properties run/ history_repo/ *.tar.gz`.
 Реальные `profiles/profile.yaml` и `profiles/grafana.yaml` **коммитятся** (джобы

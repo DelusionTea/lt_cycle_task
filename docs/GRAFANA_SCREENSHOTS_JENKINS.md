@@ -25,6 +25,28 @@
 - `dashboards` (uid дашбордов);
 - `applications` → имена datasource в Grafana.
 
+**Связь с SDD:** ключ `applications` и `APPLICATION` в Jenkins должны совпадать
+с именем АС в спеке (`meta.service` в `SDD/specs/<АС>/.../spec.yaml`).
+Для каждой АС укажите список дашбордов, по которым снимаются скриншоты.
+
+Пример `profiles/grafana.yaml`:
+```yaml
+grafana:
+  url: https://grafana.example
+dashboards:
+  system:
+    uid: abc123
+  business:
+    uid: def456
+applications:
+  efsFinmonWeb:
+    datasource: finmonweb
+    dashboards: [system, business]
+  pprbSberrating:
+    datasource: sberrating
+    dashboards: [system]
+```
+
 ### 2.2 Confluence parent page (по APPLICATION)
 
 Скопируйте пример и заполните:
@@ -38,7 +60,8 @@ applications:
     confluence_parent_page_id: "123456789"
 ```
 
-`APPLICATION` в Jenkins выбирает эти параметры.
+`APPLICATION` в Jenkins выбирает эти параметры. Имя `APPLICATION` должно
+соответствовать имени АС в SDD‑спеке (`meta.service`).
 
 ## 3. Jenkins job
 

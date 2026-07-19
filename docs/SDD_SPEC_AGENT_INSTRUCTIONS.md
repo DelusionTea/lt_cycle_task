@@ -19,6 +19,9 @@
 - Данные о профиле (если уже есть `profiles/.../profile.yaml`):
   - блок `count`, `sla_per_label`, `injection`
   - `target_percent`, `rampup`, `95pct`, `50pct`, `rps`, `error_count`
+- Grafana‑связка (обязательно):
+  - `profiles/grafana.yaml` с ключом АС (`applications.<АС>`)
+  - список дашбордов для скриншотов по этой АС
 
 Если чего-то нет — не заполняй и пометь как `TODO` в `spec.md`.
 
@@ -132,6 +135,11 @@ endpoints:
 3) Если валидатор падает:
    - сверить `id` и `label` с Case-классом
    - сверить ключи `count` с Case-классом
+
+4) Проверить Grafana‑связку:
+   - `meta.service` должен совпадать с ключом АС в `profiles/grafana.yaml`
+   - для этой АС должны быть перечислены дашборды
+   - если нет — `TODO` в `spec.md` и стоп
 
 ### 7) Критическое правило
 

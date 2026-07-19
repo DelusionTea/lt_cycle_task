@@ -40,6 +40,8 @@ pipeline {
                description: 'Имя АС = каталог profiles/<APPLICATION>/ и cases/<APPLICATION>/')
         string(name: 'PROFILE_YAML', defaultValue: '',
                description: 'Путь к profile.yaml относительно GATLING_DIR. Пусто → profiles/<APPLICATION>/profile.yaml')
+        booleanParam(name: 'USE_SDD_SPEC', defaultValue: false, description: 'Использовать SDD/spec.yaml как источник профиля')
+        string(name: 'SPEC_PATH', defaultValue: '', description: 'Путь к spec.yaml (относительно корня репозитория)')
         booleanParam(name: 'UNATTENDED', defaultValue: false, description: 'Принудительно неинтерактивный режим (без input()).')
         credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора', credentialType: 'Username with password', required: true)
     }
@@ -60,8 +62,20 @@ pipeline {
                         error "Unattended-запуск требует непустой packageSimulation."
                     }
                     env.FINAL_TARGET = params.packageSimulation.trim()
-                    env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
-                        params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
+                    if (params.USE_SDD_SPEC) {
+                        if (params.SPEC_PATH == null || params.SPEC_PATH.trim() == '') {
+                            error "USE_SDD_SPEC=true требует непустой SPEC_PATH."
+                        }
+                        env.SPEC_PATH = params.SPEC_PATH.trim()
+                        def specProfile = env.SPEC_PATH
+                            .replace("SDD/specs/", "SDD/profiles/")
+                            .replace("spec.yaml", "profile.spec.yaml")
+                        env.SDD_PROFILE = specProfile
+                        env.PROFILE_YAML = "../" + specProfile
+                    } else {
+                        env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
+                            params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
+                    }
                     echo "PROFILE_YAML=${env.PROFILE_YAML}"
                 }
             }
@@ -79,6 +93,10 @@ pipeline {
                     // Скрипты и профили лежат в ${GATLING_DIR}; веса randomSwitch
                     // и request_classes (src/test/java/cases/...) резолвятся относительно него.
                     sh """
+                        if [ "${params.USE_SDD_SPEC}" = "true" ]; then
+                          python3 SDD/ltAuto/spec_validate.py --spec '${env.SPEC_PATH}'
+                          python3 SDD/ltAuto/spec_to_profile.py --spec '${env.SPEC_PATH}' --output '${env.SDD_PROFILE}'
+                        fi
                         python3 ${GATLING_DIR}/ltAuto/profile_to_props.py \
                             --profile '${GATLING_DIR}/${env.PROFILE_YAML}' \
                             --target_percent '${params.TARGET_PERCENT}' \

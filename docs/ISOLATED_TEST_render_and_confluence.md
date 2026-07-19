@@ -48,6 +48,28 @@ python3 ltAuto/summary_to_confluence.py --help
 - Ключ АС (`--application`) и его datasource — из `profiles/grafana.yaml`
   (скопируйте из `profiles/grafana.example.yaml` и поправьте `url`/`applications`/`dashboards`).
 
+**Связь с SDD:** значение `--application` должно совпадать с именем АС в SDD‑спеке
+(`meta.service` в `SDD/specs/<АС>/.../spec.yaml`). Для этой АС в `grafana.yaml`
+должны быть перечислены дашборды, по которым делаются скриншоты.
+
+Пример `profiles/grafana.yaml`:
+```yaml
+grafana:
+  url: https://grafana.example
+dashboards:
+  system:
+    uid: abc123
+  business:
+    uid: def456
+applications:
+  efsFinmonWeb:
+    datasource: finmonweb
+    dashboards: [system, business]
+  pprbSberrating:
+    datasource: sberrating
+    dashboards: [system]
+```
+
 ### 1.2. Экспорт переменных окружения
 ```bash
 export GRAFANA_URL="https://grafana.example:3000"

@@ -23,22 +23,16 @@
 4) Если установленный pip не может писать в системные каталоги:
    - `python3 -m pip install --user PyYAML`
 
-### 1) Пилот: подготовка спеки
+### 1) Пилот: проверка готовых спек
 
-1) Создайте папку для пилотного контроллера:
-   - пример уже есть: `SDD/specs/ZK/ComplianceRequests/`
+1) Убедитесь, что спека уже заполнена:
+   - пример: `SDD/specs/ZK/ComplianceRequests/`
 
-2) Заполните `spec.yaml`:
-   - `meta` (service, component, scenario, source, swagger)
-   - `request_classes` (пути к Case-классам)
-   - `profile` (count, SLA, thresholds)
-   - `injection` (duration, rampup, scenarios)
-   - `endpoints` (id, label, method, path, checks)
+2) Проверьте наличие обязательных разделов в `spec.yaml`:
+   - `meta`, `request_classes`, `profile`, `injection`, `endpoints`
 
-3) Заполните `spec.md`:
-   - бизнес-поток
-   - зависимости по данным/feeder
-   - допущения (например, stub при отсутствии БД)
+3) Проверьте `spec.md`:
+   - бизнес-поток, зависимости, допущения
 
 ### 2) Пилот: валидация спеки
 
@@ -83,7 +77,7 @@
 
 ### 6) Дальнейшее масштабирование
 
-1) Создавайте спеки для каждого компонента:
+1) Проверяйте, что все спеки заполнены:
    - `SDD/specs/<АС>/<Component>/spec.yaml` + `spec.md`
 
 2) Встраивайте в CI:

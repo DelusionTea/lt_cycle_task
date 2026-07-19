@@ -19,6 +19,7 @@ Never invent endpoints, paths, labels, counts, SLA, or data fields. If missing, 
 1) Case-класс: `gatling/src/test/java/cases/<АС>/<Component>Case.java`  
 2) Профиль (если существует): `profiles/<АС>/<Component>/profile.yaml`  
 3) Сценарий: `gatling/src/test/java/scenarios/<АС>/<Component>Scenario.java`
+4) Grafana mapping: `profiles/grafana.yaml` (для связи `meta.service` и dashboards)
 
 If any input is missing, stop and report which file is missing.
 
@@ -110,6 +111,12 @@ endpoints:
 ### Ограничения и допущения
 - TODO для неизвестного.
 ```
+
+## Grafana Link (must verify)
+
+- `meta.service` MUST match the key in `profiles/grafana.yaml` and Jenkins `APPLICATION`.
+- For this service, `profiles/grafana.yaml` MUST list dashboards used for screenshots.
+- If dashboards are missing, write `TODO` in `spec.md` and stop.
 
 ## Validation (must run)
 

@@ -25,6 +25,8 @@ pipeline {
                description: 'Имя АС = каталог profiles/<APPLICATION>/, cases/<APPLICATION>/, история Bitbucket.')
         string(name: 'PROFILE_YAML', defaultValue: '',
                description: 'profile.yaml для SLA. Пусто → profiles/<APPLICATION>/profile.yaml')
+        booleanParam(name: 'USE_SDD_SPEC', defaultValue: false, description: 'Использовать SDD/spec.yaml как источник профиля')
+        string(name: 'SPEC_PATH', defaultValue: '', description: 'Путь к spec.yaml (относительно корня репозитория)')
         string(name: 'ERROR_THRESHOLD', defaultValue: '100', description: 'Порог error% для "перестал отрабатывать".')
         credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора (SSH).', credentialType: 'Username with password', required: true)
         string(name: 'BITBUCKET_REPO', defaultValue: '', description: 'URL Bitbucket-репозитория истории прогонов (https).')
@@ -79,11 +81,32 @@ pipeline {
         stage('Checkout scripts') {
             steps {
                 script {
-                    env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
-                        params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
+                    if (params.USE_SDD_SPEC) {
+                        if (params.SPEC_PATH == null || params.SPEC_PATH.trim() == '') {
+                            error "USE_SDD_SPEC=true требует непустой SPEC_PATH."
+                        }
+                        env.SPEC_PATH = params.SPEC_PATH.trim()
+                        def specProfile = env.SPEC_PATH
+                            .replace("SDD/specs/", "SDD/profiles/")
+                            .replace("spec.yaml", "profile.spec.yaml")
+                        env.SDD_PROFILE = specProfile
+                        env.PROFILE_YAML = "../" + specProfile
+                    } else {
+                        env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
+                            params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
+                    }
                     echo "PROFILE_YAML=${env.PROFILE_YAML}"
                 }
                 checkout scm
+            }
+        }
+        stage('Prepare SDD profile') {
+            when { expression { return params.USE_SDD_SPEC } }
+            steps {
+                sh """
+                    python3 SDD/ltAuto/spec_validate.py --spec '${env.SPEC_PATH}'
+                    python3 SDD/ltAuto/spec_to_profile.py --spec '${env.SPEC_PATH}' --output '${env.SDD_PROFILE}'
+                """
             }
         }
         stage('Clone history (Bitbucket)') {
