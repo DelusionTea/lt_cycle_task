@@ -1,0 +1,338 @@
+// Jenkins job: foreground Gatling run + parser + mail.
+// Запуск теста выполняется на генераторе по SSH без nohup.
+
+pipeline {
+    agent {
+        node { label 'sberlinux&&Linux_Default' }
+    }
+    environment {
+        MAVEN_HOME = "/home/pprb_test/apache-maven-3.9.6/"
+        REMOTE_RESULTS = "/home/pprb_test/gatling_job/gatlingScripts/results"
+        REMOTE_PROFILE = "/home/pprb_test/gatling_job/gatlingScripts/profile.properties"
+    }
+    parameters {
+        choice(name: 'ACTION', choices: ['ЗАПУСТИТЬ ТЕСТ', 'ТОЛЬКО ОБНОВИТЬ СКРИПТЫ (Без запуска)'],
+                description: 'Что делаем?')
+        gitParameter(
+            name: 'BRANCH',
+            branchFilter: 'origin/(.*)',
+            defaultValue: 'master',
+            description: 'Ветка со скриптами Gatling',
+            type: 'PT_BRANCH',
+            sortMode: 'ASCENDING_SMART',
+            selectedValue: 'DEFAULT',
+            useRepository: '.*'
+        )
+        string(name: 'APPLICATION', defaultValue: 'efsFinmonWeb',
+               description: 'Имя АС (profiles/<APPLICATION>/profile.yaml)')
+        string(name: 'PROFILE_YAML', defaultValue: '',
+               description: 'Путь к profile.yaml относительно gatling/gatlingScripts; пусто → profiles/<APPLICATION>/profile.yaml')
+        string(name: 'TARGET_PERCENT', defaultValue: '100', description: 'Целевой % от профиля (масштаб интенсивности)')
+        string(name: 'TARGET_DURATION', defaultValue: '3600', description: 'Целевая длительность теста, сек')
+        string(name: 'packageSimulation', defaultValue: '',
+               description: 'Класс симуляции (пример: PPRB_Arbitr.PPRB_Arbitr_Debug). Пусто → выбор из списков.')
+        credentials(name: 'CREDS', defaultValue: '', description: 'SSH креды генератора',
+                credentialType: 'Username with password', required: true)
+        string(name: 'MAIL_TO', defaultValue: '', description: 'Получатели письма (через запятую)')
+    }
+    options {
+        ansiColor('xterm')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+    stages {
+        stage('Checkout branch') {
+            steps {
+                echo "Выкачиваем ветку: ${params.BRANCH}"
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "${params.BRANCH}"]],
+                    extensions: [
+                        [$class: 'CleanBeforeCheckout'],
+                        [$class: 'CloneOption', shallow: true, depth: 1, noTags: true]
+                    ],
+                    userRemoteConfigs: scm.userRemoteConfigs
+                ])
+            }
+        }
+        stage('Select simulation') {
+            when {
+                expression {
+                    params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' &&
+                            (params.packageSimulation == null || params.packageSimulation.trim() == '')
+                }
+            }
+            steps {
+                script {
+                    echo "Ручной ввод пуст. Ищем пакеты (АС) в simulations..."
+                    def foundDirs = sh(
+                        script: '''#!/bin/bash
+                        found_any="false"
+                        for sim_dir in $(find . -type d -iname "simulations"); do
+                            if [[ "$sim_dir" != *"/target/"* ]]; then
+                                cd "$sim_dir" || continue
+                                find . -mindepth 1 -maxdepth 1 -type d | sed 's|^\\./||'
+                                cd - > /dev/null
+                                found_any="true"
+                            fi
+                        done
+                        if [ "$found_any" = "false" ]; then
+                            echo "ERROR_NO_DIR"
+                        fi
+                        ''',
+                        returnStdout: true
+                    ).trim().split('\n')
+                    def packageList = []
+                    for (String dir : foundDirs) {
+                        dir = dir.trim()
+                        if (dir != "" && dir != "ERROR_NO_DIR") packageList.add(dir)
+                    }
+                    if (packageList.isEmpty()) packageList = ["ОШИБКА: НЕТ ПАПОК"]
+                    env.SELECTED_PACKAGE = input(
+                        message: 'АВТОВЫБОР (Шаг 1 из 2): Выберите пакет (АС):',
+                        parameters: [
+                            choice(name: 'PACK', choices: packageList.unique().sort(), description: 'Список АС')
+                        ]
+                    )
+                    echo "Ищем скрипты в пакете ${env.SELECTED_PACKAGE}..."
+                    def foundFiles = sh(
+                        script: '''#!/bin/bash
+                        found_any="false"
+                        for sim_dir in $(find . -type d -iname "simulations"); do
+                            if [[ "$sim_dir" != *"/target/"* ]]; then
+                                if [ -d "$sim_dir/''' + env.SELECTED_PACKAGE + '''" ]; then
+                                    cd "$sim_dir/''' + env.SELECTED_PACKAGE + '''" || continue
+                                    find . -type f \\( -name "*.java" -o -name "*.scala" \\) | sed 's|^\\./||' | sed 's/\\.java$//' | sed 's/\\.scala$//'
+                                    cd - > /dev/null
+                                    found_any="true"
+                                fi
+                            fi
+                        done
+                        if [ "$found_any" = "false" ]; then
+                            echo "ERROR_NO_DIR"
+                        fi
+                        ''',
+                        returnStdout: true
+                    ).trim().split('\n')
+                    def classList = []
+                    for (String file : foundFiles) {
+                        file = file.trim()
+                        if (file != "" && file != "ERROR_NO_DIR") classList.add(file)
+                    }
+                    if (classList.isEmpty()) classList = ["ОШИБКА: ПУСТАЯ ПАПКА"]
+                    env.SELECTED_CLASS = input(
+                        message: "АВТОВЫБОР (Шаг 2 из 2): Выберите класс симуляции для [${env.SELECTED_PACKAGE}]:",
+                        parameters: [
+                            choice(name: 'SIMCLASS', choices: classList.unique().sort(), description: 'Скрипты внутри пакета')
+                        ]
+                    )
+                    env.SELECTED_SIMCLASS = "${env.SELECTED_PACKAGE}.${env.SELECTED_CLASS}"
+                    echo "Выбрана симуляция: ${env.SELECTED_SIMCLASS}"
+                }
+            }
+        }
+        stage('Generate profile.properties') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
+            }
+            steps {
+                script {
+                    env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
+                            params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
+                    sh """
+                        python3 gatling/gatlingScripts/ltAuto/profile_to_props.py \
+                            --profile 'gatling/gatlingScripts/${env.PROFILE_YAML}' \
+                            --target_percent '${params.TARGET_PERCENT}' \
+                            --output profile.properties
+                        echo "injection.duration=${params.TARGET_DURATION}" >> profile.properties
+                        cat profile.properties
+                    """
+                }
+            }
+        }
+        stage('Prepare remote') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
+            }
+            steps {
+                script {
+                    def finalTarget = ""
+                    if (params.packageSimulation != null && params.packageSimulation.trim() != '') {
+                        finalTarget = params.packageSimulation.trim()
+                        echo "Используется РУЧНОЙ ввод: simulations.${finalTarget}"
+                    } else {
+                        finalTarget = env.SELECTED_SIMCLASS
+                        echo "Используется выбор из ИНТЕРАКТИВНОГО МЕНЮ: simulations.${finalTarget}"
+                    }
+                    env.FINAL_TARGET = finalTarget
+                    env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
+                            params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
+                    withCredentials([usernamePassword(
+                        credentialsId: params.CREDS,
+                        usernameVariable: 'remoteHost',
+                        passwordVariable: 'remotePassword'
+                    )]) {
+                        def lockCheckScript = '''#!/bin/bash
+                            if [ -f "/home/pprb_test/lockfileGatling.txt" ]; then
+                                cat /home/pprb_test/lockfileGatling.txt 2>/dev/null || echo 0
+                            else
+                                echo 0
+                            fi
+                        '''
+                        def lockValue = sh(
+                            script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${lockCheckScript}'",
+                            returnStdout: true
+                        ).trim()
+                        if (lockValue != "0") {
+                            def userChoice = input(
+                                message: "⚠️ Генератор ${remoteHost} сейчас ЗАНЯТ (lockfile = ${lockValue}). Что делаем?",
+                                parameters: [
+                                    choice(name: 'WAIT_OR_ABORT', choices: ['Подождать (встать в очередь)', 'Отменить запуск'],
+                                            description: 'Выберите действие')
+                                ]
+                            )
+                            if (userChoice == 'Отменить запуск') {
+                                currentBuild.result = 'ABORTED'
+                                error "Запуск отменён пользователем: генератор занят."
+                            } else {
+                                echo "Ожидаем освобождения генератора..."
+                                timeout(time: 60, unit: 'HOURS') {
+                                    waitUntil {
+                                        def currentLock = sh(
+                                            script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${lockCheckScript}'",
+                                            returnStdout: true
+                                        ).trim()
+                                        if (currentLock == "0") {
+                                            echo "✅ Генератор освободился. Продолжаем запуск."
+                                            return true
+                                        }
+                                        echo "Генератор всё ещё занят (lockfile = ${currentLock}). Повторная проверка через 30 сек..."
+                                        sleep 30
+                                        return false
+                                    }
+                                }
+                            }
+                        } else {
+                            echo "✅ Генератор свободен. Начинаем подготовку."
+                        }
+                        def libsExist = sh(
+                            script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '[ -d gatling_job/libs ] && echo \"true\" || echo \"false\"'",
+                            returnStdout: true
+                        ).trim()
+                        if (libsExist == "false") {
+                            echo "📦 Либы не найдены на сервере. Копируем..."
+                            sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'mkdir -p gatling_job/gatlingScripts gatling_job/libs'"
+                            sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/libs/ ${remoteHost}:gatling_job/libs/ || true"
+                        } else {
+                            echo "✅ Либы уже на сервере (gatling_job/libs), пропускаем rsync либ."
+                            sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'mkdir -p gatling_job/gatlingScripts'"
+                        }
+                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/gatlingScripts/ ${remoteHost}:gatling_job/gatlingScripts/ || true"
+                        sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no profile.properties ${remoteHost}:${REMOTE_PROFILE}"
+                    }
+                }
+            }
+        }
+        stage('Run test (foreground)') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
+            }
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: params.CREDS,
+                        usernameVariable: 'remoteHost',
+                        passwordVariable: 'remotePassword'
+                    )]) {
+                        def sshScript = '''
+                            #!/bin/bash
+                            set -e
+                            cd /home/pprb_test/gatling_job/gatlingScripts || exit 1
+                            export MAVEN_OPTS="-Dmaven.settings.file=/home/pprb_test/.m2/settings.xml"
+                            CLASS="'''+env.FINAL_TARGET+'''"
+                            [[ $CLASS != simulations.* ]] && CLASS="simulations.$CLASS"
+                            /home/pprb_test/apache-maven-3.9.6/bin/mvn gatling:test -B -q \
+                                -s /home/pprb_test/.m2/settings.xml \
+                                -D"gatling.simulationClass=$CLASS" \
+                                -DprofileProperties=${REMOTE_PROFILE} \
+                                -Dgatling.resultsFolder=results \
+                                -Dmaven.repo.local=/home/pprb_test/.m2 \
+                                -DtargetPercent="'''+params.TARGET_PERCENT+'''" \
+                                -DtargetDuration="'''+params.TARGET_DURATION+'''"
+                        '''
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                    }
+                }
+            }
+        }
+        stage('Fetch results') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
+            }
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: params.CREDS,
+                        usernameVariable: 'remoteHost',
+                        passwordVariable: 'remotePassword'
+                    )]) {
+                        sh "rm -rf run && mkdir -p run"
+                        def simLog = sh(
+                            script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'ls -td ${REMOTE_RESULTS}/*/ 2>/dev/null | head -n1 | xargs -n1 basename'",
+                            returnStdout: true
+                        ).trim()
+                        if (!simLog) {
+                            error('Не найден каталог результатов в results/.')
+                        }
+                        env.RUN_ID = simLog
+                        sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no ${remoteHost}:${REMOTE_RESULTS}/${env.RUN_ID}/simulation.log run/simulation.log"
+                    }
+                }
+            }
+        }
+        stage('Parse Gatling') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
+            }
+            steps {
+                sh """
+                    rm -rf output && mkdir -p output
+                    python3 gatling/gatlingScripts/ltAuto/gatling_parser.py \
+                        --simulation_log run/simulation.log \
+                        --profile gatling/gatlingScripts/${env.PROFILE_YAML} \
+                        --target_percent '${params.TARGET_PERCENT}' \
+                        --output_dir output \
+                        --script_name '${params.APPLICATION}' || true
+                """
+            }
+        }
+        stage('Notify (mail)') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
+            }
+            steps {
+                script {
+                    def status = sh(
+                        script: "python3 -c \"import csv;print('PASS' if open('output/test_result.csv').read().strip() == '1' else 'FAIL')\"",
+                        returnStdout: true
+                    ).trim()
+                    def subject = "[НТ][${params.APPLICATION}] ${status} (target=${params.TARGET_PERCENT}%, duration=${params.TARGET_DURATION}s)"
+                    def body = """Прогон НТ ${params.APPLICATION} завершён.
+
+Статус: ${status}
+Run ID: ${env.RUN_ID}
+Simulation: ${env.FINAL_TARGET}
+Target percent: ${params.TARGET_PERCENT}%
+Target duration: ${params.TARGET_DURATION} sec
+Jenkins: ${env.BUILD_URL}
+"""
+                    mail to: params.MAIL_TO, subject: subject, body: body
+                }
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'output/**,run/simulation.log', allowEmptyArchive: true
+        }
+    }
+}
