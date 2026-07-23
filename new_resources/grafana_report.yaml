@@ -1,0 +1,19 @@
+applications:
+  efsFinmonMob:
+    grafana_application: finmon-mob
+    confluence_parent_page_id: "11714565455"
+  efsFinmonWeb:
+    grafana_application: finmon-web
+    confluence_parent_page_id: "6980599817"
+  efsSberratingMob:
+    grafana_application: riski
+    confluence_parent_page_id: "14509736692"
+  efsSberratingWeb:
+    grafana_application: sberrating-web
+    confluence_parent_page_id: "10864525313"
+  efsRMMOP:
+    grafana_application: rm_mop
+    confluence_parent_page_id: "11714565284"
+  pprbSberrating:
+    grafana_application: pprb-sberraiting
+    confluence_parent_page_id: "6335102978"
