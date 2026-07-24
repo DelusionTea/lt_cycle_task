@@ -41,6 +41,8 @@ pipeline {
         string(name: 'PROFILE_YAML', defaultValue: '',
                description: 'Путь к profile.yaml относительно GATLING_DIR. Пусто → profiles/<APPLICATION>/profile.yaml')
         booleanParam(name: 'USE_SDD_SPEC', defaultValue: false, description: 'Использовать SDD/spec.yaml как источник профиля')
+        booleanParam(name: 'USE_OPENSPEC', defaultValue: false, description: 'Сконвертировать OpenSpec/GigaCLI артефакт в SDD/spec.yaml перед валидацией')
+        string(name: 'OPENSPEC_PATH', defaultValue: '', description: 'Путь к OpenSpec артефакту yaml/json (относительно корня репозитория)')
         string(name: 'SPEC_PATH', defaultValue: '', description: 'Путь к spec.yaml (относительно корня репозитория)')
         booleanParam(name: 'UNATTENDED', defaultValue: false, description: 'Принудительно неинтерактивный режим (без input()).')
         credentials(name: 'CREDS', defaultValue: '', description: 'Ключи от генератора', credentialType: 'Username with password', required: true)
@@ -62,11 +64,18 @@ pipeline {
                         error "Unattended-запуск требует непустой packageSimulation."
                     }
                     env.FINAL_TARGET = params.packageSimulation.trim()
-                    if (params.USE_SDD_SPEC) {
+                    env.USE_SDD_SPEC_EFFECTIVE = (params.USE_SDD_SPEC || params.USE_OPENSPEC) ? 'true' : 'false'
+                    if (env.USE_SDD_SPEC_EFFECTIVE == 'true') {
                         if (params.SPEC_PATH == null || params.SPEC_PATH.trim() == '') {
-                            error "USE_SDD_SPEC=true требует непустой SPEC_PATH."
+                            error "USE_SDD_SPEC/USE_OPENSPEC требует непустой SPEC_PATH."
                         }
                         env.SPEC_PATH = params.SPEC_PATH.trim()
+                        if (params.USE_OPENSPEC) {
+                            if (params.OPENSPEC_PATH == null || params.OPENSPEC_PATH.trim() == '') {
+                                error "USE_OPENSPEC=true требует непустой OPENSPEC_PATH."
+                            }
+                            env.OPENSPEC_PATH = params.OPENSPEC_PATH.trim()
+                        }
                         env.PROFILE_YAML = "(from spec)"
                     } else {
                         env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
@@ -89,7 +98,13 @@ pipeline {
                     // Скрипты и профили лежат в ${GATLING_DIR}; веса randomSwitch
                     // и request_classes (src/test/java/cases/...) резолвятся относительно него.
                     sh """
-                        if [ "${params.USE_SDD_SPEC}" = "true" ]; then
+                        if [ "${env.USE_SDD_SPEC_EFFECTIVE}" = "true" ]; then
+                          if [ "${params.USE_OPENSPEC}" = "true" ]; then
+                            python3 SDD/ltAuto/openspec_to_sdd.py \
+                              --input '${env.OPENSPEC_PATH}' \
+                              --output '${env.SPEC_PATH}' \
+                              --expected_service '${params.APPLICATION}'
+                          fi
                           python3 SDD/ltAuto/spec_validate.py --spec '${env.SPEC_PATH}'
                           python3 SDD/ltAuto/spec_to_props.py \
                             --spec '${env.SPEC_PATH}' \

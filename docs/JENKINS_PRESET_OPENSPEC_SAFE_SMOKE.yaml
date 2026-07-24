@@ -1,0 +1,52 @@
+# OpenSpec safe-smoke preset (minimal load)
+# Fill placeholder values (<...>) before usage.
+
+start_job:
+  jenkinsfile: Jenkinsfile_NT_Start
+  parameters:
+    ACTION: "ЗАПУСТИТЬ ТЕСТ"
+    START_TIME: "now"
+    packageSimulation: "ZK.All.ZK_all_debug"
+    TARGET_PERCENT: "5"
+
+    APPLICATION: "ZK"
+    PROFILE_YAML: ""
+
+    USE_OPENSPEC: true
+    OPENSPEC_PATH: "SDD/specs/ZK/ComplianceRequests/openspec.raw.yaml"
+    USE_SDD_SPEC: false
+    SPEC_PATH: "SDD/specs/ZK/ComplianceRequests/spec.yaml"
+
+    UNATTENDED: true
+    CREDS: "<ssh-cred-id-generator>"
+
+analyze_job:
+  jenkinsfile: Jenkinsfile_NT_Analyze_Report
+  parameters:
+    APPLICATION: "ZK"
+    PROFILE_YAML: ""
+
+    USE_OPENSPEC: true
+    OPENSPEC_PATH: "SDD/specs/ZK/ComplianceRequests/openspec.raw.yaml"
+    USE_SDD_SPEC: false
+    SPEC_PATH: "SDD/specs/ZK/ComplianceRequests/spec.yaml"
+
+    ERROR_THRESHOLD: "100"
+    CREDS: "<ssh-cred-id-generator>"
+
+    BITBUCKET_REPO: "https://<bitbucket>/<project>/<repo>.git"
+    BITBUCKET_CREDS: "<bitbucket-cred-id>"
+
+    CONF_URL: "https://<confluence-host>"
+    CONF_SPACE: "<SPACE_KEY>"
+    CONF_PAGE_SUMMARY: "<PAGE_ID>"
+    CONF_CREDS: "<confluence-cred-id>"
+
+    ENABLE_GRAFANA: false
+    GRAFANA_URL: ""
+    GRAFANA_CONFIG: "profiles/grafana.yaml"
+    GRAFANA_APPLICATION: "ZK"
+    GRAFANA_TOKEN_CRED: ""
+    RENDER_ONLY_MOST_LOADED_PODS: true
+
+    MAIL_TO: "<team-mail-list>"
