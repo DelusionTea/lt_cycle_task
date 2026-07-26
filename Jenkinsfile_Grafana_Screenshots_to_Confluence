@@ -8,8 +8,8 @@ pipeline {
     parameters {
         string(name: 'APPLICATION', defaultValue: 'efsFinmonWeb',
                description: 'Ключ АС для grafana_report.yaml (grafana_application + parent page)')
-        string(name: 'FROM_TIME', defaultValue: '', description: 'Unix epoch seconds (from)')
-        string(name: 'TO_TIME', defaultValue: '', description: 'Unix epoch seconds (to)')
+        string(name: 'FROM_TIME', defaultValue: '', description: 'Время начала: unix epoch seconds/millis или ISO-8601 (например 2026-07-16T21:00:00.000Z)')
+        string(name: 'TO_TIME', defaultValue: '', description: 'Время конца: unix epoch seconds/millis или ISO-8601 (например 2026-07-16T22:00:00.000Z)')
         string(name: 'PAGE_TITLE_SUFFIX', defaultValue: '', description: 'Суффикс для заголовка страницы (опц.)')
         booleanParam(name: 'RENDER_ONLY_MOST_LOADED_PODS', defaultValue: true, description: 'Только самые нагруженные поды.')
         booleanParam(name: 'USE_PROXY', defaultValue: true, description: 'Использовать datasource proxy Grafana.')
@@ -41,14 +41,29 @@ pipeline {
             steps {
                 script {
                     if (!params.FROM_TIME?.trim() || !params.TO_TIME?.trim()) {
-                        error('FROM_TIME и TO_TIME обязательны (unix epoch seconds).')
+                        error('FROM_TIME и TO_TIME обязательны (unix epoch seconds/millis или ISO-8601).')
                     }
-                    if (!(params.FROM_TIME ==~ /^\d+$/) || !(params.TO_TIME ==~ /^\d+$/)) {
-                        error('FROM_TIME/TO_TIME должны быть целыми unix epoch seconds.')
+                    def normalizeTs = { String raw, String fieldName ->
+                        def value = (raw ?: "").trim()
+                        if (value ==~ /^\d+$/) {
+                            // unix seconds or unix milliseconds
+                            if (value.length() >= 13) {
+                                return String.valueOf((value.toLong() / 1000L) as long)
+                            }
+                            return value
+                        }
+                        try {
+                            return String.valueOf(java.time.Instant.parse(value).epochSecond)
+                        } catch (Exception ignored) {
+                            error("${fieldName}='${value}' не распознан. Используйте unix epoch seconds/millis или ISO-8601, например 2026-07-16T21:00:00.000Z")
+                        }
                     }
-                    if (params.FROM_TIME.toLong() >= params.TO_TIME.toLong()) {
-                        error("FROM_TIME (${params.FROM_TIME}) должен быть меньше TO_TIME (${params.TO_TIME}).")
+                    env.FROM_TIME_EPOCH = normalizeTs(params.FROM_TIME, "FROM_TIME")
+                    env.TO_TIME_EPOCH = normalizeTs(params.TO_TIME, "TO_TIME")
+                    if (env.FROM_TIME_EPOCH.toLong() >= env.TO_TIME_EPOCH.toLong()) {
+                        error("FROM_TIME (${params.FROM_TIME} -> ${env.FROM_TIME_EPOCH}) должен быть меньше TO_TIME (${params.TO_TIME} -> ${env.TO_TIME_EPOCH}).")
                     }
+                    echo "Normalized time range (epoch sec): from=${env.FROM_TIME_EPOCH}, to=${env.TO_TIME_EPOCH}"
                     if (!fileExists('profiles/grafana_report.yaml')) {
                         error("Не найден файл 'profiles/grafana_report.yaml'. Он нужен на этапе Resolve config для APPLICATION -> grafana_application/confluence_parent_page_id. Добавьте файл по пути 'profiles/grafana_report.yaml' (можно создать из example).")
                     }
@@ -124,8 +139,8 @@ pipeline {
                     ]) {
                         def tokenB64 = GRAFANA_TOKEN.bytes.encodeBase64().toString()
                         def appB64 = env.GRAFANA_APPLICATION.bytes.encodeBase64().toString()
-                        def fromB64 = params.FROM_TIME.bytes.encodeBase64().toString()
-                        def toB64 = params.TO_TIME.bytes.encodeBase64().toString()
+                        def fromB64 = env.FROM_TIME_EPOCH.bytes.encodeBase64().toString()
+                        def toB64 = env.TO_TIME_EPOCH.bytes.encodeBase64().toString()
                         def onlyLoadedB64 = onlyLoaded.bytes.encodeBase64().toString()
                         def grafanaUrlB64 = (params.GRAFANA_URL?.trim() ?: "").bytes.encodeBase64().toString()
                         def useProxyB64 = useProxy.bytes.encodeBase64().toString()
