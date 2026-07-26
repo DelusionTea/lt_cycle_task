@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from collections import Counter
 
 import yaml
 
@@ -98,6 +99,57 @@ def required_fields(r: Reporter, spec: dict):
         r.fail_msg("endpoints отсутствует")
 
 
+def validate_meta_service(r: Reporter, spec: dict, expected_service: str):
+    if not expected_service:
+        return
+    actual = ((spec.get("meta") or {}).get("service") or "").strip()
+    expected = expected_service.strip()
+    if not actual:
+        r.fail_msg("meta.service пустой, ожидался '{}'".format(expected))
+        return
+    if actual == expected:
+        r.ok_msg("meta.service совпадает с expected_service: {}".format(expected))
+    else:
+        r.fail_msg("meta.service='{}' не совпадает с expected_service='{}'".format(actual, expected))
+
+
+def validate_endpoint_structure(r: Reporter, spec: dict):
+    endpoints = spec.get("endpoints") or []
+    if not endpoints:
+        return
+
+    ids = [e.get("id") for e in endpoints if isinstance(e, dict) and e.get("id")]
+    labels = [e.get("label") for e in endpoints if isinstance(e, dict) and e.get("label")]
+
+    dup_ids = sorted([key for key, val in Counter(ids).items() if val > 1])
+    dup_labels = sorted([key for key, val in Counter(labels).items() if val > 1])
+
+    if dup_ids:
+        r.fail_msg("дубликаты endpoints.id: {}".format(", ".join(dup_ids)))
+    else:
+        r.ok_msg("дубликаты endpoints.id отсутствуют")
+
+    if dup_labels:
+        r.fail_msg("дубликаты endpoints.label: {}".format(", ".join(dup_labels)))
+    else:
+        r.ok_msg("дубликаты endpoints.label отсутствуют")
+
+    for idx, endpoint in enumerate(endpoints, start=1):
+        if not isinstance(endpoint, dict):
+            r.fail_msg("endpoints[{}] должен быть объектом".format(idx))
+            continue
+        method = (endpoint.get("method") or "").strip()
+        path = (endpoint.get("path") or "").strip()
+        if method:
+            r.ok_msg("endpoints[{}].method задан".format(idx))
+        else:
+            r.fail_msg("endpoints[{}].method пустой".format(idx))
+        if path:
+            r.ok_msg("endpoints[{}].path задан".format(idx))
+        else:
+            r.fail_msg("endpoints[{}].path пустой".format(idx))
+
+
 def validate_labels(r: Reporter, spec: dict, base_dirs: list[str]):
     request_classes = normalize_list(spec.get("request_classes"))
     if not request_classes:
@@ -135,6 +187,7 @@ def validate_labels(r: Reporter, spec: dict, base_dirs: list[str]):
 def main() -> int:
     ap = argparse.ArgumentParser(description="Валидация spec.yaml против Case-классов")
     ap.add_argument("--spec", required=True, help="путь к spec.yaml")
+    ap.add_argument("--expected_service", default="", help="ожидаемое значение meta.service")
     args = ap.parse_args()
 
     spec_path = os.path.abspath(args.spec)
@@ -142,6 +195,8 @@ def main() -> int:
 
     r = Reporter()
     required_fields(r, spec)
+    validate_meta_service(r, spec, args.expected_service)
+    validate_endpoint_structure(r, spec)
 
     gatling_root = detect_gatling_root()
     base_dirs = [gatling_root, os.getcwd(), _REPO_ROOT]

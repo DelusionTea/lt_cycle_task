@@ -83,6 +83,9 @@ pipeline {
         stage('Checkout scripts') {
             steps {
                 script {
+                    if (!(params.ERROR_THRESHOLD ==~ /^\\d+(\\.\\d+)?$/)) {
+                        error "ERROR_THRESHOLD должен быть числом, получено: '${params.ERROR_THRESHOLD}'"
+                    }
                     env.USE_SDD_SPEC_EFFECTIVE = (params.USE_SDD_SPEC || params.USE_OPENSPEC) ? 'true' : 'false'
                     if (env.USE_SDD_SPEC_EFFECTIVE == 'true') {
                         if (params.SPEC_PATH == null || params.SPEC_PATH.trim() == '') {
@@ -105,17 +108,60 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Validate repository files') {
+            steps {
+                script {
+                    if (!fileExists("${GATLING_DIR}")) {
+                        error("Не найден каталог '${GATLING_DIR}'. Поместите Gatling-скрипты в '${GATLING_DIR}' (ожидаются ltAuto, profiles и парсеры).")
+                    }
+                    if (!fileExists("${GATLING_DIR}/ltAuto/gatling_parser.py")) {
+                        error("Не найден файл '${GATLING_DIR}/ltAuto/gatling_parser.py'. Он нужен на этапе Parse Gatling. Добавьте файл по этому пути.")
+                    }
+                    if (!fileExists("${GATLING_DIR}/ltAuto/compare_runs.py")) {
+                        error("Не найден файл '${GATLING_DIR}/ltAuto/compare_runs.py'. Он нужен на этапе Compare runs. Добавьте файл по этому пути.")
+                    }
+                    if (!fileExists("${GATLING_DIR}/ltAuto/summary_to_confluence.py")) {
+                        error("Не найден файл '${GATLING_DIR}/ltAuto/summary_to_confluence.py'. Он нужен на этапе Confluence summary. Добавьте файл по этому пути.")
+                    }
+                    if (env.USE_SDD_SPEC_EFFECTIVE == 'true') {
+                        if (!fileExists("SDD/ltAuto/openspec_preflight.py")) {
+                            error("Не найден файл 'SDD/ltAuto/openspec_preflight.py'. Он нужен для проверки SDD/OpenSpec перед анализом. Добавьте файл по этому пути.")
+                        }
+                        if (!fileExists("SDD/ltAuto/spec_to_profile.py")) {
+                            error("Не найден файл 'SDD/ltAuto/spec_to_profile.py'. Он нужен для генерации '${env.PROFILE_YAML}'. Добавьте файл по этому пути.")
+                        }
+                        if (!fileExists(env.SPEC_PATH)) {
+                            error("Не найден spec-файл '${env.SPEC_PATH}'. Укажите корректный SPEC_PATH и добавьте файл в репозиторий по этому пути.")
+                        }
+                        if (params.USE_OPENSPEC && !fileExists(env.OPENSPEC_PATH)) {
+                            error("Не найден OpenSpec-файл '${env.OPENSPEC_PATH}'. Укажите корректный OPENSPEC_PATH и добавьте артефакт в репозиторий по этому пути.")
+                        }
+                    } else {
+                        def profilePath = "${GATLING_DIR}/${env.PROFILE_YAML}"
+                        if (!fileExists(profilePath)) {
+                            error("Не найден профиль '${profilePath}'. Для non-SDD режима добавьте profile.yaml по этому пути или передайте корректный PROFILE_YAML.")
+                        }
+                    }
+                }
+            }
+        }
         stage('Prepare SDD profile') {
             when { expression { return (params.USE_SDD_SPEC || params.USE_OPENSPEC) } }
             steps {
                 sh """
                     if [ "${params.USE_OPENSPEC}" = "true" ]; then
-                      python3 SDD/ltAuto/openspec_to_sdd.py \
-                        --input '${env.OPENSPEC_PATH}' \
-                        --output '${env.SPEC_PATH}' \
-                        --expected_service '${params.APPLICATION}'
+                      python3 SDD/ltAuto/openspec_preflight.py \
+                        --spec '${env.SPEC_PATH}' \
+                        --expected_service '${params.APPLICATION}' \
+                        --use_openspec \
+                        --openspec '${env.OPENSPEC_PATH}' \
+                        --dry_profile_yaml
+                    else
+                      python3 SDD/ltAuto/openspec_preflight.py \
+                        --spec '${env.SPEC_PATH}' \
+                        --expected_service '${params.APPLICATION}' \
+                        --dry_profile_yaml
                     fi
-                    python3 SDD/ltAuto/spec_validate.py --spec '${env.SPEC_PATH}'
                     python3 SDD/ltAuto/spec_to_profile.py --spec '${env.SPEC_PATH}' --output '${env.PROFILE_YAML}'
                 """
             }
@@ -149,7 +195,7 @@ pipeline {
                         --simulation_log '${env.SIM_LOG}' \
                         --profile '${GATLING_DIR}/${env.PROFILE_YAML}' \
                         --output_dir output \
-                        --script_name '${params.APPLICATION}' || true
+                        --script_name '${params.APPLICATION}'
                 """
             }
         }

@@ -1,0 +1,56 @@
+description: Мобильное приложение — комплаенс (загрузка документов, запросы/списки,
+  реабилитация, комплаенс-профиль, информирование)
+spec_ref: C:\Users\19717757\IdeaProjects\pprb_compl\pprb_compl_GatlingVlada\gatling\gatlingScripts\SDD\specs\efsFinmonMob\FinmonMob\spec.yaml
+target_percent: 100
+rampup: 60
+95pct: 3000
+50pct: 2000
+rps: 44
+error_count: TODO
+request_classes:
+- src/test/java/cases/efsFinmonMob/FinmonMobCases.java
+count:
+  UC01_POST_UPLOAD_V1: 206
+  UC02_POST_request_list: 0
+  UC03_GET_request_online_pprbId: 371
+  UC04_GET_rejections_pprbId: 371
+  UC05_POST_rejections_list: 635
+  UC06_GET_REQUEST_V2: 190
+  UC07_GET_request_state: 0
+  UC08_GET_files_params: 109
+  UC09_GET_v1_support: 950
+  UC10_GET_print: 34
+  UC11_GET_ffl_id: 371
+  UC12_GET_download_ecmId: 221
+  UC13_GET_informing_id: 91
+  UC14_POST_informing_list: 0
+  UC15_GET_v2_request_state: 150000
+  UC16_POST_v2_request_list: 1059
+  UC17_GET_v2_rejections_uuid: 134
+  UC18_GET_v1_rejections_startRehabilitation_uuid: 371
+  UC19_GET_v1_request_rehabilitation: 371
+  UC20_GET_compliance_profile_widget: 950
+  UC21_GET_compliance_profile_schemeBusiness: 950
+  UC22_GET_compliance_profile_schemeBusiness_partners: 73
+  UC23_GET_compliance_profile_schemeBusiness_mtb: 19
+  UC24_DELETE_compliance_profile_schemeBusiness_detail_alert: 371
+  UC25_POST_compliance_profile_schemeBusiness_detail: 73
+  UC26_POST_compliance_profile_schemeBusiness_save_partners: 20
+  UC27_POST_compliance_profile_schemeBusiness_save_mtb: 371
+  UC28_POST_compliance_profile_schemeBusiness_save_other: 371
+  UC29_POST_compliance_profile_schemeBusiness_save_aboutCompany: 371
+  UC30_POST_compliance_profile_schemeBusiness_save_contacts: 371
+  UC31_GET_proactive_mop2_pprbId: 290
+  UC32_GET_proactive_onboarding_pprbId: 38
+  UC33_POST_informing_list_v2: 750
+  UC34_POST_request_UUID_reply: 371
+  UC35_POST_request_UUID_saveAttachments: 371
+sla_per_label: {}
+injection:
+  duration: TODO
+  rampup: TODO
+  scenarios:
+    FinmonMobScenario:
+      users: TODO
+      request_classes:
+      - src/test/java/cases/efsFinmonMob/FinmonMobCases.java

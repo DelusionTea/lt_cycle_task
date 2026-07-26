@@ -40,21 +40,30 @@ pipeline {
         stage('Resolve config') {
             steps {
                 script {
+                    if (!params.FROM_TIME?.trim() || !params.TO_TIME?.trim()) {
+                        error('FROM_TIME и TO_TIME обязательны (unix epoch seconds).')
+                    }
+                    if (!(params.FROM_TIME ==~ /^\d+$/) || !(params.TO_TIME ==~ /^\d+$/)) {
+                        error('FROM_TIME/TO_TIME должны быть целыми unix epoch seconds.')
+                    }
+                    if (params.FROM_TIME.toLong() >= params.TO_TIME.toLong()) {
+                        error("FROM_TIME (${params.FROM_TIME}) должен быть меньше TO_TIME (${params.TO_TIME}).")
+                    }
                     if (!fileExists('profiles/grafana_report.yaml')) {
-                        error('profiles/grafana_report.yaml не найден (создайте из example).')
+                        error("Не найден файл 'profiles/grafana_report.yaml'. Он нужен на этапе Resolve config для APPLICATION -> grafana_application/confluence_parent_page_id. Добавьте файл по пути 'profiles/grafana_report.yaml' (можно создать из example).")
                     }
                     def cfg = readYaml(file: 'profiles/grafana_report.yaml')
                     def appCfg = cfg?.applications?.get(params.APPLICATION)
                     if (!appCfg) {
-                        error("APPLICATION=${params.APPLICATION} не найден в profiles/grafana_report.yaml.")
+                        error("APPLICATION='${params.APPLICATION}' не найден в 'profiles/grafana_report.yaml'. Добавьте секцию applications.${params.APPLICATION} с полями grafana_application и confluence_parent_page_id.")
                     }
                     env.GRAFANA_APPLICATION = appCfg.grafana_application
                     env.CONF_PARENT_PAGE = appCfg.confluence_parent_page_id
                     if (!env.GRAFANA_APPLICATION?.trim()) {
-                        error("grafana_application пустой для ${params.APPLICATION}.")
+                        error("Пустой grafana_application для APPLICATION='${params.APPLICATION}' в 'profiles/grafana_report.yaml'. Заполните applications.${params.APPLICATION}.grafana_application.")
                     }
                     if (!env.CONF_PARENT_PAGE?.trim()) {
-                        error("confluence_parent_page_id пустой для ${params.APPLICATION}.")
+                        error("Пустой confluence_parent_page_id для APPLICATION='${params.APPLICATION}' в 'profiles/grafana_report.yaml'. Заполните applications.${params.APPLICATION}.confluence_parent_page_id.")
                     }
                 }
             }
@@ -62,13 +71,22 @@ pipeline {
         stage('Prepare bundle') {
             steps {
                 script {
+                    if (!fileExists('ltAuto/render_export.py')) {
+                        error("Не найден файл 'ltAuto/render_export.py'. Он нужен на этапе Render on generator. Добавьте файл по этому пути в репозитории.")
+                    }
+                    if (!fileExists('ltAuto/publish_grafana_to_confluence.py')) {
+                        error("Не найден файл 'ltAuto/publish_grafana_to_confluence.py'. Он нужен на этапах Publish/Dry-run Confluence. Добавьте файл по этому пути в репозитории.")
+                    }
+                    if (!fileExists('resources/confluence_manger_v2.py')) {
+                        error("Не найден файл 'resources/confluence_manger_v2.py'. Он импортируется publish-скриптом. Добавьте файл по этому пути в репозитории.")
+                    }
                     sh "rm -rf test_files && mkdir -p test_files"
                     sh "cp ltAuto/render_export.py ltAuto/publish_grafana_to_confluence.py resources/confluence_manger_v2.py test_files/"
                     if (params.GRAFANA_CONFIG_B64?.trim()) {
                         sh "echo '${params.GRAFANA_CONFIG_B64}' | base64 -d > test_files/grafana.yaml"
                     } else {
                         if (!fileExists('profiles/grafana.yaml')) {
-                            error('profiles/grafana.yaml не найден (создайте из profiles/grafana.example.yaml).')
+                            error("Не найден файл 'profiles/grafana.yaml'. Он нужен для render_export.py, если не передан GRAFANA_CONFIG_B64. Добавьте файл по пути 'profiles/grafana.yaml' (можно создать из profiles/grafana.example.yaml).")
                         }
                         sh "cp profiles/grafana.yaml test_files/"
                     }
@@ -80,15 +98,16 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: params.CREDS,
                             usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
-                        def sshScript = '''
-                            #!/bin/bash
-                            if ! cd "$HOME/jenkins_job"; then
-                                mkdir -p "$HOME/jenkins_job"
-                            fi
-                            mkdir -p "$HOME/jenkins_job/'''+env.WORK_DIR+'''"
-                        '''
-                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
-                        sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no -r test_files ${remoteHost}:jenkins_job/${env.WORK_DIR}"
+                        def remoteDir = sh(
+                                script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'printf %s \"\$HOME/jenkins_job/${env.WORK_DIR}\"'",
+                                returnStdout: true
+                        ).trim()
+                        if (!remoteDir) {
+                            error('Не удалось определить удаленный WORK_DIR.')
+                        }
+                        sh "ls -la test_files"
+                        sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'mkdir -p \"${remoteDir}/test_files\"'"
+                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' test_files/ ${remoteHost}:${remoteDir}/test_files/"
                     }
                 }
             }
@@ -98,26 +117,41 @@ pipeline {
                 script {
                     def onlyLoaded = params.RENDER_ONLY_MOST_LOADED_PODS ? '1' : '0'
                     def useProxy = params.USE_PROXY ? '1' : '0'
-                    def grafanaUrlArg = params.GRAFANA_URL?.trim() ? "--grafana_url \\\"${params.GRAFANA_URL.trim()}\\\"" : ""
-                    def useProxyArg = "--use_proxy ${useProxy}"
                     withCredentials([
                         usernamePassword(credentialsId: params.CREDS,
                                 usernameVariable: 'remoteHost', passwordVariable: 'remotePassword'),
                         string(credentialsId: params.GRAFANA_TOKEN_CRED, variable: 'GRAFANA_TOKEN')
                     ]) {
+                        def tokenB64 = GRAFANA_TOKEN.bytes.encodeBase64().toString()
+                        def appB64 = env.GRAFANA_APPLICATION.bytes.encodeBase64().toString()
+                        def fromB64 = params.FROM_TIME.bytes.encodeBase64().toString()
+                        def toB64 = params.TO_TIME.bytes.encodeBase64().toString()
+                        def onlyLoadedB64 = onlyLoaded.bytes.encodeBase64().toString()
+                        def grafanaUrlB64 = (params.GRAFANA_URL?.trim() ?: "").bytes.encodeBase64().toString()
+                        def useProxyB64 = useProxy.bytes.encodeBase64().toString()
                         def sshScript = '''
                             #!/bin/bash
                             set -e
                             cd "$HOME/jenkins_job/'''+env.WORK_DIR+'''/test_files"
-                            export GRAFANA_TOKEN="'''+GRAFANA_TOKEN+'''"
+                            export GRAFANA_TOKEN="$(printf '%s' '''+tokenB64+''' | base64 -d)"
+                            APP="$(printf '%s' '''+appB64+''' | base64 -d)"
+                            FROM_TS="$(printf '%s' '''+fromB64+''' | base64 -d)"
+                            TO_TS="$(printf '%s' '''+toB64+''' | base64 -d)"
+                            ONLY_LOADED="$(printf '%s' '''+onlyLoadedB64+''' | base64 -d)"
+                            GRAFANA_URL_VALUE="$(printf '%s' '''+grafanaUrlB64+''' | base64 -d)"
+                            USE_PROXY_VALUE="$(printf '%s' '''+useProxyB64+''' | base64 -d)"
+                            URL_ARG=""
+                            if [ -n "$GRAFANA_URL_VALUE" ]; then
+                                URL_ARG="--grafana_url \"$GRAFANA_URL_VALUE\""
+                            fi
                             python3 render_export.py \
                                 --config grafana.yaml \
-                                --application "'''+env.GRAFANA_APPLICATION+'''" \
-                                --from_time "'''+params.FROM_TIME+'''" \
-                                --to_time "'''+params.TO_TIME+'''" \
+                                --application "$APP" \
+                                --from_time "$FROM_TS" \
+                                --to_time "$TO_TS" \
                                 --results_path output/systemMetrics \
-                                --render_only_most_loaded_pods "'''+onlyLoaded+'''" \
-                                '''+grafanaUrlArg+''' '''+useProxyArg+'''
+                                --render_only_most_loaded_pods "$ONLY_LOADED" \
+                                $URL_ARG --use_proxy "$USE_PROXY_VALUE"
                             PNG_COUNT=$(find output/systemMetrics -name "*.png" | wc -l)
                             echo "PNG_COUNT=${PNG_COUNT}"
                             if [ "${PNG_COUNT}" -le 0 ]; then
@@ -139,20 +173,36 @@ pipeline {
                         usernamePassword(credentialsId: params.CONF_CREDS,
                                 usernameVariable: 'confUser', passwordVariable: 'confPassword')
                     ]) {
+                        def appB64 = params.APPLICATION.bytes.encodeBase64().toString()
+                        def parentB64 = env.CONF_PARENT_PAGE.bytes.encodeBase64().toString()
+                        def suffixB64 = (params.PAGE_TITLE_SUFFIX ?: "").bytes.encodeBase64().toString()
+                        def buildUrlB64 = env.BUILD_URL.bytes.encodeBase64().toString()
+                        def confUrlB64 = (params.CONF_URL ?: "").bytes.encodeBase64().toString()
+                        def confSpaceB64 = (params.CONF_SPACE ?: "").bytes.encodeBase64().toString()
+                        def confUserB64 = confUser.bytes.encodeBase64().toString()
+                        def confPassB64 = confPassword.bytes.encodeBase64().toString()
                         def sshScript = '''
                             #!/bin/bash
                             set -e
                             cd "$HOME/jenkins_job/'''+env.WORK_DIR+'''/test_files"
+                            APP="$(printf '%s' '''+appB64+''' | base64 -d)"
+                            PARENT_PAGE="$(printf '%s' '''+parentB64+''' | base64 -d)"
+                            TITLE_SUFFIX="$(printf '%s' '''+suffixB64+''' | base64 -d)"
+                            BUILD_URL_VALUE="$(printf '%s' '''+buildUrlB64+''' | base64 -d)"
+                            CONF_URL_VALUE="$(printf '%s' '''+confUrlB64+''' | base64 -d)"
+                            CONF_SPACE_VALUE="$(printf '%s' '''+confSpaceB64+''' | base64 -d)"
+                            CONF_USER="$(printf '%s' '''+confUserB64+''' | base64 -d)"
+                            CONF_PASS="$(printf '%s' '''+confPassB64+''' | base64 -d)"
                             python3 publish_grafana_to_confluence.py \
                                 --system_metrics_dir output/systemMetrics \
-                                --application "'''+params.APPLICATION+'''" \
-                                --parent_page "'''+env.CONF_PARENT_PAGE+'''" \
-                                --page_title_suffix "'''+params.PAGE_TITLE_SUFFIX+'''" \
-                                --build_url "'''+env.BUILD_URL+'''" \
-                                --url "'''+params.CONF_URL+'''" \
-                                --space "'''+params.CONF_SPACE+'''" \
-                                -u "'''+confUser+'''" \
-                                -p "'''+confPassword+'''"
+                                --application "$APP" \
+                                --parent_page "$PARENT_PAGE" \
+                                --page_title_suffix "$TITLE_SUFFIX" \
+                                --build_url "$BUILD_URL_VALUE" \
+                                --url "$CONF_URL_VALUE" \
+                                --space "$CONF_SPACE_VALUE" \
+                                -u "$CONF_USER" \
+                                -p "$CONF_PASS"
                         '''
                         sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
                     }
@@ -165,16 +215,24 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: params.CREDS,
                             usernameVariable: 'remoteHost', passwordVariable: 'remotePassword')]) {
+                        def appB64 = params.APPLICATION.bytes.encodeBase64().toString()
+                        def parentB64 = env.CONF_PARENT_PAGE.bytes.encodeBase64().toString()
+                        def suffixB64 = (params.PAGE_TITLE_SUFFIX ?: "").bytes.encodeBase64().toString()
+                        def buildUrlB64 = env.BUILD_URL.bytes.encodeBase64().toString()
                         def sshScript = '''
                             #!/bin/bash
                             set -e
                             cd "$HOME/jenkins_job/'''+env.WORK_DIR+'''/test_files"
+                            APP="$(printf '%s' '''+appB64+''' | base64 -d)"
+                            PARENT_PAGE="$(printf '%s' '''+parentB64+''' | base64 -d)"
+                            TITLE_SUFFIX="$(printf '%s' '''+suffixB64+''' | base64 -d)"
+                            BUILD_URL_VALUE="$(printf '%s' '''+buildUrlB64+''' | base64 -d)"
                             python3 publish_grafana_to_confluence.py \
                                 --system_metrics_dir output/systemMetrics \
-                                --application "'''+params.APPLICATION+'''" \
-                                --parent_page "'''+env.CONF_PARENT_PAGE+'''" \
-                                --page_title_suffix "'''+params.PAGE_TITLE_SUFFIX+'''" \
-                                --build_url "'''+env.BUILD_URL+'''" \
+                                --application "$APP" \
+                                --parent_page "$PARENT_PAGE" \
+                                --page_title_suffix "$TITLE_SUFFIX" \
+                                --build_url "$BUILD_URL_VALUE" \
                                 --dry_run \
                                 --output_dir output
                         '''
@@ -193,7 +251,7 @@ pipeline {
                         #!/bin/bash
                         rm -rf "$HOME/jenkins_job/'''+env.WORK_DIR+'''"
                     '''
-                    sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}'"
+                    sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '${sshScript}' || true"
                 }
                 sh "rm -rf test_files"
             }

@@ -1,0 +1,389 @@
+meta:
+  service: efsFinmonMob
+  component: FinmonMob
+  scenario: FinmonMobScenario
+  source: manual
+  swagger: false
+  description: "Мобильное приложение — комплаенс (загрузка документов, запросы/списки, реабилитация, комплаенс-профиль, информирование)"
+
+request_classes:
+  - src/test/java/cases/efsFinmonMob/FinmonMobCases.java
+
+data_sources:
+  feeders:
+    - name: finmonMobAuthFeeder
+      source: feeders.efsSberbusiness.EfsSberbussinesFeeder
+      required_fields: [csrftoken, sessionId]
+      fallback: stub
+    - name: finmonMobPPRBFeeder
+      source: feeders.efsSberbusiness.EfsSberbussinesFeeder
+      required_fields: [pprbId, crmId]
+      fallback: stub
+    - name: uuid
+      source: CommonMethods.generateUUID
+      required_fields: []
+      fallback: stub
+    - name: currentTimestamp
+      source: CommonMethods.generateCurrentTimestamp
+      required_fields: []
+      fallback: stub
+
+profile:
+  target_percent: 100
+  rampup: 60
+  thresholds:
+    pct95: 3000
+    pct50: 2000
+    rps: 44
+    error_count: TODO
+  count:
+    UC01_POST_UPLOAD_V1: 206
+    UC02_POST_request_list: 0
+    UC03_GET_request_online_pprbId: 371
+    UC04_GET_rejections_pprbId: 371
+    UC05_POST_rejections_list: 635
+    UC06_GET_REQUEST_V2: 190
+    UC07_GET_request_state: 0
+    UC08_GET_files_params: 109
+    UC09_GET_v1_support: 950
+    UC10_GET_print: 34
+    UC11_GET_ffl_id: 371
+    UC12_GET_download_ecmId: 221
+    UC13_GET_informing_id: 91
+    UC14_POST_informing_list: 0
+    UC15_GET_v2_request_state: 150000
+    UC16_POST_v2_request_list: 1059
+    UC17_GET_v2_rejections_uuid: 134
+    UC18_GET_v1_rejections_startRehabilitation_uuid: 371
+    UC19_GET_v1_request_rehabilitation: 371
+    UC20_GET_compliance_profile_widget: 950
+    UC21_GET_compliance_profile_schemeBusiness: 950
+    UC22_GET_compliance_profile_schemeBusiness_partners: 73
+    UC23_GET_compliance_profile_schemeBusiness_mtb: 19
+    UC24_DELETE_compliance_profile_schemeBusiness_detail_alert: 371
+    UC25_POST_compliance_profile_schemeBusiness_detail: 73
+    UC26_POST_compliance_profile_schemeBusiness_save_partners: 20
+    UC27_POST_compliance_profile_schemeBusiness_save_mtb: 371
+    UC28_POST_compliance_profile_schemeBusiness_save_other: 371
+    UC29_POST_compliance_profile_schemeBusiness_save_aboutCompany: 371
+    UC30_POST_compliance_profile_schemeBusiness_save_contacts: 371
+    UC31_GET_proactive_mop2_pprbId: 290
+    UC32_GET_proactive_onboarding_pprbId: 38
+    UC33_POST_informing_list_v2: 750
+    UC34_POST_request_UUID_reply: 371
+    UC35_POST_request_UUID_saveAttachments: 371
+  sla_per_label: {}
+
+injection:
+  duration: TODO
+  rampup: TODO
+  scenarios:
+    FinmonMobScenario:
+      users: TODO
+      request_classes:
+        - src/test/java/cases/efsFinmonMob/FinmonMobCases.java
+
+endpoints:
+  - id: UC01_POST_UPLOAD_V1
+    label: "UC01_POST_/upload1"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/files/upload"
+    query:
+    body: JSONs/efsFinmonMob/test.finmonmobxls1.xlsx (multipart, RawFileBodyPart)
+    checks:
+      status: 200
+
+  - id: UC02_POST_request_list
+    label: "UC02_POST_/list"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/request/list"
+    query:
+    body: JSONs/efsFinmonMob/UC02.json
+    checks:
+      status: 200
+    deprecated: true
+
+  - id: UC03_GET_request_online_pprbId
+    label: "UC03_GET_/online/{pprbId}"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/request/online/#{pprbId}"
+    query:
+    checks:
+      status: 200
+
+  - id: UC04_GET_rejections_pprbId
+    label: "UC04_GET_/rejections/{pprbId}"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/rejections/#{pprbId}"
+    query:
+    checks:
+      status: 200
+
+  - id: UC05_POST_rejections_list
+    label: "UC05_POST_/list"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/rejections/list"
+    query:
+    body: JSONs/efsFinmonMob/UC05.json
+    checks:
+      status: 200
+
+  - id: UC06_GET_REQUEST_V2
+    label: "UC06_GET_/v2/request"
+    method: GET
+    path: "/ufs/mobile/compliance/v2/request"
+    query:
+      pprbId: "#{pprbId}"
+      crmId: "#{crmId}"
+    checks:
+      status: 200
+
+  - id: UC07_GET_request_state
+    label: "UC07_GET_/state"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/request/state"
+    query:
+    checks:
+      status: 200
+    deprecated: true
+
+  - id: UC08_GET_files_params
+    label: "UC08_GET_/params"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/files/params"
+    query:
+    checks:
+      status: 200
+
+  - id: UC09_GET_v1_support
+    label: "UC09_GET_/support"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/support"
+    query:
+    checks:
+      status: 200
+
+  - id: UC10_GET_print
+    label: "UC10_GET_/{pprbId}/print"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/request/#{pprbId}/print"
+    query:
+      printType: "REQUEST"
+      requestType: "MOP1"
+    checks:
+      status: 200
+
+  - id: UC11_GET_ffl_id
+    label: "UC11_GET_/free-format-letter/{pprbId}"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/free-format-letter/#{pprbId}"
+    query:
+    checks:
+      status: 200
+
+  - id: UC12_GET_download_ecmId
+    label: "UC12_GET_/download/{ecmId}"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/free-format-letter/download/%7B20E60934-56BB-492E-8CB0-333DD3256E54%7D"
+    query:
+    checks:
+      status: 200
+
+  - id: UC13_GET_informing_id
+    label: "UC13_GET_/informing/{pprbId}"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/informing/#{pprbId}"
+    query:
+    checks:
+      status: 200
+
+  - id: UC14_POST_informing_list
+    label: "UC14_POST_/list"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/informing/list"
+    query:
+    body: JSONs/efsFinmonMob/UC14.json
+    checks:
+      status: 200
+    deprecated: true
+
+  - id: UC15_GET_v2_request_state
+    label: "UC15_GET_/state"
+    method: GET
+    path: "/ufs/mobile/compliance/v2/request/state"
+    query:
+      type: ["MOP 1.0", "Online control", "FREE_FORMAT_LETTER"]
+    checks:
+      status: 200
+
+  - id: UC16_POST_v2_request_list
+    label: "UC16_POST_/list"
+    method: POST
+    path: "/ufs/mobile/compliance/v2/request/list"
+    query:
+    body: JSONs/efsFinmonMob/UC16.json
+    checks:
+      status: 200
+
+  - id: UC17_GET_v2_rejections_uuid
+    label: "UC17_GET_/v2/rejections/{uuid}"
+    method: GET
+    path: "/ufs/mobile/compliance/v2/rejections/#{uuid}"
+    query:
+    checks:
+      status: 200
+
+  - id: UC18_GET_v1_rejections_startRehabilitation_uuid
+    label: "UC18_GET_/startRehabilitatio/{uuid}"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/rejections/startRehabilitation/#{uuid}"
+    query:
+    checks:
+      status: 200
+
+  - id: UC19_GET_v1_request_rehabilitation
+    label: "UC19_GET_/rehabilitation"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/request/rehabilitation"
+    query:
+      pprbId: "#{uuid}"
+      caseId: "#{uuid}"
+    checks:
+      status: 200
+
+  - id: UC20_GET_compliance_profile_widget
+    label: "UC20_GET_/widget"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/compliance-profile/widget"
+    query:
+    checks:
+      status: 200
+
+  - id: UC21_GET_compliance_profile_schemeBusiness
+    label: "UC21_GET_/schemeBusiness"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness"
+    query:
+    checks:
+      status: 200
+
+  - id: UC22_GET_compliance_profile_schemeBusiness_partners
+    label: "UC22_GET_/partners"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/partners"
+    query:
+    checks:
+      status: 200
+
+  - id: UC23_GET_compliance_profile_schemeBusiness_mtb
+    label: "UC23_GET_/mtb"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/mtb"
+    query:
+    checks:
+      status: 200
+
+  - id: UC24_DELETE_compliance_profile_schemeBusiness_detail_alert
+    label: "UC24_DELETE_/alert"
+    method: DELETE
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/detail/alert"
+    query:
+    checks:
+      status: 204
+
+  - id: UC25_POST_compliance_profile_schemeBusiness_detail
+    label: "UC25_POST_/detail"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/detail"
+    query:
+    body: JSONs/efsFinmonMob/UC25.json
+    checks:
+      status: 200
+
+  - id: UC26_POST_compliance_profile_schemeBusiness_save_partners
+    label: "UC26_POST_/partners"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/save/partners"
+    query:
+    body: JSONs/efsFinmonMob/UC26.json
+    checks:
+      status: 200
+
+  - id: UC27_POST_compliance_profile_schemeBusiness_save_mtb
+    label: "UC27_POST_/mtb"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/save/mtb"
+    query:
+    body: JSONs/efsFinmonMob/UC27.json
+    checks:
+      status: 200
+
+  - id: UC28_POST_compliance_profile_schemeBusiness_save_other
+    label: "UC28_POST_/other"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/save/other"
+    query:
+    body: JSONs/efsFinmonMob/UC28.json
+    checks:
+      status: 200
+
+  - id: UC29_POST_compliance_profile_schemeBusiness_save_aboutCompany
+    label: "UC29_POST_/aboutCompany"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/save/aboutCompany"
+    query:
+    body: JSONs/efsFinmonMob/UC29.json
+    checks:
+      status: 200
+
+  - id: UC30_POST_compliance_profile_schemeBusiness_save_contacts
+    label: "UC30_POST_/contacts"
+    method: POST
+    path: "/ufs/mobile/compliance/v1/compliance-profile/schemeBusiness/save/contacts"
+    query:
+    body: JSONs/efsFinmonMob/UC30.json
+    checks:
+      status: 200
+
+  - id: UC31_GET_proactive_mop2_pprbId
+    label: "UC31_GET_/mop2/{pprbId}"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/proactive/mop2/#{pprbId}"
+    query:
+    checks:
+      status: 200
+
+  - id: UC32_GET_proactive_onboarding_pprbId
+    label: "UC32_GET_/onboarding/{pprbId}"
+    method: GET
+    path: "/ufs/mobile/compliance/v1/proactive/onboarding/#{pprbId}"
+    query:
+    checks:
+      status: 200
+
+  - id: UC33_POST_informing_list_v2
+    label: "UC33_POST_v2/list"
+    method: POST
+    path: "/ufs/mobile/compliance/v2/informing/list"
+    query:
+    body: JSONs/efsFinmonMob/UC14.json
+    checks:
+      status: 200
+
+  - id: UC34_POST_request_UUID_reply
+    label: "UC34_POST_/request/{pprbId}/reply"
+    method: POST
+    path: "/ufs/mobile/compliance/v2/request/#{uuid}/reply"
+    query:
+    body: JSONs/efsFinmonMob/UC31.json
+    checks:
+      status: 200
+
+  - id: UC35_POST_request_UUID_saveAttachments
+    label: "UC35_POST_/request/[UUID]/saveAttachments"
+    method: POST
+    path: "/ufs/mobile/compliance/v2/request/#{uuid}/saveAttachments"
+    query:
+    body: JSONs/efsFinmonMob/UC34.json
+    checks:
+      status: 200

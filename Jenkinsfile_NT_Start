@@ -59,6 +59,9 @@ pipeline {
                     def timerCause = currentBuild.getBuildCauses('hudson.triggers.TimerTrigger$TimerTriggerCause')
                     env.IS_UNATTENDED = (params.UNATTENDED || (timerCause != null && !timerCause.isEmpty())) ? 'true' : 'false'
                     echo "UNATTENDED=${env.IS_UNATTENDED}"
+                    if (!(params.TARGET_PERCENT ==~ /^\\d+(\\.\\d+)?$/)) {
+                        error "TARGET_PERCENT должен быть числом, получено: '${params.TARGET_PERCENT}'"
+                    }
 
                     if (env.IS_UNATTENDED == 'true' && (params.packageSimulation == null || params.packageSimulation.trim() == '')) {
                         error "Unattended-запуск требует непустой packageSimulation."
@@ -90,6 +93,63 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Validate repository files') {
+            steps {
+                script {
+                    if (!fileExists("${GATLING_DIR}")) {
+                        error("Не найден каталог '${GATLING_DIR}'. Поместите Gatling-скрипты в '${GATLING_DIR}' (ожидаются pom.xml, ltAuto, src, profiles).")
+                    }
+                    if (!fileExists("${GATLING_DIR}/ltAuto/profile_to_props.py")) {
+                        error("Не найден файл '${GATLING_DIR}/ltAuto/profile_to_props.py'. Он нужен для генерации profile.properties из profile.yaml. Добавьте файл по этому пути.")
+                    }
+                    if (env.USE_SDD_SPEC_EFFECTIVE == 'true') {
+                        if (!fileExists("SDD/ltAuto/openspec_preflight.py")) {
+                            error("Не найден файл 'SDD/ltAuto/openspec_preflight.py'. Он нужен для preflight (convert/validate/dry-run). Добавьте файл по этому пути.")
+                        }
+                        if (!fileExists("SDD/ltAuto/spec_to_props.py")) {
+                            error("Не найден файл 'SDD/ltAuto/spec_to_props.py'. Он нужен для генерации profile.properties из spec.yaml. Добавьте файл по этому пути.")
+                        }
+                        if (!fileExists(env.SPEC_PATH)) {
+                            error("Не найден spec-файл '${env.SPEC_PATH}'. Укажите корректный SPEC_PATH и добавьте файл в репозиторий по этому пути.")
+                        }
+                        if (params.USE_OPENSPEC && !fileExists(env.OPENSPEC_PATH)) {
+                            error("Не найден OpenSpec-файл '${env.OPENSPEC_PATH}'. Укажите корректный OPENSPEC_PATH и добавьте артефакт в репозиторий по этому пути.")
+                        }
+                    } else {
+                        def profilePath = "${GATLING_DIR}/${env.PROFILE_YAML}"
+                        if (!fileExists(profilePath)) {
+                            error("Не найден профиль '${profilePath}'. Для non-SDD режима добавьте profile.yaml по этому пути или передайте корректный PROFILE_YAML.")
+                        }
+                    }
+                }
+            }
+        }
+        stage('Preflight SDD/OpenSpec') {
+            when {
+                expression {
+                    return params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' && env.USE_SDD_SPEC_EFFECTIVE == 'true'
+                }
+            }
+            steps {
+                sh """
+                    if [ "${params.USE_OPENSPEC}" = "true" ]; then
+                      python3 SDD/ltAuto/openspec_preflight.py \
+                        --spec '${env.SPEC_PATH}' \
+                        --expected_service '${params.APPLICATION}' \
+                        --use_openspec \
+                        --openspec '${env.OPENSPEC_PATH}' \
+                        --target_percent '${params.TARGET_PERCENT}' \
+                        --dry_profile_props
+                    else
+                      python3 SDD/ltAuto/openspec_preflight.py \
+                        --spec '${env.SPEC_PATH}' \
+                        --expected_service '${params.APPLICATION}' \
+                        --target_percent '${params.TARGET_PERCENT}' \
+                        --dry_profile_props
+                    fi
+                """
+            }
+        }
         stage('Generate profile.properties') {
             when { expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' } }
             steps {
@@ -99,13 +159,6 @@ pipeline {
                     // и request_classes (src/test/java/cases/...) резолвятся относительно него.
                     sh """
                         if [ "${env.USE_SDD_SPEC_EFFECTIVE}" = "true" ]; then
-                          if [ "${params.USE_OPENSPEC}" = "true" ]; then
-                            python3 SDD/ltAuto/openspec_to_sdd.py \
-                              --input '${env.OPENSPEC_PATH}' \
-                              --output '${env.SPEC_PATH}' \
-                              --expected_service '${params.APPLICATION}'
-                          fi
-                          python3 SDD/ltAuto/spec_validate.py --spec '${env.SPEC_PATH}'
                           python3 SDD/ltAuto/spec_to_props.py \
                             --spec '${env.SPEC_PATH}' \
                             --target_percent '${params.TARGET_PERCENT}' \
@@ -166,10 +219,10 @@ pipeline {
                         if (hasLegacyLibs == 'true') {
                             def libsExist = sh(script: "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} '[ -d gatling_job/libs ] && ls -A gatling_job/libs >/dev/null 2>&1 && echo true || echo false'", returnStdout: true).trim()
                             if (libsExist == 'false') {
-                                sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' ${GATLING_DIR}/../libs/ ${remoteHost}:gatling_job/libs/ || true"
+                                sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' ${GATLING_DIR}/../libs/ ${remoteHost}:gatling_job/libs/"
                             }
                         }
-                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' ${GATLING_DIR}/ ${remoteHost}:gatling_job/gatlingScripts/ || true"
+                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' ${GATLING_DIR}/ ${remoteHost}:gatling_job/gatlingScripts/"
 
                         // Кладём profile.properties рядом со скриптами (только при запуске теста)
                         if (params.ACTION == 'ЗАПУСТИТЬ ТЕСТ') {

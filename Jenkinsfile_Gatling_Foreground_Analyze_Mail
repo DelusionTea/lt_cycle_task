@@ -134,12 +134,19 @@ pipeline {
                 }
             }
         }
-        stage('Generate profile.properties') {
+        stage('Resolve profile source') {
             when {
                 expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
             }
             steps {
                 script {
+                    if (!(params.TARGET_PERCENT ==~ /^\\d+(\\.\\d+)?$/)) {
+                        error("TARGET_PERCENT должен быть числом, получено: '${params.TARGET_PERCENT}'")
+                    }
+                    if (!(params.TARGET_DURATION ==~ /^\\d+$/)) {
+                        error("TARGET_DURATION должен быть целым числом секунд, получено: '${params.TARGET_DURATION}'")
+                    }
+
                     env.USE_SDD_SPEC_EFFECTIVE = (params.USE_SDD_SPEC || params.USE_OPENSPEC) ? 'true' : 'false'
                     if (env.USE_SDD_SPEC_EFFECTIVE == 'true') {
                         if (params.SPEC_PATH == null || params.SPEC_PATH.trim() == '') {
@@ -152,24 +159,97 @@ pipeline {
                             }
                             env.OPENSPEC_PATH = params.OPENSPEC_PATH.trim()
                         }
-                        env.PROFILE_YAML = "(from spec)"
+                        env.PROFILE_YAML = "profile.from.spec.yaml"
                     } else {
                         env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
                             params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
                     }
+                    echo "USE_SDD_SPEC_EFFECTIVE=${env.USE_SDD_SPEC_EFFECTIVE}"
+                    echo "PROFILE_YAML=${env.PROFILE_YAML}"
+                }
+            }
+        }
+        stage('Validate repository files') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
+            }
+            steps {
+                script {
+                    if (!fileExists("gatling/gatlingScripts")) {
+                        error("Не найден каталог 'gatling/gatlingScripts'. Поместите Gatling-скрипты в этот путь (ожидаются ltAuto, src, profiles).")
+                    }
+                    if (!fileExists("gatling/gatlingScripts/ltAuto/profile_to_props.py")) {
+                        error("Не найден файл 'gatling/gatlingScripts/ltAuto/profile_to_props.py'. Он нужен для генерации profile.properties из profile.yaml. Добавьте файл по этому пути.")
+                    }
+                    if (!fileExists("gatling/gatlingScripts/ltAuto/gatling_parser.py")) {
+                        error("Не найден файл 'gatling/gatlingScripts/ltAuto/gatling_parser.py'. Он нужен для этапа Parse Gatling. Добавьте файл по этому пути.")
+                    }
+                    if (env.USE_SDD_SPEC_EFFECTIVE == 'true') {
+                        if (!fileExists("SDD/ltAuto/openspec_preflight.py")) {
+                            error("Не найден файл 'SDD/ltAuto/openspec_preflight.py'. Он нужен для preflight SDD/OpenSpec. Добавьте файл по этому пути.")
+                        }
+                        if (!fileExists("SDD/ltAuto/spec_to_props.py")) {
+                            error("Не найден файл 'SDD/ltAuto/spec_to_props.py'. Он нужен для генерации profile.properties из spec.yaml. Добавьте файл по этому пути.")
+                        }
+                        if (!fileExists("SDD/ltAuto/spec_to_profile.py")) {
+                            error("Не найден файл 'SDD/ltAuto/spec_to_profile.py'. Он нужен для генерации '${env.PROFILE_YAML}' под парсер. Добавьте файл по этому пути.")
+                        }
+                        if (!fileExists(env.SPEC_PATH)) {
+                            error("Не найден spec-файл '${env.SPEC_PATH}'. Укажите корректный SPEC_PATH и добавьте файл в репозиторий по этому пути.")
+                        }
+                        if (params.USE_OPENSPEC && !fileExists(env.OPENSPEC_PATH)) {
+                            error("Не найден OpenSpec-файл '${env.OPENSPEC_PATH}'. Укажите корректный OPENSPEC_PATH и добавьте артефакт в репозиторий по этому пути.")
+                        }
+                    } else {
+                        def profilePath = "gatling/gatlingScripts/${env.PROFILE_YAML}"
+                        if (!fileExists(profilePath)) {
+                            error("Не найден профиль '${profilePath}'. Для non-SDD режима добавьте profile.yaml по этому пути или передайте корректный PROFILE_YAML.")
+                        }
+                    }
+                }
+            }
+        }
+        stage('Preflight SDD/OpenSpec') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' && env.USE_SDD_SPEC_EFFECTIVE == 'true' }
+            }
+            steps {
+                sh """
+                    if [ "${params.USE_OPENSPEC}" = "true" ]; then
+                      python3 SDD/ltAuto/openspec_preflight.py \
+                        --spec '${env.SPEC_PATH}' \
+                        --expected_service '${params.APPLICATION}' \
+                        --use_openspec \
+                        --openspec '${env.OPENSPEC_PATH}' \
+                        --target_percent '${params.TARGET_PERCENT}' \
+                        --dry_profile_props \
+                        --dry_profile_yaml
+                    else
+                      python3 SDD/ltAuto/openspec_preflight.py \
+                        --spec '${env.SPEC_PATH}' \
+                        --expected_service '${params.APPLICATION}' \
+                        --target_percent '${params.TARGET_PERCENT}' \
+                        --dry_profile_props \
+                        --dry_profile_yaml
+                    fi
+                """
+            }
+        }
+        stage('Generate profile.properties') {
+            when {
+                expression { params.ACTION == 'ЗАПУСТИТЬ ТЕСТ' }
+            }
+            steps {
+                script {
                     sh """
                         if [ "${env.USE_SDD_SPEC_EFFECTIVE}" = "true" ]; then
-                          if [ "${params.USE_OPENSPEC}" = "true" ]; then
-                            python3 SDD/ltAuto/openspec_to_sdd.py \
-                              --input '${env.OPENSPEC_PATH}' \
-                              --output '${env.SPEC_PATH}' \
-                              --expected_service '${params.APPLICATION}'
-                          fi
-                          python3 SDD/ltAuto/spec_validate.py --spec '${env.SPEC_PATH}'
                           python3 SDD/ltAuto/spec_to_props.py \
                             --spec '${env.SPEC_PATH}' \
                             --target_percent '${params.TARGET_PERCENT}' \
                             --output profile.properties
+                          python3 SDD/ltAuto/spec_to_profile.py \
+                            --spec '${env.SPEC_PATH}' \
+                            --output '${env.PROFILE_YAML}'
                         else
                           python3 gatling/gatlingScripts/ltAuto/profile_to_props.py \
                             --profile 'gatling/gatlingScripts/${env.PROFILE_YAML}' \
@@ -197,8 +277,6 @@ pipeline {
                         echo "Используется выбор из ИНТЕРАКТИВНОГО МЕНЮ: simulations.${finalTarget}"
                     }
                     env.FINAL_TARGET = finalTarget
-                    env.PROFILE_YAML = params.PROFILE_YAML?.trim() ?
-                            params.PROFILE_YAML.trim() : "profiles/${params.APPLICATION}/profile.yaml"
                     withCredentials([usernamePassword(
                         credentialsId: params.CREDS,
                         usernameVariable: 'remoteHost',
@@ -254,12 +332,16 @@ pipeline {
                         if (libsExist == "false") {
                             echo "📦 Либы не найдены на сервере. Копируем..."
                             sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'mkdir -p gatling_job/gatlingScripts gatling_job/libs'"
-                            sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/libs/ ${remoteHost}:gatling_job/libs/ || true"
+                            if (fileExists('gatling/libs')) {
+                                sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/libs/ ${remoteHost}:gatling_job/libs/"
+                            } else {
+                                echo "⚠️ Локальный каталог gatling/libs не найден, пропускаем копирование libs."
+                            }
                         } else {
                             echo "✅ Либы уже на сервере (gatling_job/libs), пропускаем rsync либ."
                             sh "sshpass -p '${remotePassword}' ssh -o StrictHostKeyChecking=no ${remoteHost} 'mkdir -p gatling_job/gatlingScripts'"
                         }
-                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/gatlingScripts/ ${remoteHost}:gatling_job/gatlingScripts/ || true"
+                        sh "sshpass -p '${remotePassword}' rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no' gatling/gatlingScripts/ ${remoteHost}:gatling_job/gatlingScripts/"
                         sh "sshpass -p '${remotePassword}' scp -o StrictHostKeyChecking=no profile.properties ${remoteHost}:${REMOTE_PROFILE}"
                     }
                 }
